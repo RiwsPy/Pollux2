@@ -17,6 +17,7 @@ selenium = "*"
 pytest-flask = "*"
 flask-testing = "*"
 numpy = "*"
+idna = "*"
 
 [requires]
 python_version = "3.8"
