@@ -1,0 +1,160 @@
+{
+ "COPYRIGHT": "The data included in this document is from www.data.gouv.fr. The data is made available under unknown.",
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.71621,
+     45.15452
+    ]
+   },
+   "properties": {
+    "date": "06/10/2020",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7104306,
+     45.1583984
+    ]
+   },
+   "properties": {
+    "date": "21/10/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.689039,
+     45.200061
+    ]
+   },
+   "properties": {
+    "date": "18/10/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.73318,
+     45.15886
+    ]
+   },
+   "properties": {
+    "date": "27/11/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.73733,
+     45.18886
+    ]
+   },
+   "properties": {
+    "date": "06/10/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7028,
+     45.19244
+    ]
+   },
+   "properties": {
+    "date": "26/01/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.72039,
+     45.17355
+    ]
+   },
+   "properties": {
+    "date": "12/04/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.6795,
+     45.21554
+    ]
+   },
+   "properties": {
+    "date": "05/05/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.74849,
+     45.18785
+    ]
+   },
+   "properties": {
+    "date": "22/01/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.70166,
+     45.15785
+    ]
+   },
+   "properties": {
+    "date": "23/02/2019",
+    "night_and_lightless": true
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.70166,
+     45.15785
+    ]
+   },
+   "properties": {
+    "date": "23/02/2019",
+    "night_and_lightless": true
+   }
+  }
+ ]
+}

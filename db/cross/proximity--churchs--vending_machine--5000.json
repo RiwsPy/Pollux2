@@ -1,0 +1,1222 @@
+{
+ "type": "FeatureCollection",
+ "COPYRIGHT": "The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7030924,
+     45.1883013
+    ]
+   },
+   "properties": {
+    "name": "Église protestante évangélique du Drac",
+    "_pollux_values": {
+     "Contradiction": 0.78
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7317069,
+     45.1902531
+    ]
+   },
+   "properties": {
+    "name": "Chapelle de l'Adoration",
+    "_pollux_values": {
+     "Contradiction": 1.56
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7237595,
+     45.1628868
+    ]
+   },
+   "properties": {
+    "name": "Chapelle du Village Olympique",
+    "_pollux_values": {
+     "Contradiction": 0.59
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7561462,
+     45.2050912
+    ]
+   },
+   "properties": {
+    "name": "Chapelle du centre théologique de Meylan",
+    "_pollux_values": {
+     "Contradiction": 0.46
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7154264,
+     45.1867887
+    ]
+   },
+   "properties": {
+    "name": "Le Chandelier",
+    "_pollux_values": {
+     "Contradiction": 1.29
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7136086,
+     45.170809
+    ]
+   },
+   "properties": {
+    "name": "Église de Jésus-Christ des Saints des Derniers Jours",
+    "_pollux_values": {
+     "Contradiction": 0.72
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7303467,
+     45.1877794
+    ]
+   },
+   "properties": {
+    "name": "Église Chrétienne Évangélique",
+    "_pollux_values": {
+     "Contradiction": 2.0
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.704929,
+     45.1865474
+    ]
+   },
+   "properties": {
+    "name": "Salle du royaume des témoins de Jéhovah",
+    "_pollux_values": {
+     "Contradiction": 0.84
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7373327,
+     45.1502608
+    ]
+   },
+   "properties": {
+    "name": "Église protestante évangélique Grenoble Eybens",
+    "_pollux_values": {
+     "Contradiction": 0.32
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7127096,
+     45.1626968
+    ]
+   },
+   "properties": {
+    "name": "Église Chrétienne Évangélique",
+    "_pollux_values": {
+     "Contradiction": 0.43
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7427651,
+     45.203264
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 0.77
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7505076,
+     45.2126834
+    ]
+   },
+   "properties": {
+    "name": "Eglise du Rondeau-Montfleury",
+    "_pollux_values": {
+     "Contradiction": 0.42
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7171835,
+     45.178297
+    ]
+   },
+   "properties": {
+    "name": "Centre d'Études Juives",
+    "_pollux_values": {
+     "Contradiction": 1.13
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.725903338596492,
+     45.1897807245614
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Louis",
+    "_pollux_values": {
+     "Contradiction": 2.96
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7140048439613516,
+     45.18678441111111
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Bruno",
+    "_pollux_values": {
+     "Contradiction": 1.18
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7224678,
+     45.17121600000001
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Paul de la Capuche",
+    "_pollux_values": {
+     "Contradiction": 1.15
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.715936898333334,
+     45.19156792833335
+    ]
+   },
+   "properties": {
+    "name": "Basilique du Sacré-Cœur",
+    "_pollux_values": {
+     "Contradiction": 1.32
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.719030499999999,
+     45.186062003125
+    ]
+   },
+   "properties": {
+    "name": "Synagogue C.I.G Bar Yohaï",
+    "_pollux_values": {
+     "Contradiction": 1.66
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7278831305970135,
+     45.19281501417908
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-André",
+    "_pollux_values": {
+     "Contradiction": 1.88
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.730010415294113,
+     45.18677961882351
+    ]
+   },
+   "properties": {
+    "name": "Basilique Saint-Joseph",
+    "_pollux_values": {
+     "Contradiction": 2.04
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.740601007692309,
+     45.19514004615384
+    ]
+   },
+   "properties": {
+    "name": "Chapelle Saint-Roch",
+    "_pollux_values": {
+     "Contradiction": 0.81
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.731922834234234,
+     45.19262145765767
+    ]
+   },
+   "properties": {
+    "name": "Cathédrale Notre-Dame",
+    "_pollux_values": {
+     "Contradiction": 1.6
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.722860773529413,
+     45.18439599705883
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Vincent-de-Paul",
+    "_pollux_values": {
+     "Contradiction": 1.65
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.725517833333333,
+     45.18192526666666
+    ]
+   },
+   "properties": {
+    "name": "Synagogue ACJG Rachi",
+    "_pollux_values": {
+     "Contradiction": 1.55
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.735723653571427,
+     45.18991836785715
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 1.21
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.735808625714288,
+     45.18998016285713
+    ]
+   },
+   "properties": {
+    "name": "Église réformée de France",
+    "_pollux_values": {
+     "Contradiction": 1.2
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.736355125,
+     45.189703560000005
+    ]
+   },
+   "properties": {
+    "name": "Église Notre-Dame-Réconciliatrice",
+    "_pollux_values": {
+     "Contradiction": 1.17
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.714121776923077,
+     45.18859049230769
+    ]
+   },
+   "properties": {
+    "name": "Église évangélique assemblée de Dieu",
+    "_pollux_values": {
+     "Contradiction": 1.18
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.754747007142856,
+     45.18234591428571
+    ]
+   },
+   "properties": {
+    "name": "Église Notre-Dame-de-la-Salette",
+    "_pollux_values": {
+     "Contradiction": 0.99
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7157602,
+     45.18165124444445
+    ]
+   },
+   "properties": {
+    "name": "Chapelle Sainte-Marie-Saint-Michel",
+    "_pollux_values": {
+     "Contradiction": 1.27
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.725119484615385,
+     45.17949430769231
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Jacques",
+    "_pollux_values": {
+     "Contradiction": 1.84
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.712136133333334,
+     45.18613223333333
+    ]
+   },
+   "properties": {
+    "name": "Mosquée Abu Hurayra",
+    "_pollux_values": {
+     "Contradiction": 1.01
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.713842453333334,
+     45.18066328
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Jean",
+    "_pollux_values": {
+     "Contradiction": 1.09
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.748004695238096,
+     45.16527913333333
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Maurice",
+    "_pollux_values": {
+     "Contradiction": 0.55
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.72942296,
+     45.16585392
+    ]
+   },
+   "properties": {
+    "name": "Masjid Al Kawthar",
+    "_pollux_values": {
+     "Contradiction": 0.71
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.749444919999999,
+     45.18419143333333
+    ]
+   },
+   "properties": {
+    "name": "Église Notre-Dame de la Délivrande",
+    "_pollux_values": {
+     "Contradiction": 0.87
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.740813875000001,
+     45.18103335
+    ]
+   },
+   "properties": {
+    "name": "Église Adventiste du Septième Jour",
+    "_pollux_values": {
+     "Contradiction": 0.94
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.758069488888889,
+     45.172004872222224
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Bernard",
+    "_pollux_values": {
+     "Contradiction": 0.59
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7378283372093035,
+     45.17041664651163
+    ]
+   },
+   "properties": {
+    "name": "Centre œcuménique Saint-Marc",
+    "_pollux_values": {
+     "Contradiction": 0.74
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.734486555555556,
+     45.176414257777765
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-François-de-Sales",
+    "_pollux_values": {
+     "Contradiction": 1.11
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.73470674,
+     45.1763496
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 1.1
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.71169275,
+     45.16933656250001
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Pierre du Rondeau",
+    "_pollux_values": {
+     "Contradiction": 0.58
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.712820758620691,
+     45.16279144827586
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 0.43
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.721211076470588,
+     45.1801760117647
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Georges",
+    "_pollux_values": {
+     "Contradiction": 1.4
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.762384666666666,
+     45.21934086274509
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Pierre et Saint-Paul",
+    "_pollux_values": {
+     "Contradiction": 0.16
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.7592353874999995,
+     45.209206787499994
+    ]
+   },
+   "properties": {
+    "name": "Centre Évangélique Protestant",
+    "_pollux_values": {
+     "Contradiction": 0.38
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.757284485714286,
+     45.212237128571424
+    ]
+   },
+   "properties": {
+    "name": "Église Sainte-Thérèse",
+    "_pollux_values": {
+     "Contradiction": 0.34
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.681031853846155,
+     45.16873707692308
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Pierre",
+    "_pollux_values": {
+     "Contradiction": 0.21
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.668112736363636,
+     45.17171602727273
+    ]
+   },
+   "properties": {
+    "name": "Église de la Tour sans Venin",
+    "_pollux_values": {
+     "Contradiction": 0.15
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.681097565384615,
+     45.15772768461538
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Martin",
+    "_pollux_values": {
+     "Contradiction": 0.11
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.6758606291666664,
+     45.19330982500001
+    ]
+   },
+   "properties": {
+    "name": "Église de la Nativité",
+    "_pollux_values": {
+     "Contradiction": 0.61
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.696414030000001,
+     45.190901769999996
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-François-d'Assise",
+    "_pollux_values": {
+     "Contradiction": 0.64
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.6937215199999995,
+     45.21440672
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 0.41
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.71092302,
+     45.21394034
+    ]
+   },
+   "properties": {
+    "name": "Chapelle de la Nativité",
+    "_pollux_values": {
+     "Contradiction": 0.48
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.69371234,
+     45.2144489
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Jean-Marie-Vianney",
+    "_pollux_values": {
+     "Contradiction": 0.41
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.716630861904761,
+     45.20311046666667
+    ]
+   },
+   "properties": {
+    "name": "Notre-Dame de l'Annonciation",
+    "_pollux_values": {
+     "Contradiction": 0.72
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.731535524705882,
+     45.197619285882354
+    ]
+   },
+   "properties": {
+    "name": "Musée archéologique Saint-Laurent",
+    "_pollux_values": {
+     "Contradiction": 1.13
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.749082050000001,
+     45.15255896250001
+    ]
+   },
+   "properties": {
+    "name": "Église Evangélique",
+    "_pollux_values": {
+     "Contradiction": 0.27
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.744877805555556,
+     45.178297005555564
+    ]
+   },
+   "properties": {
+    "name": "Église apostolique arménienne Saint-Gabriel Archange",
+    "_pollux_values": {
+     "Contradiction": 0.8
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.72875458076923,
+     45.15318182692307
+    ]
+   },
+   "properties": {
+    "name": "Église Sainte-Monique",
+    "_pollux_values": {
+     "Contradiction": 0.42
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.752640061538462,
+     45.20300613076923
+    ]
+   },
+   "properties": {
+    "name": "Église Notre-Dame-du-Rosaire",
+    "_pollux_values": {
+     "Contradiction": 0.54
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.742698468421052,
+     45.21336488947369
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 0.5
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.742740270370371,
+     45.203213211111105
+    ]
+   },
+   "properties": {
+    "name": "Chambre mortuaire",
+    "_pollux_values": {
+     "Contradiction": 0.77
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.744481103508773,
+     45.20528704912281
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Ferjus",
+    "_pollux_values": {
+     "Contradiction": 0.65
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.741912260000001,
+     45.21222139
+    ]
+   },
+   "properties": {
+    "name": "Chapelle de la Vierge-Noire",
+    "_pollux_values": {
+     "Contradiction": 0.55
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.764520765000001,
+     45.208727695
+    ]
+   },
+   "properties": {
+    "name": "Église Notre-Dame de la Plaine Fleurie",
+    "_pollux_values": {
+     "Contradiction": 0.3
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.71822268,
+     45.164312179999996
+    ]
+   },
+   "properties": {
+    "name": "Chapelle de Beauvert",
+    "_pollux_values": {
+     "Contradiction": 0.51
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.73712515,
+     45.196803708333334
+    ]
+   },
+   "properties": {
+    "name": "Église Saint-Luc",
+    "_pollux_values": {
+     "Contradiction": 0.88
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.715947493103449,
+     45.19182507586207
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 1.32
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.688880284615385,
+     45.216313661538464
+    ]
+   },
+   "properties": {
+    "name": "El houda",
+    "_pollux_values": {
+     "Contradiction": 0.25
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.754561284615385,
+     45.172737469230775
+    ]
+   },
+   "properties": {
+    "name": "Mosquée Omar ibn al Khattab",
+    "_pollux_values": {
+     "Contradiction": 0.62
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.759430184615386,
+     45.15914999230769
+    ]
+   },
+   "properties": {
+    "name": "Centre œcuménique",
+    "_pollux_values": {
+     "Contradiction": 0.28
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.715512885185183,
+     45.191661166666684
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 1.28
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.713776699999999,
+     45.17081641000001
+    ]
+   },
+   "properties": {
+    "name": "",
+    "_pollux_values": {
+     "Contradiction": 0.72
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.689650487500001,
+     45.168319212499995
+    ]
+   },
+   "properties": {
+    "name": "Église protestante évangélique de Seyssinet (EPES)",
+    "_pollux_values": {
+     "Contradiction": 0.34
+    }
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     5.694886939999999,
+     45.18180740999999
+    ]
+   },
+   "properties": {
+    "name": "Eglise de Seyssinet-Pariset",
+    "_pollux_values": {
+     "Contradiction": 0.59
+    }
+   }
+  }
+ ]
+}

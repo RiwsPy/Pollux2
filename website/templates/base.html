@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+   <html lang="fr">
+   <head>
+       <meta charset="UTF-8">
+       {% block title %}
+           {% if page_title %}
+               <title>Pollux - {{page_title}}</title>
+           {% else %}
+               <title>Pollux</title>
+           {% endif %}
+       {% endblock %}
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="Debruyne Thibault, Helena Diaz, Fano Ramparany" />
+
+       <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+
+        <!-- Bootstrap -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"/>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.4/js/all.js" crossorigin="anonymous"></script>
+
+       {% block head_dependencies %}
+       {% endblock %}
+   </head>
+   <body>
+        {% block navbar %}
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" id="mainNav">
+            <div class="container">
+                <a href="/">
+                {% if not is_mainpage %}
+                    <img src="{{ url_for('static', filename='img/logos.png') }}" alt="Pollux logo" width="70">
+                {% endif %}
+                </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse">
+                    <ul class="navbar-nav ms-auto my-2">
+                        <li class="nav-item d-flex align-items-center">
+                            {% for map_data in maps_data.values() %}
+                                {% if map_data.description.icon %}
+                                    <a class="nav-link" href="{{ map_data.href }}" title="{{ map_data.description.title }}"><img src="../static/img/{{ map_data.description.icon }}" alt="Button {{ map_data.description.title }}" width="60"></a>
+                                {% endif %}
+                            {% endfor %}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        {% endblock %}
+
+        {% block content %}
+        {% endblock %}
+
+        {% block footer %}
+            {% if is_mainpage %}
+                <footer>
+            {% else %}
+                <footer style="background-color: #eee;">
+            {% endif %}
+                    <li class="d-inline-flex">
+                        <ul><a href="/mentions_legales">Mentions légales</a></ul>
+                        <ul><a href="https://github.com/RiwsPy/Pollux" target="_blank">GitHub</a></ul>
+                        <ul><a href="/about">A propos</a></ul>
+                    </li>
+                </footer>
+       {% endblock %}
+   </body>
+</html>

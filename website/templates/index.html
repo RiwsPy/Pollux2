@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <body background="{{ url_for('static', filename='img/menu_vierge.png') }}">
+        <div id="content" class="with_footer">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='img/logos.png') }}" width="150" height="150">
+            </div>
+            <div class="devise">
+                <p>“ Un outil d'aide à la décision pour une politique d'éclairage urbain</p>
+                <p>soucieuse de la préservation de la biodiversité et du besoin citoyen. ”</p>
+                <!--
+                “ Parce que les fluxs des luxs font des refluxs, Pollux c'est vraiment le luxe. ”
+                <p style="text-align: right; margin-right: 30px;">- Xu le Castor</p>-->
+            </div>
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                    <div class="main_bar">
+                        <div class="border">
+                            <div class="buttons">
+                                {% for map_data in maps_data.values() %}
+                                    {% if map_data.description.icon %}
+                                        <div class="main_button">
+                                            <a href="{{ map_data.description.href }}" title="{{ map_data.description.accroche }}"><img src="../static/img/{{ map_data.description.icon }}" alt="Bouton {{map_data.description.title}}" width="60"> {{ map_data.description.title }}</a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+{% endblock %}
