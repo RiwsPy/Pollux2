@@ -18,6 +18,7 @@ def index(request):
     context = {'is_mainpage': True,
                'page_title': "Accueil",
                'maps_data': CONFIGS}
+
     return render(request, 'index.html', context=context)
 
 

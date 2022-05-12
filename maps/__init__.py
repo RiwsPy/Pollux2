@@ -65,7 +65,6 @@ class Default_Config:
     _DEFAULT_DATA = {
         'template_name_or_list': 'maps/map.html',
         'mapJSMethod': 'create_map',
-        'href': '',
         'description': {},
         'layers': [],
         'options': {}
