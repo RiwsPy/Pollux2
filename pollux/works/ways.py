@@ -7,7 +7,7 @@ class Works(Osm_works):
     filename = 'ways'
     model = Highways
     query = \
-        f"""
+        f"""(
             way["highway"="primary"]{Osm_works().BBOX};
             way["highway"="trunk"]{Osm_works().BBOX};
             way["highway"="motorway"]{Osm_works().BBOX};

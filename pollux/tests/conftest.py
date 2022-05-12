@@ -2,8 +2,8 @@ from pathlib import Path
 import pytest
 from .base import LampsFactory
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-DB_DIR = 'tests/fixtures'
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+DB_DIR = 'pollux/tests/fixtures'
 
 
 @pytest.fixture
