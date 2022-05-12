@@ -9,8 +9,7 @@ from pollux.works import MAX_BOUND_LNG_LAT
 class Configs(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        file_maps = os.listdir(Path(__name__).resolve())
+        file_maps = os.listdir(Path(__file__).parent)
         try:
             file_maps.remove('__init__.py')
         except ValueError:
@@ -24,9 +23,8 @@ class Configs(dict):
             if ext != 'py':
                 continue
 
-            parent_dir = os.path.dirname(__file__).rsplit('/', 1)[-1]
             # print('Chargement de', cls, 'réussi.')
-            a = import_module(parent_dir + '.' + cls).Config()
+            a = import_module(__name__ + '.' + cls).Config()
             self[str(a.ID)] = a.__dict__
 
 

@@ -1,4 +1,4 @@
-import maps
+from pollux import maps
 import pytest
 
 

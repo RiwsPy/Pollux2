@@ -11,6 +11,7 @@ from django.contrib.gis.geos import Point
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+WORKS_DIR = Path(__file__).resolve().parent
 
 '''
 LAT_MAX = 45.19770374838654 # 45.198848
@@ -76,7 +77,7 @@ class Default_works:
     def load(self, filename: str = '', file_ext: str = '', directory='db') -> dict:
         filename = filename or self.filename
         file_ext = file_ext or self.file_ext
-        with open(os.path.join(BASE_DIR, directory, f'{filename}.{file_ext}'), 'r') as file:
+        with open(os.path.join(WORKS_DIR.parent, directory, f'{filename}.{file_ext}'), 'r') as file:
             if file_ext == 'json':
                 file = json.load(file)
             else:
