@@ -1,0 +1,298 @@
+.credits {
+  margin: 10px;
+  font-size: 16px;
+}
+.credits a {
+  font-size: 16px;
+  color: rgb(224, 34, 236);
+  text-decoration: none;
+}
+.credits a:hover {
+  color: #bf11ca;
+}
+.credits a {
+  font-weight: bold;
+}
+.credits u {
+  text-decoration: rgb(192, 172, 246) underline;
+}
+.credits table {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.credits th, .credits td {
+  padding: 10px;
+}
+.credits h2 {
+  margin-top: 40px;
+}
+
+footer {
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+  text-align: right;
+  padding: 5px 50px 0 0;
+  background-color: #eee;
+}
+footer ul {
+  list-style: none;
+}
+footer ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+footer ul li a {
+  font-size: 16px;
+  text-decoration: none;
+  color: black;
+}
+
+.main_title {
+  margin-bottom: 50px;
+}
+.main_title .logo {
+  padding-left: 40px;
+}
+.main_title .logo img {
+  width: 150px;
+  max-width: 25%;
+  height: auto;
+}
+.main_title .devise {
+  margin: -5% 5% 0 40px;
+  max-width: 1000px;
+  font-size: 18px;
+  font-style: italic;
+  text-align: right;
+}
+@media only screen and (min-width: 600px) {
+  .main_title .devise {
+    font-size: 26px;
+  }
+}
+
+.main_bar {
+  background-color: rgb(192, 172, 246);
+  border-radius: 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 10px 0 10px;
+  min-width: 400px;
+  width: 40%;
+}
+@media only screen and (min-width: 600px) {
+  .main_bar {
+    margin: 0 20% 0 10%;
+  }
+}
+.main_bar ul {
+  padding: 20px 20px 0 20px;
+  list-style: none;
+}
+.main_bar ul li {
+  padding: 0 0 20px 0;
+}
+.main_bar ul li a {
+  font-weight: bold;
+  color: #FFF;
+  font-size: 20px;
+}
+.main_bar ul li a:link {
+  text-decoration: none;
+}
+.main_bar ul li a:hover {
+  color: #e6e6e6;
+}
+.main_bar ul li a img {
+  width: 80px;
+  height: 80px;
+  padding-right: 5px;
+}
+
+.map_desc {
+  margin: 10px 10px 20px 10px;
+  max-width: 75%;
+  text-align: center;
+  font-size: 18px;
+}
+.map_desc a {
+  font-size: 18px;
+  color: rgb(224, 34, 236);
+  text-decoration: none;
+}
+.map_desc a:hover {
+  color: #bf11ca;
+}
+.map_desc #myTxt {
+  font-size: 18px;
+}
+.map_desc h2 {
+  margin-top: -10px;
+  padding-top: 10px;
+  font-size: 36px;
+  border: solid rgb(217, 219, 64);
+  border-radius: 10px;
+  border-top: 0px;
+}
+.map_desc h3 {
+  background-color: rgb(192, 172, 246);
+  border-radius: 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  margin: 10px;
+  padding: 10px;
+  font-size: 30px;
+}
+.map_desc hr {
+  height: 0.2rem;
+  max-width: 10rem;
+  margin: 1.5rem auto;
+  background-color: rgb(224, 34, 236);
+  opacity: 1;
+}
+.map_desc video {
+  height: auto;
+  width: 100%;
+  max-width: 640px;
+}
+
+.logo_desc {
+  position: fixed;
+  margin-top: 10%;
+  margin-left: 80%;
+  max-width: 20%;
+}
+.logo_desc a div {
+  background-color: rgb(192, 172, 246);
+  border-radius: 30px;
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+  padding: 5px;
+  padding-top: 8px;
+  margin-top: 20px;
+  border-radius: 10px;
+}
+.logo_desc a div > h5 {
+  font-weight: bold;
+  color: black;
+  text-align: center;
+}
+.logo_desc a:link {
+  text-decoration: none;
+}
+.logo_desc a img {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+}
+
+@font-face {
+  font-family: "Manjari";
+  font-style: normal;
+  font-weight: normal;
+  src: url("../fonts/Manjari-Regular.woff") format("woff");
+}
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+header {
+  padding-top: 100px;
+}
+
+h1, div, a {
+  font: 14px Manjari;
+}
+
+#city_map {
+  height: 100%;
+  width: 100%;
+  min-height: 300px;
+  position: absolute;
+}
+
+.text-center {
+  text-align: center;
+}
+
+#clips_recommendations {
+  height: 100%;
+}
+#clips_recommendations_content {
+  height: 97%;
+  margin-top: 1%;
+  position: absolute;
+  overflow: auto;
+  font-size: 16px;
+}
+
+#mainNav {
+  background: linear-gradient(217deg, rgba(214, 217, 50, 0.8), rgba(255, 0, 0, 0) 70.71%), linear-gradient(127deg, rgba(195, 170, 235, 0.8), rgba(255, 0, 0, 0) 70.71%), linear-gradient(336deg, rgba(214, 217, 50, 0.8), rgba(0, 255, 255, 0) 70.71%);
+  /*background: rgba(170,255,170,.8);*/
+  /*background: rgba(250, 250, 250, .9);*/
+  background-position: center;
+  height: 80px;
+}
+#mainNav .container {
+  display: inline-block;
+  text-align: right;
+}
+#mainNav .container a img {
+  width: 70px;
+  height: auto;
+}
+#mainNav .container ul.horizontal-list {
+  display: inline-block;
+  list-style: none;
+  padding-top: 0;
+}
+#mainNav .container ul.horizontal-list li {
+  display: inline-block;
+  margin: 5px 30px 0 0;
+}
+
+#content {
+  margin-bottom: 50px;
+}
+#content .encyclopedia {
+  text-align: justify;
+  margin: 10px 30px 10px 30px;
+}
+#content .encyclopedia a, #content .encyclopedia div {
+  font-size: 18px;
+}
+
+.legendBox {
+  padding: 6px 8px;
+  font: 14px Manjari;
+  background: rgba(255, 255, 255, 0.8);
+  line-height: 24px;
+  color: #555;
+}
+.legendBox h4 {
+  font-size: 16px;
+  text-align: center;
+  margin: 2px 12px 8px;
+  color: #777;
+}
+.legendBox i {
+  width: 18px;
+  height: 18px;
+  float: left;
+  margin: 2px 8px 0 0;
+  opacity: 0.7;
+  border-radius: 10px;
+}
+.legendBox i.icon {
+  background-size: 16px;
+  background-color: rgb(255, 255, 255);
+}
+
+#about {
+  padding-top: 80px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/*# sourceMappingURL=styles.css.map */

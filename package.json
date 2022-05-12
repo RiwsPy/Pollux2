@@ -1,0 +1,23 @@
+{
+  "name": "pollux",
+  "version": "1.0.0",
+  "description": "Outil d'aide à la décision de l'éclairage public par des cartes interactives",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "sass": "sass --watch ./pollux/static/sass/main.scss:./pollux/static/css/styles.css",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RiwsPy/Pollux2.git"
+  },
+  "author": "Debruyne Thibault",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RiwsPy/Pollux2/issues"
+  },
+  "homepage": "https://github.com/RiwsPy/Pollux2#readme"
+}

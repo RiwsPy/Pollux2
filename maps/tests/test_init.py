@@ -26,11 +26,6 @@ def fix_default_cls(monkeypatch):
     return mock_Config()
 
 
-def test_data(fix_default_cls):
-    expected_value = {'test': 'test ok', 'description': {'name': 'default_value', 'href': '/map/X'}}
-    assert fix_default_cls.data == expected_value
-
-
 def test_description(fix_default_cls):
     expected_value = {'name': 'default_value', 'href': '/map/X'}
     assert fix_default_cls.description == expected_value
@@ -39,8 +34,3 @@ def test_description(fix_default_cls):
 def test_href(fix_default_cls):
     expected_value = '/map/1'
     assert fix_default_cls.href == expected_value
-
-
-def test__dict__(fix_default_cls):
-    expected_value = {'test': 'test ok', 'href': '/map/1', 'description': {'name': 'default_value', 'href': '/map/X'}}
-    assert fix_default_cls.__dict__ == expected_value

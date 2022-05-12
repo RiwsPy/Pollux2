@@ -1,0 +1,22 @@
+{
+  "type": "FeatureCollection",
+  "COPYRIGHT": "",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "ELEM_POINT_ID": 22519,
+        "CODE": "ESP28703"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [5.70497723253789,
+          45.188724499762],
+          [5.69497723253789,
+          45.178724499762]
+        ]
+      }
+    }
+  ]
+}

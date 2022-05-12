@@ -1,0 +1,16 @@
+{% extends "maps/map.html" %}
+
+{% block content %}
+    <div id="clips_recommendations">
+      <div class="row">
+        <div class="col-md-8">
+            <div id="city_map" style="width: 66.6%;">
+            </div>
+        </div>
+        <div class="col-md-4">
+          <span id="clips_recommendations_content">Chargement en cours...</span>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/create_map.js') }}" onload="{{ mapJSMethod }}({{ layers }}, {{ options }})"></script>
+{% endblock %}
