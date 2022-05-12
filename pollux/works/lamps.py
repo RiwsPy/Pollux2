@@ -32,8 +32,8 @@ lowering_night_impact = {
 
 
 class Works(Default_works):
-    filename = "lamps_output"
-    file_ext = "json"
+    filename = "lamps"
+    file_ext = "csv"
     COPYRIGHT_ORIGIN = Gam.BASE_URL
     COPYRIGHT_LICENSE = 'ODbL'
     fake_request = True
