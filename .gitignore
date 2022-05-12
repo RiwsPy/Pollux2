@@ -7,5 +7,5 @@ geckodriver.log
 old/
 .env
 /pollux/static/sass/
-/pollux/static/css/styles.css.map
+package.json
 /pollux/staticfiles/
