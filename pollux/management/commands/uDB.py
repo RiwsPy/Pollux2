@@ -20,10 +20,12 @@ class Command(BaseCommand):
             arg = db_arg.replace('.py', '').replace('/', '.')
             try:
                 cls = import_module(arg).Works
-            except ModuleNotFoundError:
+            except ModuleNotFoundError as e:
                 print(f'Module {arg} introuvable.')
-            except AttributeError:
+                print(e)
+            except AttributeError as e:
                 print(f'Classe {arg}.Works introuvable.')
+                print(e)
             else:
                 db_update(cls)
                 if cls.filename == 'lamps':

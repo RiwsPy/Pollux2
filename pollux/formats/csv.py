@@ -5,7 +5,7 @@ from typing import TextIO
 regex_csv_attr = re.compile('(?:^|,)(?=[^\"]|(\")?)\"?((?(1)[^\"]*|[^,\"]*))\"?(?=,|$)')
 
 
-def convert_to_geojson(_, file: TextIO, regex=regex_csv_attr) -> dict:
+def convert_to_geojson(file: TextIO, regex=regex_csv_attr) -> dict:
     file_content = file.readlines()
     columns = file_content[0].partition('\n')[0]
     if columns[0] == '\ufeff':

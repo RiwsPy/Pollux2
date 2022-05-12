@@ -10,7 +10,7 @@ from pollux.formats import osm
 from django.contrib.gis.geos import Point
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 '''
 LAT_MAX = 45.19770374838654 # 45.198848
@@ -94,6 +94,7 @@ class Default_works:
         return geo
 
     def output(self, data: dict, filename: str = '') -> None:
+        print(data)
         data = self.convert_to_geojson(data)
         if self.model:
             if data and data['features']:

@@ -1,6 +1,7 @@
 from . import Default_works
 from pollux.api_ext.grenoble_alpes_metropole import Gam
 from pollux.models.lamps import Lamps
+from pollux.formats.csv import convert_to_geojson
 
 
 lowering_night_impact = {
@@ -40,6 +41,10 @@ class Works(Default_works):
 
     def _can_be_output(self, feature: 'Model', bound=None, **kwargs) -> bool:
         return super()._can_be_output(feature, bound=bound)
+
+    @staticmethod
+    def convert_to_geojson(data_dict) -> dict:
+        return convert_to_geojson(data_dict)
 
     class Model(Default_works.Model):
         def __init__(self, **kwargs):
