@@ -94,7 +94,6 @@ class Default_works:
         return geo
 
     def output(self, data: dict, filename: str = '') -> None:
-        print(data)
         data = self.convert_to_geojson(data)
         if self.model:
             if data and data['features']:
@@ -114,7 +113,6 @@ class Default_works:
             geo.dump('db/' + (filename or self.output_filename) + '.json')
 
     def _can_be_output(self, feature, **kwargs) -> bool:
-        print(feature)
         return feature.position.in_bound(kwargs.get('bound', self.bound))
 
     @staticmethod

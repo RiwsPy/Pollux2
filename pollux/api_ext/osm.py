@@ -5,7 +5,6 @@ class Osm(Api_ext):
     BASE_URL = 'http://overpass-api.de/api/interpreter'
 
     def call(self, query: str, skel_qt: bool = False, **kwargs) -> dict:
-        print(query)
         query = get_query(query, out_format="json", end="body", skel_qt=skel_qt)
 
         return super().call(url="", data=query)
