@@ -94,7 +94,6 @@ class Default_works:
         return geo
 
     def output(self, data: dict, filename: str = '') -> None:
-        data = self.convert_to_geojson(data)
         if self.model:
             if data and data['features']:
                 self.model.objects.all().delete()
