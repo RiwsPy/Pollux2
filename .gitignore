@@ -8,3 +8,4 @@ old/
 .env
 /pollux/static/sass/
 /pollux/static/css/styles.css.map
+/pollux/staticfiles/
