@@ -47,6 +47,11 @@ footer ul li a {
   text-decoration: none;
   color: black;
 }
+@media (max-width: 599px) {
+  footer ul li {
+    margin-right: 5px;
+  }
+}
 
 .main_title {
   margin-bottom: 50px;
@@ -66,7 +71,7 @@ footer ul li a {
   font-style: italic;
   text-align: right;
 }
-@media only screen and (min-width: 600px) {
+@media (min-width: 600px) {
   .main_title .devise {
     font-size: 26px;
   }
@@ -77,10 +82,10 @@ footer ul li a {
   border-radius: 30px;
   box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
   margin: 0 10px 0 10px;
-  min-width: 400px;
+  min-width: 300px;
   width: 40%;
 }
-@media only screen and (min-width: 600px) {
+@media (min-width: 600px) {
   .main_bar {
     margin: 0 20% 0 10%;
   }
@@ -250,6 +255,11 @@ h1, div, a {
   display: inline-block;
   margin: 5px 30px 0 0;
 }
+@media (max-width: 599px) {
+  #mainNav .container ul.horizontal-list li {
+    margin: 5px 5px 0 0;
+  }
+}
 
 #content {
   margin-bottom: 50px;
@@ -257,6 +267,11 @@ h1, div, a {
 #content .encyclopedia {
   text-align: justify;
   margin: 10px 30px 10px 30px;
+}
+@media (max-width: 600px) {
+  #content .encyclopedia {
+    margin: 10px;
+  }
 }
 #content .encyclopedia a, #content .encyclopedia div {
   font-size: 18px;
