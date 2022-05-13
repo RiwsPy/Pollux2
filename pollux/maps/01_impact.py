@@ -19,7 +19,8 @@ class Config(Default_Config):
                 'filename': 'lamps',
                 'gradient': Gradient.DEFAULT,
                 'radius': {
-                    'field': 'max_range_day'
+                    'field': 'max_range_day',
+                    'unit': 'pixel',
                 },
             },
             {
@@ -28,7 +29,8 @@ class Config(Default_Config):
                 'maxValueMethod': 'zoom_depend',
                 'filename': 'lamps',
                 'radius': {
-                    'field': 'max_range_day'
+                    'field': 'max_range_day',
+                    'unit': 'pixel',
                 },
             },
             {
@@ -39,7 +41,8 @@ class Config(Default_Config):
                 'isActive': 1,
                 'gradient': Gradient.TEST,
                 'radius': {
-                    'field': 'max_range_day'
+                    'field': 'max_range_day',
+                    'unit': 'pixel',
                 },
             },
             {
