@@ -59,6 +59,11 @@ footer ul li a {
 .main_title .logo {
   padding-left: 40px;
 }
+@media (max-width: 599px) {
+  .main_title .logo {
+    padding-left: 10px;
+  }
+}
 .main_title .logo img {
   width: 150px;
   max-width: 25%;
@@ -85,7 +90,7 @@ footer ul li a {
   min-width: 300px;
   width: 40%;
 }
-@media (min-width: 600px) {
+@media only screen and (min-width: 600px) {
   .main_bar {
     margin: 0 20% 0 10%;
   }
@@ -267,11 +272,6 @@ h1, div, a {
 #content .encyclopedia {
   text-align: justify;
   margin: 10px 30px 10px 30px;
-}
-@media (max-width: 600px) {
-  #content .encyclopedia {
-    margin: 10px;
-  }
 }
 #content .encyclopedia a, #content .encyclopedia div {
   font-size: 18px;
