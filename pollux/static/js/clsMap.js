@@ -123,7 +123,7 @@ class heatMap {
             },
             ...options
         };
-        console.log(this._options)
+
         this._options.zoom.min = Math.min(this._options.zoom.min || 10, this._options.zoom.max || 20)
         this._options.zoom.max = Math.max(this._options.zoom.min, this._options.zoom.max || 20)
         this._options.zoom.init = Math.min(this._options.zoom.max,
@@ -443,7 +443,6 @@ class heatMap {
     createHeatLayer(data, layer) {
         let heatMapData = [];
         let cls = this;
-
         data.features.forEach(function(d) {
             if (d.geometry.type == 'Point') {
                 let itm_intensity = d.properties[layer.value.field] || layer.value.fix || 0;
@@ -461,7 +460,6 @@ class heatMap {
 
                 // Radius
                 let itm_radius = d.properties[layer.radius.field] || layer.radius.fix;
-
                 // Orientation
                 let itm_orientation = cls.getOrientation(d, layer)
 

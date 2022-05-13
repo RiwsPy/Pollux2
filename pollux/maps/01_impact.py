@@ -17,12 +17,30 @@ class Config(Default_Config):
                 'layerType': 'heatmap',
                 'maxValueMethod': 'zoom_depend',
                 'filename': 'lamps',
+                'gradient': Gradient.DEFAULT,
+                'radius': {
+                    'field': 'max_range_day'
+                },
             },
             {
                 'name': 'Luminaires (+ colorée)',
                 'layerType': 'heatmap',
                 'maxValueMethod': 'zoom_depend',
                 'filename': 'lamps',
+                'radius': {
+                    'field': 'max_range_day'
+                },
+            },
+            {
+                'name': 'Luminaires (+ color test)',
+                'layerType': 'heatmap',
+                'maxValueMethod': 'zoom_depend',
+                'filename': 'lamps',
+                'isActive': 1,
+                'gradient': Gradient.TEST,
+                'radius': {
+                    'field': 'max_range_day'
+                },
             },
             {
                 'name': 'Températeur de couleur',
@@ -61,7 +79,16 @@ class Config(Default_Config):
                 'maxValueMethod': 'zoom_depend',
                 'filename': 'lamps',
             },
-
+            {
+                'name': 'Luminaires (orientée + color test)',
+                'layerType': 'heatmap',
+                'orientation': {
+                    'field': 'orientation',
+                },
+                'maxValueMethod': 'zoom_depend',
+                'gradient': Gradient.TEST,
+                'filename': 'lamps',
+            },
             {
                 'name': 'Luminaires (Impact - Jour)',
                 'maxValueMethod': 'zoom_depend',
@@ -76,7 +103,6 @@ class Config(Default_Config):
                 'orientation': {
                     'field': 'orientation',
                 },
-                'isActive': 1,
                 'filename': 'lamps',
             },
             {

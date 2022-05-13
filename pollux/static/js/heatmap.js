@@ -89,6 +89,7 @@
                      e = this._data.length;
                  e > s ; s++) {
                 a = this._data[s];
+                console.log(a[4])
                 this.radius(a[4], this.initBlur, a[3] == -1 ? -1: a[3]/360*Math.PI*2);
                 i.globalAlpha = Math.max(a[2] / this._max, t || .05);
                 i.drawImage(this._circle, a[0] - this._r, a[1] - this._r);

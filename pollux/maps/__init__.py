@@ -52,6 +52,17 @@ class Gradient:
         0.15: 'violet',
     }
 
+    TEST = {
+        1.0: 'red',
+        0.89: 'orange',
+        0.77: 'yellow',
+        0.63: 'lime',
+        0.45: 'blue',
+        0.31: 'violet',
+        0.3: 'blue',
+        0.15: 'violet'
+    }
+
 
 class Default_Config:
     ID = 0
@@ -121,21 +132,35 @@ class Default_Config:
         'fix': 1,
     }
     _DEFAULT_LEGEND = {
-        'name': 'Legend',
+        'name': 'Légende',
     }
 
     @property
     def data(self) -> dict:
+        default_options = {**self.options,
+                            **{'value': self.value},
+                            **{'orientation': self.orientation},
+                            **{'radius': self.radius},
+                            }
+        for index, layer in enumerate(self.DATA['layers']):
+            for option_k, option_v in default_options.items():
+                if option_k not in layer:
+                    self.DATA['layers'][index][option_k] = option_v
+                    continue
+                if option_k != 'gradient' and isinstance(option_v, dict):
+                    for k, v in option_v.items():
+                        if k not in self.DATA['layers'][index][option_k]:
+                            self.DATA['layers'][index][option_k][k] = v
+
         return {**self._DEFAULT_DATA,
-                **self.DATA,
                 **{'description': self.description},
                 **{'legend': self.legend},
-                **{'options': {**self.options,
-                               **{'buttons': self.buttons},
-                               **{'zoom': self.zoom},
-                               **{'value': self.value},
-                               **{'orientation': self.orientation},
-                               **{'radius': self.radius}}},
+                **self.DATA,
+                **{'options':
+                   {**default_options,
+                    **{'buttons': self.buttons},
+                    **{'zoom': self.zoom},
+                    }},
                 }
 
     @property
