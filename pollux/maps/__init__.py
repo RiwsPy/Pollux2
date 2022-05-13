@@ -10,17 +10,13 @@ class Configs(dict):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         file_maps = os.listdir(Path(__file__).parent)
-        try:
-            file_maps.remove('__init__.py')
-        except ValueError:
-            pass
         self.file_maps = file_maps
 
     def load(self) -> None:
         self.clear()
         for file in sorted(self.file_maps):
             cls, _, ext = file.rpartition('.')
-            if ext != 'py':
+            if ext != 'py' or cls == '__init__':
                 continue
 
             # print('Chargement de', cls, 'réussi.')
@@ -133,8 +129,8 @@ class Default_Config:
         return {**self._DEFAULT_DATA,
                 **self.DATA,
                 **{'description': self.description},
+                **{'legend': self.legend},
                 **{'options': {**self.options,
-                               **{'legend': self.legend},
                                **{'buttons': self.buttons},
                                **{'zoom': self.zoom},
                                **{'value': self.value},

@@ -38,8 +38,8 @@ class Cross(Default_cross):
                 dist = lamp_pos.distance_from_way(*segment)
                 current_is_footway = highway.is_footway
                 if lamp.max_range(5, 'day') <= dist or dist <= 0.2 and current_is_footway:
-                    if dist <= 0.2:
-                        print(f'distance <= 0.2: code {lamp.code}, distance: {dist}', highway.__dict__)
+                    # if dist <= 0.2:
+                    #    print(f'distance <= 0.2: code {lamp.code}, distance: {dist}', highway.__dict__)
                     continue
                 if hasattr(lamp, 'nearest_highway'):
                     nearest_is_footway = lamp.nearest_highway.is_footway
