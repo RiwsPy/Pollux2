@@ -6,12 +6,17 @@ from django.contrib.gis.geos import LineString
 class Highways(Default_model):
     class Meta:
         app_label = "pollux"
+        verbose_name = "Voie de circulation"
+        verbose_name_plural = "Voies de circulation"
 
-    type = models.CharField(max_length=20, default="")
+    type = models.CharField('Type', max_length=20, default="")
     position = models.LineStringField(default=LineString([[0, 0], [0, 0]]))
-    name = models.CharField(max_length=100, default="")
-    width = models.FloatField(default=0.0)
-    lanes = models.IntegerField(default=0)
+    name = models.CharField('Nom de la voie', max_length=100, default="")
+    width = models.FloatField('Largeur', default=0.0)
+    lanes = models.IntegerField('Nombre de voies', default=0)
+
+    def __str__(self) -> str:
+        return f'Voie: {self.type}, {self.name}'
 
     @property
     def is_footway(self) -> bool:

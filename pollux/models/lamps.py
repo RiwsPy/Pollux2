@@ -7,18 +7,22 @@ from pollux.formats.position import Position
 class Lamps(Default_model):
     class Meta:
         app_label = "pollux"
+        verbose_name = "Luminaire"
 
     code = models.CharField(max_length=20, default="")
-    height = models.FloatField(default=8.0)
-    irc = models.IntegerField(default=75)
-    power = models.IntegerField(default=150)
-    colour = models.IntegerField(default=5000)
-    on_motion = models.BooleanField(default=False)
-    lowering_night = models.IntegerField(default=0)
-    orientation = models.FloatField(default=-1.0)
-    nearest_way_dist = models.FloatField(default=-1.0)
-    day_impact = models.FloatField(default=0.0)
-    night_impact = models.FloatField(default=0.0)
+    height = models.FloatField('Hauteur', default=8.0)
+    irc = models.IntegerField('Rendu de couleur', default=75)
+    power = models.IntegerField('Puissance', default=150)
+    colour = models.IntegerField('Température de couleur', default=5000)
+    on_motion = models.BooleanField('Détection de mouvement?', default=False)
+    lowering_night = models.IntegerField('Réduction de puissance nocturne', default=0)
+    orientation = models.FloatField('Orientation', default=-1.0)
+    nearest_way_dist = models.FloatField('Distance voie la plus proche', default=-1.0)
+    day_impact = models.FloatField('Impact (jour)', default=0.0)
+    night_impact = models.FloatField('Impact (nuit)', default=0.0)
+
+    def __str__(self) -> str:
+        return f'Luminaire: {self.code}'
 
     @property
     def way_type(self) -> str:

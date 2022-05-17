@@ -7,13 +7,17 @@ from pollux.models.lamps import Lamps
 class Trees(Default_model):
     class Meta:
         app_label = "pollux"
+        verbose_name = "Arbre"
 
     code = models.CharField(max_length=20, default="")
     taxon = models.CharField(max_length=100, default="")
-    planted_date = models.IntegerField(default=0)
-    height = models.FloatField(default=0)
-    day_impact = models.FloatField(default=0.0)
-    night_impact = models.FloatField(default=0.0)
+    planted_date = models.IntegerField('Date de plantation', default=0)
+    height = models.FloatField('Hauteur', default=0)
+    day_impact = models.FloatField('Impact (jour)', default=0.0)
+    night_impact = models.FloatField('Impact (nuit)', default=0.0)
+
+    def __str__(self) -> str:
+        return f'Arbre: {self.code} {self.taxon}'
 
     def distance_from(self, obj) -> float:
         dist = Position(self.position).distance(obj.position)
