@@ -9,6 +9,7 @@ from .models import lamps, trees, highways
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.gis.geos import Polygon
 from .map_desc import DICT_DATA
+from django.views import View
 
 CONFIGS = Configs()
 CONFIGS.load()
@@ -33,6 +34,7 @@ def show_map(request, map_id):
                 zoom = request.GET['zoom']
                 if zoom.isdigit():
                     context['options']['zoom']['init'] = zoom
+
             if request.GET.get('layers'):
                 layers = request.GET['layers'].split('/')
                 for ind, layer in enumerate(context['layers']):
@@ -40,6 +42,7 @@ def show_map(request, map_id):
                         layer['isActive'] = 1
                     else:
                         layer['isActive'] = 0
+
             if request.GET.get('bound'):
                 bound = request.GET['bound'].split('/')
                 if len(bound) == 4:
@@ -105,31 +108,45 @@ def print_db_to_json(request, filename):
     return JsonResponse(response)
 
 
-def mentions_legales(request):
-    context = {'page_title': "Mentions légales",
-               'maps_data': CONFIGS,
-               'dict_data': DICT_DATA}
-    return render(request,
-                  'mentions_legales.html',
-                  context=context)
+class MixinSecondaryPages(View):
+    template_name = ""
+    context_content = ['page_title', 'maps_data', 'dict_data']
+    page_title = "Pollux"
+    maps_data = CONFIGS
+    dict_data = DICT_DATA
+
+    @property
+    def context(self) -> dict:
+        return {attr_name: getattr(self, attr_name, '')
+                for attr_name in self.context_content
+                }
+
+    def get(self, request, *args, **kwargs):
+        return render(request,
+                      self.template_name,
+                      context=self.context)
 
 
-def about(request):
-    context = {
-        'page_title': "A propos",
-        'maps_data': CONFIGS
-    }
-    return render(request,
-                  'about.html',
-                  context=context)
+class MentionsLegales(MixinSecondaryPages):
+    template_name = "mentions_legales.html"
+    page_title = "Mentions légales"
 
 
-def show_map_description(request, map_id):
-    if not CONFIGS.get(map_id):
-        return index(request)
+class About(MixinSecondaryPages):
+    template_name = "about.html"
+    page_title = "A propos"
 
-    context = {'maps_data': CONFIGS,
-               'map_data': CONFIGS[map_id]}
-    return render(request,
-                  'map_description.html',
-                  context=context)
+
+class ShowMapDescription(MixinSecondaryPages):
+    template_name = "map_description.html"
+    map_id = 0
+
+    def get(self, request, map_id, *args, **kwargs):
+        if not CONFIGS.get(map_id):
+            return index(request)
+        self.map_id = map_id
+        return super().get(request, map_id, *args, **kwargs)
+
+    @property
+    def context(self) -> dict:
+        return {**super().context, **{'map_data': CONFIGS[self.map_id]}}

@@ -15,14 +15,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
-from .views import index, show_map, print_json, mentions_legales, about, show_map_description
+from .views import index, show_map, print_json, MentionsLegales, About, ShowMapDescription
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', index, name='home'),
     re_path(r'map/(?P<map_id>\w+)$', show_map),
     re_path(r'api/(.+)', print_json),
-    path('mentions_legales', mentions_legales, name='mentions_legales'),
-    path('about', about, name="about"),
-    re_path(r'map_desc/(.+)', show_map_description, name='map_description'),
+    path('mentions_legales', MentionsLegales.as_view(), name='mentions_legales'),
+    path('about', About.as_view(), name="about"),
+    re_path(r'map_desc/(.+)', ShowMapDescription.as_view(), name='map_description'),
 ]
