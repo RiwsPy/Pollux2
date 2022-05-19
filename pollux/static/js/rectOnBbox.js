@@ -23,7 +23,7 @@ L.Control.MyButton =
                 this.link.href = href;
             }
             return container
-            },
+        },
 
         _click: function(e) {
             const mapBounds = this._map.getBounds();

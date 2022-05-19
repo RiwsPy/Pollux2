@@ -392,9 +392,10 @@ class heatMap {
     }
 
     request(layerdata) {
-        let request = new Request('/api/' + layerdata.filename, {
-            method: 'POST',
-            body: JSON.stringify({bbox: this._options.bbox}),
+        let request = new Request('/api/' + layerdata.filename + '?bound=' + this._options.bbox, {
+            //method: 'POST',
+            method: 'GET',
+            //body: JSON.stringify({bbox: this._options.bbox}),
             headers: new Headers({
                 'X-CSRFToken': getCookie('csrftoken'),
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
