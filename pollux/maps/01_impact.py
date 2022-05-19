@@ -6,102 +6,25 @@ class Config(Default_Config):
     DATA = {
         'options': {
             'bbox': [5.717633, 45.182596, 5.734348, 45.185410],
-            'gradient': Gradient.LIGHT_COLORED,
+            'gradient': Gradient.TEST,
             'legend': {
                 'name': 'Impact'},
             'blur': 15,
         },
         'layers': [
             {
-                'name': 'Luminaires (circulaire)',
-                'layerType': 'heatmap',
-                'maxValueMethod': 'zoom_depend',
-                'filename': 'lamps',
-                'gradient': Gradient.DEFAULT,
-                'radius': {
-                    'field': 'max_range_day',
-                    'unit': 'pixel',
-                },
-            },
-            {
-                'name': 'Luminaires (+ colorée)',
-                'layerType': 'heatmap',
-                'maxValueMethod': 'zoom_depend',
-                'filename': 'lamps',
-                'radius': {
-                    'field': 'max_range_day',
-                    'unit': 'pixel',
-                },
-            },
-            {
-                'name': 'Luminaires (+ color test)',
-                'layerType': 'heatmap',
-                'maxValueMethod': 'zoom_depend',
-                'filename': 'lamps',
-                'isActive': 1,
-                'gradient': Gradient.TEST,
-                'radius': {
-                    'field': 'max_range_day',
-                    'unit': 'pixel',
-                },
-            },
-            {
-                'name': 'Températeur de couleur',
-                'value': {
-                    'field': 'colour'
-                },
-                'layerType': 'heatmap',
-                'filename': 'lamps',
-                'maxValueDefault': 6000,
-                'blur': 0,
-                'gradient': {
-                    0.3333: '#FF880E',
-                    0.4166: '#FF9F46',
-                    0.5: '#FFB16D',
-                    0.6666: '#FFCDA6',
-                    0.8333: '#FFE4CD',
-                    1.0: '#FFF6EC',
-                },
-            },
-            {
-                'name': 'Luminaires (orienté)',
-                'layerType': 'heatmap',
-                'orientation': {
-                    'field': 'orientation',
-                },
-                'maxValueMethod': 'zoom_depend',
-                'filename': 'lamps',
-                'gradient': Gradient.DEFAULT,
-            },
-            {
-                'name': 'Luminaires (orientée + colorée)',
-                'layerType': 'heatmap',
-                'orientation': {
-                    'field': 'orientation',
-                },
-                'maxValueMethod': 'zoom_depend',
-                'filename': 'lamps',
-            },
-            {
-                'name': 'Luminaires (orientée + color test)',
-                'layerType': 'heatmap',
-                'orientation': {
-                    'field': 'orientation',
-                },
-                'maxValueMethod': 'zoom_depend',
-                'gradient': Gradient.TEST,
-                'filename': 'lamps',
-            },
-            {
                 'name': 'Luminaires (Impact - Jour)',
                 'maxValueMethod': 'zoom_depend',
+                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
+                'isActive': 1,
                 'radius': {
                     'unit': 'auto',
                     'field': 'max_range_day'
                 },
                 'layerType': 'heatmap',
                 'value': {
-                    'field': 'day_impact'
+                    'field': 'day_impact',
+                    'fix': 0,
                 },
                 'orientation': {
                     'field': 'orientation',
@@ -111,8 +34,10 @@ class Config(Default_Config):
             {
                 'name': 'Luminaires (Impact - Nuit)',
                 'maxValueMethod': 'zoom_depend',
+                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
                 'value': {
-                    'field': 'night_impact'
+                    'field': 'night_impact',
+                    'fix': 0,
                 },
                 'radius': {
                     'unit': 'auto',
@@ -129,6 +54,36 @@ class Config(Default_Config):
                 'layerType': 'cluster',
                 'filename': 'lamps',
                 'icon': 'markers/lamp.png',
+            },
+            {
+                'name': 'Arbres (Impact - Jour)',
+                'maxValueMethod': 'zoom_depend',
+                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
+                'layerType': 'heatmap',
+                'value': {
+                    'field': 'night_impact',
+                    'fix': 0,
+                },
+                'radius': {
+                    'unit': 'auto',
+                    'fix': 10,
+                },
+                'filename': 'trees',
+            },
+            {
+                'name': 'Arbres (Impact - Nuit)',
+                'maxValueMethod': 'zoom_depend',
+                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
+                'value': {
+                    'field': 'night_impact',
+                    'fix': 0,
+                },
+                'radius': {
+                    'unit': 'auto',
+                    'fix': 10,
+                },
+                'layerType': 'heatmap',
+                'filename': 'trees',
             },
             {
                 'name': 'Arbres',
