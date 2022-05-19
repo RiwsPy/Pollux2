@@ -324,11 +324,8 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
             }
         }
 
-        this.updateMax()
+        this.updateMax(grid)
         this._heat.max(this._max);
-
-        // Legend update
-        this._map.owner.addLegend(this._max)
 
         for (i = 0, len = grid.length; i < len; i++) {
             if (grid[i]) {
@@ -356,6 +353,10 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         // console.timeEnd('draw ' + data.length);
 
         this._frame = null;
+
+        // Legend update
+        this._map.owner.addLegend(this, this._max)
+
     },
 
     _animateZoom: function (e) {
@@ -370,7 +371,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         }
     },
 
-    updateMax() {
+    updateMax(grid) {
         if (this.options.maxValueDefault || this.options.maxValueMethod == 'zoom_depend') {
             if (this.options.maxValueMethod === 'part%') {
                 let maxValue = Math.max(0, Math.min(1, this.options.maxValueDefault));
@@ -383,13 +384,14 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
                     }
                 }
                 values = values.sort(function(a, b){return a - b});
-                this._max = values[Math.ceil(values.length*maxValue)];
+                this._max = values[Math.ceil(values.length*maxValue/100)];
             } else if (this.options.maxValueMethod === '%') {
                 let maxValue = Math.max(0, Math.min(1, this.options.maxValueDefault));
                 this._max *= maxValue;
             } else if (this.options.maxValueMethod == 'zoom_depend') {
                 // Contrôle de la valeur max en fonction du Zoom
-                let maxValueForZoom = {14: 3, 15: 2, 16: 3, 17: 2, 18: 1.3, 19: 1.3, 20: 1.1};
+                let maxValueForZoom = this.options.maxValueDefault ||
+                                      {14: 3, 15: 2, 16: 3, 17: 2, 18: 1.3, 19: 1.3, 20: 1.1};
                 let getZoom = this._map.getZoom();
                 this._max = maxValueForZoom[getZoom] || 1
             } else {

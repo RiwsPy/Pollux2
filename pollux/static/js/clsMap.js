@@ -267,7 +267,6 @@ class heatMap {
             for (let layer of cls.layers) {
                 if (layer.name == e.name) {
                     layer.isActive = false;
-                    break;
                 }
             }
             //console.log(map._active_layers)
@@ -277,7 +276,6 @@ class heatMap {
             for (let layer of cls.layers) {
                 if (layer.name == e.name) {
                     layer.isActive = true;
-                    //cls.addLegend(e.layer._max)
                     break;
                 }
             }
@@ -320,7 +318,7 @@ class heatMap {
             bound[3].toFixed(6);
     }
 
-    addLegend(maxValueInLayer) {
+    addLegend(layer, maxValueInLayer) {
         // TODO: bug affichage légende quand une carte sans layer est chargée puis qu'un layer est ajouté
         if (!this._options.legend) {
             return;
@@ -335,8 +333,9 @@ class heatMap {
         let legendName = L.DomUtil.create('h4', 'legendName', legendBox);
         legendName.textContent = this._options.legend.name;
         this._legendDiv = legendBox;
+
         if (maxValueInLayer) {
-            this.updateLegend(maxValueInLayer)
+            this.updateLegend(layer, maxValueInLayer)
         }
         legend.onAdd = function(map) {
             return legendBox
@@ -344,16 +343,13 @@ class heatMap {
         legend.addTo(this.map);
     }
 
-    updateLegend(maxValue) {
+    updateLegend(layer, maxValue) {
         if (!this._options.legend || !this._options.gradient) {
             return;
         }
 
-        for (let layer of this.layers.slice().reverse()) {
-            if (layer.isActive) {
-                this.showLegendDetails(maxValue)
-                break;
-            }
+        if (layer) {
+            this.showLegendDetails(maxValue)
         }
     }
 
@@ -458,19 +454,20 @@ class heatMap {
                 }
 
                 // Gestion minmax à faire côté python ?
+                if (itm_intensity != 0) {
+                    // Radius
+                    let itm_radius = d.properties[layer.radius.field] || layer.radius.fix;
+                    // Orientation
+                    let itm_orientation = cls.getOrientation(d, layer)
 
-                // Radius
-                let itm_radius = d.properties[layer.radius.field] || layer.radius.fix;
-                // Orientation
-                let itm_orientation = cls.getOrientation(d, layer)
-
-                // y, x, intensité, orientation, rayon
-                heatMapData.push([
-                    +d.geometry.coordinates[1],
-                    +d.geometry.coordinates[0],
-                    +(itm_intensity),
-                    +(itm_orientation),
-                    +(itm_radius)]);
+                    // y, x, intensité, orientation, rayon
+                    heatMapData.push([
+                        +d.geometry.coordinates[1],
+                        +d.geometry.coordinates[0],
+                        +(itm_intensity),
+                        +(itm_orientation),
+                        +(itm_radius)]);
+                }
             }
         });
         L.heatLayer(heatMapData, this.heatLayerAttr(layer)).addTo(layer.layer);
