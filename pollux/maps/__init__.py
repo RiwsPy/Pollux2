@@ -2,8 +2,8 @@ import os
 from pathlib import Path
 from importlib import import_module
 from pollux.works import MAX_BOUND_LNG_LAT
-
-# TODO: icon.TREE, ...
+import re
+from pollux.utils import update_deep
 
 
 class Configs(dict):
@@ -21,19 +21,49 @@ class Configs(dict):
 
             # print('Chargement de', cls, 'réussi.')
             a = import_module(__name__ + '.' + cls).Config()
-            self[str(a.ID)] = a.__dict__
+            self[str(a.ID)] = a.data
 
 
-class Gradient:
-    LIGHT_COLORED = {
-        1.0: 'red',
-        0.89: 'orange',
-        0.77: 'yellow',
-        0.63: 'lime',
-        0.45: 'blue',
-        0.31: 'violet',
-    }
+class Layer(dict):
+    def __init__(self, name: str, style: str, db: str, *args, **kwargs):
+        for arg in args:
+            self.update(**arg)
+        self.update(**kwargs)
+        self.update(**{'name': name, 'style': style, 'db': db})
 
+
+cls_regex = re.compile(r"(\w+)'>$")
+
+
+class MapAttr(dict):
+    attr_name = ''
+    DEFAULT = {}
+
+    def __init__(self, conf_name_or_value='DEFAULT', **kwargs):
+        if isinstance(conf_name_or_value, str) and hasattr(self, conf_name_or_value):
+            value = getattr(self, conf_name_or_value)
+        else:
+            value = conf_name_or_value
+
+        if type(value) is bool or value is None:
+            value = int(value or 0)
+        elif isinstance(value, dict):
+            value = {**value, **kwargs}
+
+        self[self._attr_name] = value
+
+    @property
+    def default_attr_name(self) -> str:
+        cls_name = cls_regex.findall(str(self.__class__))[0]
+        return cls_name[0].lower() + cls_name[1:]
+
+    @property
+    def _attr_name(self) -> str:
+        return self.attr_name or self.default_attr_name
+
+
+class Gradient(MapAttr):
+    attr_name = 'gradient'
     DEFAULT = {
         1.0: 'red',
         0.9: 'orange',
@@ -41,6 +71,15 @@ class Gradient:
         0.5: 'lime',
         0.3: 'blue',
         0.15: 'violet',
+    }
+
+    LIGHT_COLORED = {
+        1.0: 'red',
+        0.89: 'orange',
+        0.77: 'yellow',
+        0.63: 'lime',
+        0.45: 'blue',
+        0.31: 'violet',
     }
 
     V1 = {
@@ -52,7 +91,7 @@ class Gradient:
         0.15: 'violet',
     }
 
-    TEST = {
+    BLUEBELT = {
         1.0: 'red',
         0.89: 'orange',
         0.77: 'yellow',
@@ -64,37 +103,103 @@ class Gradient:
     }
 
 
+class Icon(MapAttr):
+    attr_name = 'icon'
+    dir = 'markers/'
+    DEFAULT = dir + 'default.png'
+    ACCIDENT = dir + 'accident.png'
+    BIRD = dir + 'bird.png'
+    BUSSTOP = dir + 'busstop.png'
+    LAMP = dir + 'lamp.png'
+    PEDESTRIAN = dir + 'pedestrian.png'
+    SHOP = dir + 'shop.png'
+    TREE = dir + 'tree.png'
+
+
+class Zoom(MapAttr):
+    attr_name = 'zoom'
+    DEFAULT = {
+        'min': 16,
+        'max': 22,
+        'init': 16
+    }
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+
+class Radius(MapAttr):
+    attr_name = 'radius'
+    DEFAULT = {
+        'unit': 'auto',
+        'fix': 25,
+    }
+
+
+class Value(MapAttr):
+    """
+        fix: int
+        min: int
+        max: int
+    """
+    attr_name = 'value'
+    DEFAULT = {
+        'fix': 1
+    }
+
+
+class Legend(MapAttr):
+    attr_name = 'legend'
+    DEFAULT = {
+        'name': 'Légende'
+    }
+
+
+class IsActive(MapAttr):
+    attr_name = 'isActive'
+    NOACTIVE = False
+    ACTIVE = True
+    DEFAULT = NOACTIVE
+
+
+class Blur(MapAttr):
+    attr_name = 'blur'
+    DEFAULT = 15
+
+
+class PxPerZoom(MapAttr):
+    attr_name = 'wheelPxPerZoomLevel'
+    DOUBLE = 240
+    DEFAULT = 120  # 1 niveau de zoom par scroll
+
+
+class Orientation(MapAttr):
+    attr_name = 'orientation'
+    DEFAULT = {
+        'fix': -1
+    }
+
+
 class Default_Config:
     ID = 0
-    DATA = {}
     _DEFAULT_DATA = {
         'template_name_or_list': 'maps/map.html',
         'mapJSMethod': 'create_map',
         'description': {},
+        'options': {},
         'layers': [],
-        'options': {}
     }
 
-    DESCRIPTION = {}
     _DEFAULT_DESCRIPTION = {
         'href': '',
         'title': 'Titre par défaut',
-        'accroche': 'Accroche par defaut',
+        'accroche': 'Accroche par défaut',
         'intro': 'Introduction par défaut',
         'icon': '',
         'video': '',
         'QR': [],
     }
-    _DEFAULT_OPTIONS = {
-        'bbox': MAX_BOUND_LNG_LAT,
-        'draw': {'bboxButton': 1},
-        'minOpacity': 0.05,
-        'isActive': 0,
-        'maxValueDefault': 0,
-        'blur': 15,
-        'wheelPxPerZoomLevel': 120,  # 1 niveau de zoom par scroll
-        'gradient': Gradient.DEFAULT,
-    }
+
     _DEFAULT_BUTTONS = {
         'fullScreen': 1,
         'scan':
@@ -116,97 +221,70 @@ class Default_Config:
                 'awesomeIcon': 'fas fa-door-open',
             },
     }
-    _DEFAULT_RADIUS = {
-        'fix': 25,
-        'unit': 'auto',  # auto / meter / pixel /
+
+    OPTIONS_DEFAULT = {
+        'bbox': MAX_BOUND_LNG_LAT,
+        'draw': {'bboxButton': 1},
+        'minOpacity': 0.05,
+        **PxPerZoom(),
+        **Zoom(),
+        **Legend(),
+        'buttons': _DEFAULT_BUTTONS,
     }
-    _DEFAULT_ZOOM = {
-        'max': 22,
-        'min': 16,
-        'init': 16,
-    }
-    _DEFAULT_ORIENTATION = {
-        'fix': -1,
-    }
-    _DEFAULT_VALUE = {
-        'fix': 1,
-    }
-    _DEFAULT_LEGEND = {
-        'name': 'Légende',
-    }
+
+    # Options par défaut pour tous les layers
+    LAYER_DEFAULT = Layer('', '', '',
+                          Radius(),
+                          Value(),
+                          Gradient(),
+                          IsActive(),
+                          Blur(),
+                          Orientation(),
+                          )
+    # Options par défaut pour le layer actuel
+    LAYER_BASE = Layer('', '', '')
+
+    no_dict_attr = ('gradient', 'maxValueDefault')
+
+    @staticmethod
+    def copy_and_deep_update(source: dict, other: dict, *args) -> dict:
+        ret = source.copy()
+        update_deep(ret, other, *args)
+        return ret
 
     @property
-    def data(self) -> dict:
-        default_options = {**self.options,
-                            **{'value': self.value},
-                            **{'orientation': self.orientation},
-                            **{'radius': self.radius},
-                            }
-        for index, layer in enumerate(self.DATA['layers']):
-            for option_k, option_v in default_options.items():
-                if option_k not in layer:
-                    self.DATA['layers'][index][option_k] = option_v
-                    continue
-                if option_k != 'gradient' and isinstance(option_v, dict):
-                    for k, v in option_v.items():
-                        if k not in self.DATA['layers'][index][option_k]:
-                            self.DATA['layers'][index][option_k][k] = v
-
-        return {**self._DEFAULT_DATA,
-                **{'description': self.description},
-                **{'legend': self.legend},
-                **self.DATA,
-                **{'options':
-                   {**default_options,
-                    **{'buttons': self.buttons},
-                    **{'zoom': self.zoom},
-                    }},
-                }
-
-    @property
-    def description(self) -> dict:
-        return {**self._DEFAULT_DESCRIPTION, **self.DATA.get('description', {})}
-
-    @property
-    def legend(self) -> dict:
-        return {**self._DEFAULT_LEGEND, **self.DATA.get('legend', {})}
+    def layers(self) -> dict:
+        ret = self.DATA['layers'].copy()
+        dict_merged = self.copy_and_deep_update(self.LAYER_DEFAULT, self.LAYER_BASE, *self.no_dict_attr)
+        for index, layer in enumerate(ret):
+            ret[index] = self.copy_and_deep_update(dict_merged, layer, *self.no_dict_attr)
+        return ret
 
     @property
     def options(self) -> dict:
-        return {**self._DEFAULT_OPTIONS, **self.DATA.get('options', {})}
+        return self.copy_and_deep_update(self.OPTIONS_DEFAULT, self.DATA.get('options', {}))
 
     @property
-    def radius(self) -> dict:
-        return {**self._DEFAULT_RADIUS, **self.options.get('radius', {})}
+    def data(self) -> dict:
+        self.DATA['layers'] = self.layers
+        self.DATA['options'] = self.options.copy()
+        self.DATA['description'] = self.description
+        self.DATA['href'] = self.DATA.get('href', f'/map/{self.ID}')
+
+        return self.copy_and_deep_update(self._DEFAULT_DATA, self.DATA)
 
     @property
-    def orientation(self) -> dict:
-        return {**self._DEFAULT_ORIENTATION, **self.options.get('orientation', {})}
-
-    @property
-    def value(self) -> dict:
-        return {**self._DEFAULT_VALUE, **self.options.get('value', {})}
-
-    @property
-    def zoom(self) -> dict:
-        return {**self._DEFAULT_ZOOM, **self.options.get('zoom', {})}
+    def description(self) -> dict:
+        return self.copy_and_deep_update(self._DEFAULT_DESCRIPTION, self.DATA.get('description', {}))
 
     @property
     def buttons(self) -> dict:
         can_scan = False
         for layer in self.DATA.get('layers', {}):
-            if layer.get('layerType') == 'heatmap':
+            if layer.get('style') == 'heatmap':
                 can_scan = True
                 break
         buttons = self.DATA.get('options', {}).get('buttons', {})
         if not can_scan:
             buttons['scan'] = 0
-        return {**self._DEFAULT_BUTTONS, **buttons}
-
-    @property
-    def href(self) -> str:
-        return self.data.get('href', f'/map/{self.ID}')
-
-    @property
-    def __dict__(self) -> dict:
-        return {**self.data, **{'href': self.href}}
+        return self.copy_and_deep_update(self._DEFAULT_BUTTONS, buttons)

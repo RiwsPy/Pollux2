@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from pollux.maps import Configs
+from pollux.maps import Configs, Zoom
 import json
 from json.decoder import JSONDecodeError
 import os

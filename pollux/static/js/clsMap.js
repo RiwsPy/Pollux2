@@ -39,9 +39,9 @@ function addAttribution(map) {
 }
 
 
-function addPopUp(feature, layer, invertIntensity) {
+function addPopUp(feature, layer) {
     if (feature.properties) {
-        layer.bindPopup(generatePupUpContent(feature, invertIntensity) || 'Aucune donnée');
+        layer.bindPopup(generatePupUpContent(feature) || 'Aucune donnée');
     }
 }
 
@@ -53,7 +53,8 @@ function getIcon(feature, icon) {
         });
 }
 
-function generatePupUpContent(feature, invertIntensity) {
+
+function generatePupUpContent(feature) {
     let content = '';
     // show full data
     for (let [k, v] of Object.entries(feature['properties'])) {
@@ -61,15 +62,6 @@ function generatePupUpContent(feature, invertIntensity) {
             content += addNewLineInContent(k, v)
         }
     }
-    /*
-    if (feature['properties']) {
-        for (let [k, v] of Object.entries(feature['properties'])) {
-            // TODO: les valeurs ne sont pas nécessairement maxées à 1, de quelle valeur faut-il faire la différence ?
-            v = (invertIntensity  && k != 'Différence') ? 1- Math.min(v, 1): v,
-            content += addNewLineInContent('Calque ' + k, v.toFixed(2), "0")
-        }
-    }
-    */
     return content
 }
 
@@ -83,76 +75,39 @@ function addNewLineInContent(category, content, default_value) {
 }
 
 
-var defaultLegendColor = {
-    0.15: 'violet',
-    0.2:  'blue',
-    0.4:  'lime',
-    0.6:  'yellow',
-    0.8:  'orange',
-    1.0:  'red'
- };
-
-
 class heatMap {
-    /*
-        options: {
-            blur: 15,
-            minOpacity: 0.05,
-            legend: true,
-            maxValueDefault: undefined,
-            draw: true,
-            gradient: {
-                0.15: 'violet',
-                0.2:  'blue',
-                0.4:  'lime',
-                0.6:  'yellow',
-                0.8:  'orange',
-                1.0:  'red'
-             },
-        },
-    */
     constructor(layers, options) {
-        this._options = {
-            ...{
-                blur: 15,
-                minOpacity: 0.05,
-                legend: {name: 'Légende'},
-                draw: true,
-                maxValueDefault: undefined,
-                gradient: defaultLegendColor,
-            },
-            ...options
-        };
+        this.options = options;
+        this.layers = layers;
 
-        this._options.zoom.min = Math.min(this._options.zoom.min || 10, this._options.zoom.max || 20)
-        this._options.zoom.max = Math.max(this._options.zoom.min, this._options.zoom.max || 20)
-        this._options.zoom.init = Math.min(this._options.zoom.max,
-                                    Math.max(this._options.zoom.min, this._options.zoom.init)
+        this.options.zoom.min = Math.min(this.options.zoom.min || 10, this.options.zoom.max || 20)
+        this.options.zoom.max = Math.max(this.options.zoom.min, this.options.zoom.max || 20)
+        this.options.zoom.init = Math.min(this.options.zoom.max,
+                                    Math.max(this.options.zoom.min, this.options.zoom.init)
                                     )
 
-        let params = window.location.href.split('/')
-        this.invertIntensity = params[params.length - 1][0] == '-'
-
-        this.layers = layers;
         this.init(false)
     }
 
     init(dontCreateMap, activeLayers) {
+        var controlLayers = {};
         for (let lyr of this.layers) {
-            if (lyr.layerType == 'cluster') {
+            let feature = null;
+            if (lyr.style == 'cluster') {
                 let radius = function(zoom) {
                     return zoom >= 19? 1: 80;
                 };
-                lyr.layer = new L.markerClusterGroup({maxClusterRadius: radius});
+                feature = new L.markerClusterGroup({maxClusterRadius: radius});
             } else {
-                lyr.layer = new L.FeatureGroup();
+                feature = new L.FeatureGroup();
             }
+            controlLayers[lyr.name] = feature
+            lyr.layer = feature
             lyr.data = {};
         }
 
         this._DB = {};
 
-        let controlLayers = this.createLayers();
         this.createMap(controlLayers, dontCreateMap, activeLayers);
         this.loadJson();
 
@@ -161,32 +116,14 @@ class heatMap {
         document.getElementsByClassName('leaflet-control-zoom-out')[0].title = 'Zoom arrière';
     }
 
-    createLayers() {
-        var controlLayers = {};
-        if (this._options.draw) { // calque dessin
-            this._drawLayer = new L.FeatureGroup();
-            //controlLayers['Mon Calque'] = this._drawLayer;
-        }
-        for (let index in this.layers) {
-            let fileData = this.layers[index]
-            fileData = {
-                ...this._options,
-                ...fileData,
-            }
-            controlLayers[fileData.name] = fileData.layer
-            this.layers[index] = fileData;
-        };
-        return controlLayers
-    }
-
     createMap(controlLayers, dontCreateMap, activeLayers) {
         let bbox_lat_lng = defaultZoneBound()
-        if (this._options.bbox) {
+        if (this.options.bbox) {
             bbox_lat_lng = L.latLngBounds([
-                                [this._options.bbox[1],
-                                this._options.bbox[0]],
-                                [this._options.bbox[3],
-                                this._options.bbox[2]]
+                                [this.options.bbox[1],
+                                this.options.bbox[0]],
+                                [this.options.bbox[3],
+                                this.options.bbox[2]]
                                 ]);
         }
 
@@ -203,13 +140,13 @@ class heatMap {
         if (!dontCreateMap) {
             this.map = L.map('city_map', {
                     layers: activeLayers,
-                    minZoom: this._options.zoom.min,
-                    maxZoom: this._options.zoom.max,
-                    wheelPxPerZoomLevel: this._options.wheelPxPerZoomLevel
-                }).setView(bbox_lat_lng.getCenter(), this._options.zoom.init);
+                    minZoom: this.options.zoom.min,
+                    maxZoom: this.options.zoom.max,
+                    wheelPxPerZoomLevel: this.options.wheelPxPerZoomLevel
+                }).setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
             this.map.owner = this;
         } else {
-            this.map.setView(bbox_lat_lng.getCenter(), this._options.zoom.init);
+            this.map.setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
 
             for (let layerName of activeLayers) {
                 for (let layer in this.layers) {
@@ -227,13 +164,13 @@ class heatMap {
         if (!dontCreateMap) {
             addAttribution(this.map)
 
-            if (this._options.buttons.fullScreen) {
+            if (this.options.buttons.fullScreen) {
                 this.addFullScreenButton()
             }
-            if (this._options.draw) {
+            if (this.options.draw) {
                 this.addDrawControl()
             }
-            for (let [id, data] of Object.entries(this._options.buttons)) {
+            for (let [id, data] of Object.entries(this.options.buttons)) {
                 if (data && id != 'fullScreen') {
                     this.map.addControl(new L.Control.MyButton({id: id, ...data}))
                 }
@@ -259,7 +196,6 @@ class heatMap {
     }
 
     update_map_on_click() {
-        let editableLayer = this._drawLayer;
         let map = this.map;
         let cls = this;
 
@@ -279,7 +215,6 @@ class heatMap {
                     break;
                 }
             }
-
             //console.log(map._active_layers)
         });
 
@@ -295,7 +230,6 @@ class heatMap {
     }
 
     reload(bound) {
-        let map = this.map;
         let activeLayers = [];
         let activeNbLayers = [];
         let nb = 0;
@@ -319,8 +253,7 @@ class heatMap {
     }
 
     addLegend(layer, maxValueInLayer) {
-        // TODO: bug affichage légende quand une carte sans layer est chargée puis qu'un layer est ajouté
-        if (!this._options.legend) {
+        if (!this.options.legend) {
             return;
         }
 
@@ -331,7 +264,7 @@ class heatMap {
         var legend = L.control({ position: "bottomright" });
         let legendBox = L.DomUtil.create("div", "legendBox");
         let legendName = L.DomUtil.create('h4', 'legendName', legendBox);
-        legendName.textContent = this._options.legend.name;
+        legendName.textContent = this.options.legend.name;
         this._legendDiv = legendBox;
 
         if (maxValueInLayer) {
@@ -344,27 +277,27 @@ class heatMap {
     }
 
     updateLegend(layer, maxValue) {
-        if (!this._options.legend || !this._options.gradient) {
+        if (!this.options.legend || !layer.options.gradient) {
             return;
         }
 
         if (layer) {
-            this.showLegendDetails(maxValue)
+            this.showLegendDetails(layer, maxValue)
         }
     }
 
-    showLegendDetails(maxValue) {
+    showLegendDetails(layer, maxValue) {
         let i = 0;
         let maxValueInLegend = null;
         maxValue = maxValue || 1.0;
-        for (let [legendValue, color] of Object.entries(this._options.gradient).sort().reverse()) {
+        for (let [legendValue, color] of Object.entries(layer.options.gradient).sort().reverse()) {
             //let lineColor = L.DomUtil.create('i', 'legendButton_' + i, this._legendDiv);
             //lineColor.innerHTML += 'style="background: ' + color + ';"';
             //let lineText = L.DomUtil.create('span', 'legendValue_' + i, this._legendDiv);
             //lineText.textContent = value + '<br>';
 
             //if (maxValueInLegend == null) {
-            //    maxValueInLegend = this._options.legend.max == undefined? legendValue: this._options.legend.max;
+            //    maxValueInLegend = this.options.legend.max == undefined? legendValue: this.options.legend.max;
             //}
             maxValueInLegend = maxValueInLegend == undefined? legendValue: maxValueInLegend;
             this._legendDiv.innerHTML += '<i id="legendButton_' + i + '" style="background: ' + color + '"></i>'
@@ -380,18 +313,18 @@ class heatMap {
     loadJson(fileData) {
         var files_to_load = {};
         for (let layerdata of this.layers) {
-            if (!(layerdata.filename in files_to_load)) {
-                files_to_load[layerdata.filename] = true;
+            if (!(layerdata.db in files_to_load)) {
+                files_to_load[layerdata.db] = true;
                 this.request(layerdata, fileData);
             }
         };
     }
 
     request(layerdata) {
-        let request = new Request('/api/' + layerdata.filename + '?bound=' + this._options.bbox, {
+        let request = new Request('/api/' + layerdata.db + '?bound=' + this.options.bbox, {
             //method: 'POST',
             method: 'GET',
-            //body: JSON.stringify({bbox: this._options.bbox}),
+            //body: JSON.stringify({bbox: this.options.bbox}),
             headers: new Headers({
                 'X-CSRFToken': getCookie('csrftoken'),
                 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
@@ -400,9 +333,9 @@ class heatMap {
         fetch(request)
         .then((resp) => resp.json())
         .then((data) => {
-            this._DB[layerdata.filename] = data;
+            this._DB[layerdata.db] = data;
             for (let layer of this.layers) {
-                if (layer.filename == layerdata.filename) {
+                if (layer.db == layerdata.db) {
                     this.createLayer(layer);
                 }
             }
@@ -410,10 +343,10 @@ class heatMap {
     }
 
     createLayer(layer) {
-        if (layer.layerType == 'heatmap') {
-            this.createHeatLayer(this._DB[layer.filename], layer)
-        } else if (layer.layerType == 'node' || layer.layerType == 'cluster') {
-            this.createNodeLayer(this._DB[layer.filename], layer)
+        if (layer.style == 'heatmap') {
+            this.createHeatLayer(this._DB[layer.db], layer)
+        } else if (layer.style == 'node' || layer.style == 'cluster') {
+            this.createNodeLayer(this._DB[layer.db], layer)
         };
     }
 
@@ -423,7 +356,7 @@ class heatMap {
             pointToLayer: function(feature, latlng) {
                 let marker = L.marker(latlng, {icon: getIcon(layer),
                                                rotationAngle: cls.getOrientation(feature, layer)});
-                addPopUp(feature, marker, cls.invertIntensity);
+                addPopUp(feature, marker);
                 return marker;
             }
         }).addTo(layer.layer);
@@ -431,8 +364,7 @@ class heatMap {
 
     heatLayerAttr(layer) {
         return {
-                 ...this._options,
-                 max: Math.min(1, Math.max(0, ...Object.keys(this._options.gradient))),
+                 max: Math.min(1, Math.max(0, ...Object.keys(layer.gradient))),
                  ...layer,
                 }
     }
@@ -442,7 +374,12 @@ class heatMap {
         let cls = this;
         data.features.forEach(function(d) {
             if (d.geometry.type == 'Point') {
-                let itm_intensity = d.properties[layer.value.field] || layer.value.fix || 0;
+                let itm_intensity = 0;
+                if (layer.value.field) {
+                    itm_intensity = d.properties[layer.value.field] || 0;
+                } else {
+                    itm_intensity = layer.value.fix || 0;
+                }
                 if (layer.value.min) {
                     itm_intensity = Math.max(layer.value.min, itm_intensity)
                 }

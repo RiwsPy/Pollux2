@@ -1,96 +1,63 @@
-from . import Default_Config, Gradient
+from . import *
 
 
 class Config(Default_Config):
     ID = 1
+    LAYER_BASE = Layer('', '', '',
+                       Gradient('BLUEBELT'),
+                       maxValueMethod='zoom_depend',
+                       maxValueDefault={14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2,
+                                        21: 1.6, 22: 1.4},
+                       )
     DATA = {
         'options': {
             'bbox': [5.717633, 45.182596, 5.734348, 45.185410],
-            'gradient': Gradient.TEST,
-            'legend': {
-                'name': 'Impact'},
-            'blur': 15,
+            **Legend(name='Impact'),
         },
         'layers': [
-            {
-                'name': 'Luminaires (Impact - Jour)',
-                'maxValueMethod': 'zoom_depend',
-                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
-                'isActive': 1,
-                'radius': {
-                    'unit': 'auto',
-                    'field': 'max_range_day'
-                },
-                'layerType': 'heatmap',
-                'value': {
-                    'field': 'day_impact',
-                    'fix': 0,
-                },
-                'orientation': {
-                    'field': 'orientation',
-                },
-                'filename': 'lamps',
-            },
-            {
-                'name': 'Luminaires (Impact - Nuit)',
-                'maxValueMethod': 'zoom_depend',
-                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
-                'value': {
-                    'field': 'night_impact',
-                    'fix': 0,
-                },
-                'radius': {
-                    'unit': 'auto',
-                    'field': 'max_range_night'
-                },
-                'orientation': {
-                    'field': 'orientation',
-                },
-                'layerType': 'heatmap',
-                'filename': 'lamps',
-            },
-            {
-                'name': 'Luminaires',
-                'layerType': 'cluster',
-                'filename': 'lamps',
-                'icon': 'markers/lamp.png',
-            },
-            {
-                'name': 'Arbres (Impact - Jour)',
-                'maxValueMethod': 'zoom_depend',
-                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
-                'layerType': 'heatmap',
-                'value': {
-                    'field': 'night_impact',
-                    'fix': 0,
-                },
-                'radius': {
-                    'unit': 'auto',
-                    'fix': 10,
-                },
-                'filename': 'trees',
-            },
-            {
-                'name': 'Arbres (Impact - Nuit)',
-                'maxValueMethod': 'zoom_depend',
-                'maxValueDefault': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
-                'value': {
-                    'field': 'night_impact',
-                    'fix': 0,
-                },
-                'radius': {
-                    'unit': 'auto',
-                    'fix': 10,
-                },
-                'layerType': 'heatmap',
-                'filename': 'trees',
-            },
-            {
-                'name': 'Arbres',
-                'layerType': 'cluster',
-                'filename': 'trees',
-                'icon': 'markers/tree.png',
-            },
+            Layer(
+                'Luminaires (Impact - Jour)',
+                'heatmap',
+                'lamps',
+                Radius(field='max_range_day'),
+                Value(field='day_impact'),
+                Orientation(field='orientation')
+            ),
+            Layer(
+                'Luminaires (Impact - Nuit)',
+                'heatmap',
+                'lamps',
+                Radius(field='max_range_night'),
+                Value(field='night_impact'),
+                Orientation(field='orientation'),
+                IsActive(True)
+            ),
+            Layer(
+                'Luminaires',
+                'cluster',
+                'lamps',
+                Icon('LAMP'),
+            ),
+            Layer(
+                'Arbres (Impact - Jour)',
+                'heatmap',
+                'trees',
+                Value(field='day_impact'),
+                Radius(fix=10),
+            ),
+            Layer(
+                'Arbres (Impact - Nuit)',
+                'heatmap',
+                'trees',
+                Value(field='night_impact'),
+                Radius(fix=10),
+            ),
+            Layer(
+                'Arbres',
+                'cluster',
+                'trees',
+                Icon('TREE'),
+            ),
         ],
         'description': {
             'title': "Carte d'impact",
