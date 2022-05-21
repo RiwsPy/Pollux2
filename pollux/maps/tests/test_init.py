@@ -29,8 +29,3 @@ def fix_default_cls(monkeypatch):
 def test_description(fix_default_cls):
     expected_value = {'name': 'default_value', 'href': '/map/X'}
     assert fix_default_cls.description == expected_value
-
-
-def test_href(fix_default_cls):
-    expected_value = '/map/1'
-    assert fix_default_cls.href == expected_value

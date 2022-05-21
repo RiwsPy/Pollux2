@@ -1,6 +1,6 @@
 from . import Default_cross
 from pollux.models.lamps import Lamps
-from pollux.works import WORKS_DIR
+from pollux.works import BASE_DIR
 import os
 import json
 from pollux.formats.position import Position
@@ -12,7 +12,7 @@ class Cross(Default_cross):
         self.lamps_queryset = Lamps.objects.all()
 
         print('Préparation des données de GreenAlp')
-        with open(os.path.join(WORKS_DIR.parent, 'db', 'data_patrimoines_EP_output.json'), 'r') as file:
+        with open(os.path.join(BASE_DIR, 'pollux', 'db', 'data_patrimoines_EP_output.json'), 'r') as file:
             green_data = json.load(file)
 
         self.lum_id_to_green_data = dict()
