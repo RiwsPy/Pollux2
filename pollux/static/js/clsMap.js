@@ -80,16 +80,19 @@ class heatMap {
         this.options = options;
         this.layers = layers;
 
-        this.options.zoom.min = Math.min(this.options.zoom.min || 10, this.options.zoom.max || 20)
-        this.options.zoom.max = Math.max(this.options.zoom.min, this.options.zoom.max || 20)
+        if (this.options.zoom.min > this.options.zoom.max) {
+            let old_max = this.options.zoom.max;
+            this.options.zoom.max = this.options.zoom.min;
+            this.options.zoom.min = old_max;
+        }
         this.options.zoom.init = Math.min(this.options.zoom.max,
                                     Math.max(this.options.zoom.min, this.options.zoom.init)
                                     )
 
-        this.init(false)
+        this.init()
     }
 
-    init(dontCreateMap, activeLayers) {
+    init() {
         var controlLayers = {};
         for (let lyr of this.layers) {
             let feature = null;
@@ -101,6 +104,7 @@ class heatMap {
             } else {
                 feature = new L.FeatureGroup();
             }
+            feature.isActive = lyr.isActive;
             controlLayers[lyr.name] = feature
             lyr.layer = feature
             lyr.data = {};
@@ -108,7 +112,7 @@ class heatMap {
 
         this._DB = {};
 
-        this.createMap(controlLayers, dontCreateMap, activeLayers);
+        this.createMap(controlLayers, false);
         this.loadJson();
 
         // basic leaflet traduction
@@ -116,7 +120,7 @@ class heatMap {
         document.getElementsByClassName('leaflet-control-zoom-out')[0].title = 'Zoom arrière';
     }
 
-    createMap(controlLayers, dontCreateMap, activeLayers) {
+    createMap(controlLayers, dontCreateMap) {
         let bbox_lat_lng = defaultZoneBound()
         if (this.options.bbox) {
             bbox_lat_lng = L.latLngBounds([
@@ -127,17 +131,13 @@ class heatMap {
                                 ]);
         }
 
-        activeLayers = activeLayers || [];
-        if (activeLayers.length == 0 && this.layers) {
+        if (!dontCreateMap) {
+            let activeLayers = [];
             for (let layer of this.layers) {
                 if (layer.isActive) {
-                    activeLayers.push(controlLayers[layer.name])
-                    controlLayers[layer.name].isActive = true;
+                    activeLayers.push(layer.layer)
                 }
             }
-        }
-
-        if (!dontCreateMap) {
             this.map = L.map('city_map', {
                     layers: activeLayers,
                     minZoom: this.options.zoom.min,
@@ -148,13 +148,9 @@ class heatMap {
         } else {
             this.map.setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
 
-            for (let layerName of activeLayers) {
-                for (let layer in this.layers) {
-                    if (this.layers[layer].name == layerName) {
-                        this.map.addLayer(this.layers[layer].layer)
-                        this.layers[layer].isActive = true;
-                        break;
-                    }
+            for (let layer of this.layers) {
+                if (layer.isActive) {
+                    this.map.addLayer(layer.layer)
                 }
             }
         }
@@ -203,6 +199,7 @@ class heatMap {
             for (let layer of cls.layers) {
                 if (layer.name == e.name) {
                     layer.isActive = false;
+                    break;
                 }
             }
             //console.log(map._active_layers)

@@ -6,15 +6,15 @@ class Config(Default_Config):
 
     LAYER_BASE = Layer('', '', '',
                        Radius(unit='meter'),
-                       maxValueMethod='zoom_depend')
+                       )
 
     DATA = {
         'href': '/map/3',
 
-        'options': {
-            'bbox': [5.717633, 45.182596, 5.734348, 45.185410],
-            **Legend(name='Impact réaliste'),
-        },
+        'options': Options(
+            Legend(name='Impact réaliste'),
+            bbox=[5.717633, 45.182596, 5.734348, 45.185410],
+        ),
         'layers': [
             Layer(
                 'Eclairage (densité)',
@@ -22,7 +22,7 @@ class Config(Default_Config):
                 'lamps',
                 IsActive(True),
                 Orientation(field='orientation'),
-                maxValueDefault=3,
+                MaxValue(method='fix', fix=3),
             ),
             Layer(
                 'Luminaire (Impact- Jour)',

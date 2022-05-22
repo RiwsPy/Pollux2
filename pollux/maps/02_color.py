@@ -5,11 +5,10 @@ class Config(Default_Config):
     ID = 2
     DATA = {
         'href': '/map/2',
-
-        'options': {
-            'bbox': [5.7200864, 45.1786431, 5.7303789, 45.1889222],
-            **Legend(name='Température de couleur'),
-            },
+        'options': Options(
+            Legend(name='Température de couleur'),
+            bbox=[5.7200864, 45.1786431, 5.7303789, 45.1889222],
+        ),
         'layers': [
             Layer(
                 'Températeur de couleur',
@@ -19,7 +18,7 @@ class Config(Default_Config):
                 IsActive(True),
                 Radius(unit='meter'),
                 Blur(0),
-                maxValueDefault=6000,
+                MaxValue(method='fix', fix=6000),
                 gradient={
                     0.3333: '#FF880E',
                     0.4166: '#FF9F46',

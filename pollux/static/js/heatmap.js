@@ -372,31 +372,27 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     updateMax(grid) {
-        if (this.options.maxValueDefault || this.options.maxValueMethod == 'zoom_depend') {
-            if (this.options.maxValueMethod === 'part%') {
-                let maxValue = Math.max(0, Math.min(1, this.options.maxValueDefault));
-                values = []
-                for (x in grid) {
-                    for (y in grid[x]) {
-                        if (grid[x][y][2]) {
-                            values.push(Math.abs(grid[x][y][2]))
-                        }
+        if (this.options.maxValue.method === 'part%') {
+            let maxValue = Math.max(0, Math.min(1, this.options.maxValue.fix));
+            values = []
+            for (x in grid) {
+                for (y in grid[x]) {
+                    if (grid[x][y][2]) {
+                        values.push(Math.abs(grid[x][y][2]))
                     }
                 }
-                values = values.sort(function(a, b){return a - b});
-                this._max = values[Math.ceil(values.length*maxValue/100)];
-            } else if (this.options.maxValueMethod === '%') {
-                let maxValue = Math.max(0, Math.min(1, this.options.maxValueDefault));
-                this._max *= maxValue;
-            } else if (this.options.maxValueMethod == 'zoom_depend') {
-                // Contrôle de la valeur max en fonction du Zoom
-                let maxValueForZoom = this.options.maxValueDefault ||
-                                      {14: 3, 15: 2, 16: 3, 17: 2, 18: 1.3, 19: 1.3, 20: 1.1};
-                let getZoom = this._map.getZoom();
-                this._max = maxValueForZoom[getZoom] || 1
-            } else {
-                this._max = this.options.maxValueDefault;
             }
+            values = values.sort(function(a, b){return a - b});
+            this._max = values[Math.ceil(values.length*maxValue/100)];
+        } else if (this.options.maxValue.method == 'zoom_depend') {
+            // Contrôle de la valeur max en fonction du Zoom
+            let getZoom = this._map.getZoom();
+            this._max = this.options.maxValue.gradient[getZoom] || 1
+        } else if (this.options.maxValue.method == 'fix') {
+            this._max = this.options.maxValue.fix;
+        } else if (this.options.maxValue.method === '%') {
+            let maxValue = Math.max(0, Math.min(1, this.options.maxValue.fix));
+            this._max *= maxValue;
         }
     }
 });

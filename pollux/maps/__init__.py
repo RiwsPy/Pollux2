@@ -32,6 +32,13 @@ class Layer(dict):
         self.update(**{'name': name, 'style': style, 'db': db})
 
 
+class Options(dict):
+    def __init__(self, *args, **kwargs):
+        for arg in args:
+            self.update(**arg)
+        self.update(**kwargs)
+
+
 cls_regex = re.compile(r"(\w+)'>$")
 
 
@@ -180,8 +187,21 @@ class Orientation(MapAttr):
     }
 
 
+class MaxValue(MapAttr):
+    attr_name = 'maxValue'
+    DEFAULT = {
+        'method': 'zoom_depend',
+        'gradient': {14: 3, 15: 2, 16: 3, 17: 2, 18: 1.3, 19: 1.3, 20: 1.1},
+    }
+    DOUBLE = {
+        'method': 'zoom_depend',
+        'gradient': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
+    }
+
+
 class Default_Config:
     ID = 0
+    DATA = {}
     _DEFAULT_DATA = {
         'template_name_or_list': 'maps/map.html',
         'mapJSMethod': 'create_map',
@@ -222,15 +242,15 @@ class Default_Config:
             },
     }
 
-    OPTIONS_DEFAULT = {
-        'bbox': MAX_BOUND_LNG_LAT,
-        'draw': {'bboxButton': 1},
-        'minOpacity': 0.05,
-        **PxPerZoom(),
-        **Zoom(),
-        **Legend(),
-        'buttons': _DEFAULT_BUTTONS,
-    }
+    OPTIONS_DEFAULT = Options(
+        PxPerZoom(),
+        Zoom(),
+        Legend(),
+        bbox=MAX_BOUND_LNG_LAT,
+        draw={'bboxButton': 1},
+        minOpacity=0.05,
+        buttons=_DEFAULT_BUTTONS,
+    )
 
     # Options par défaut pour tous les layers
     LAYER_DEFAULT = Layer('', '', '',
@@ -240,11 +260,12 @@ class Default_Config:
                           IsActive(),
                           Blur(),
                           Orientation(),
+                          MaxValue(),
                           )
     # Options par défaut pour le layer actuel
     LAYER_BASE = Layer('', '', '')
 
-    no_dict_attr = ('gradient', 'maxValueDefault')
+    no_dict_attr = ('gradient',)
 
     @staticmethod
     def copy_and_deep_update(source: dict, other: dict, *args) -> dict:

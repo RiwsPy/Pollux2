@@ -5,15 +5,13 @@ class Config(Default_Config):
     ID = 1
     LAYER_BASE = Layer('', '', '',
                        Gradient('BLUEBELT'),
-                       maxValueMethod='zoom_depend',
-                       maxValueDefault={14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2,
-                                        21: 1.6, 22: 1.4},
+                       MaxValue('DOUBLE'),
                        )
     DATA = {
-        'options': {
-            'bbox': [5.717633, 45.182596, 5.734348, 45.185410],
-            **Legend(name='Impact'),
-        },
+        'options': Options(
+            Legend(name='Impact'),
+            bbox=[5.717633, 45.182596, 5.734348, 45.185410]
+        ),
         'layers': [
             Layer(
                 'Luminaires (Impact - Jour)',
