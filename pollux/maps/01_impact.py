@@ -10,7 +10,7 @@ class Config(Default_Config):
     DATA = {
         'options': Options(
             Legend(name='Impact'),
-            bbox=[5.717633, 45.182596, 5.734348, 45.185410]
+            bbox=[5.717633, 45.182596, 5.734348, 45.185410],
         ),
         'layers': [
             Layer(

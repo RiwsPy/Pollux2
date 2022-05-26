@@ -128,11 +128,10 @@ class Zoom(MapAttr):
     DEFAULT = {
         'min': 16,
         'max': 22,
-        'init': 16
+        'init': 16,
+        'scroll': 1,
+        'button': 1,
     }
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
 
 
 class Radius(MapAttr):
@@ -172,12 +171,6 @@ class IsActive(MapAttr):
 class Blur(MapAttr):
     attr_name = 'blur'
     DEFAULT = 15
-
-
-class PxPerZoom(MapAttr):
-    attr_name = 'wheelPxPerZoomLevel'
-    DOUBLE = 240
-    DEFAULT = 120  # 1 niveau de zoom par scroll
 
 
 class Orientation(MapAttr):
@@ -243,7 +236,6 @@ class Default_Config:
     }
 
     OPTIONS_DEFAULT = Options(
-        PxPerZoom(),
         Zoom(),
         Legend(),
         bbox=MAX_BOUND_LNG_LAT,
