@@ -268,6 +268,7 @@ h1, div, a {
 
 #content {
   margin-bottom: 50px;
+  min-height: 470px;
 }
 #content .encyclopedia {
   text-align: justify;

@@ -1,3 +1,6 @@
+from typing import List
+from .formats.position import Position
+
 
 def update_deep(source: dict, other: dict, *no_dict_key) -> None:
     for k, v in other.items():
@@ -10,6 +13,10 @@ def update_deep(source: dict, other: dict, *no_dict_key) -> None:
             source_copy = source[k].copy()
             update_deep(source_copy, v, *no_dict_key)
             source[k] = source_copy
+
+
+def in_bound(feature: dict, bound: List[float], **kwargs) -> bool:
+    return Position(feature['geometry']['coordinates']).in_bound(bound)
 
 
 if __name__ == '__main__':

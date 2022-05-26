@@ -35,9 +35,9 @@ class Cross(Default_cross):
         for lamp, highway in adjacent_match(self.ret_lamps.array, self.ret_highways.array, max_case_range=1):
             lamp_pos = Position(lamp.position)
             for index, segment in enumerate(zip(highway.position[:-1], highway.position[1:])):
-                dist = lamp_pos.distance_from_way(*segment)
+                dist = lamp_pos.distance_cartesian_from_way(*segment)
                 current_is_footway = highway.is_footway
-                if lamp.max_range(5, 'day') <= dist or dist <= 0.2 and current_is_footway:
+                if lamp.max_range(5, 'day') <= dist or dist <= 1 and current_is_footway:
                     # if dist <= 0.2:
                     #    print(f'distance <= 0.2: code {lamp.code}, distance: {dist}', highway.__dict__)
                     continue
@@ -72,8 +72,9 @@ class Cross(Default_cross):
         # TODO: recalculer les différents segments ? Pas forcément pertinent d'éclairer dans la direction inverse
 
         if len(self.lamp_to_light_position) == 0:
-            print('self.lamp_to_light_position vide')
-            raise ValueError
+            print('ERROR: self.lamp_to_light_position vide')
+            return
+
         lamp_target_pos = Repartition_point(list(self.lamp_to_light_position.values()),
                                             bound=MAX_BOUND_LNG_LAT,
                                             max_range=5)
@@ -104,9 +105,8 @@ class Cross(Default_cross):
                     # check du plus haut
                     invert_referenciel = True
                 elif referenciel.source.height == other.source.height:
-                    if referenciel.source.nearest_way_dist > other.source.nearest_way_dist:
-                        # check du plus près
-                        invert_referenciel = True
+                    # check du plus près
+                    invert_referenciel = referenciel.source.nearest_way_dist > other.source.nearest_way_dist
 
             if invert_referenciel:
                 other, referenciel = referenciel, other

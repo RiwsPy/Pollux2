@@ -266,7 +266,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         }
 
         var data = [],
-            r = 10, //this._heat._r/8,
+            r = 1, //this._heat._r/8,
             size = this._map.getSize(),
             bounds = new L.Bounds(
                 L.point([-r, -r]),
@@ -373,7 +373,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
 
     updateMax(grid) {
         if (this.options.maxValue.method === 'part%') {
-            let maxValue = Math.max(0, Math.min(1, this.options.maxValue.fix));
+            let maxValue = Math.max(0, this.options.maxValue.fix);
             values = []
             for (x in grid) {
                 for (y in grid[x]) {
@@ -387,7 +387,9 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         } else if (this.options.maxValue.method == 'zoom_depend') {
             // Contrôle de la valeur max en fonction du Zoom
             let getZoom = this._map.getZoom();
-            this._max = this.options.maxValue.gradient[getZoom] || 1
+            this._max = this.options.maxValue.gradient[getZoom] ||
+                        this.options.maxValue.gradient[Math.round(getZoom)] ||
+                        1;
         } else if (this.options.maxValue.method == 'fix') {
             this._max = this.options.maxValue.fix;
         } else if (this.options.maxValue.method === '%') {

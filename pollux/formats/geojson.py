@@ -41,6 +41,13 @@ class Geojson(dict):
                       ensure_ascii=False,
                       indent=1)
 
+    def load(self, data: dict, method=None, **kwargs) -> None:
+        if not callable(method):
+            method = True
+        for feature in data['features']:
+            if method is True or method(feature, **kwargs):
+                self.append(feature)
+
 
 class Geo_Feature(dict):
     def __init__(self, *args, **kwargs):

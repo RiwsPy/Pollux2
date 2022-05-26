@@ -48,16 +48,6 @@ def test_convert_osm_to_geojson_way(db_dir):
     assert convert_to_geojson(data_test) == expected_value
 
 
-def test_can_be_output(db_dir):
-    w = Default_works(bound=DEFAULT_BOUND)
-    data = w.load('mock_geojson', 'json', directory=db_dir)
-    for feature in data['features']:
-        feature = Default_works.Model(**feature)
-        assert w._can_be_output(feature)
-        feature.position = Position([0.0, 0.0])
-        assert not w._can_be_output(feature)
-
-
 def test_fake_request(db_dir):
     w = Default_works()
     w.fake_request = True

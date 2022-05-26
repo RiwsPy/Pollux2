@@ -30,7 +30,7 @@ MAX_BOUND_LNG_LAT = [5.67066192626953, 45.1028500272485, 5.8938217163086, 45.276
 
 # for test
 # MAX_BOUND = [45.1824338559252, 5.71986436843872, 45.1833602226135, 5.72116255760193]
-# MAX_BOUND_LNG_LAT = [ 5.722123, 45.186453, 5.723035, 45.187069 ]
+# MAX_BOUND_LNG_LAT = [ 5.714794,45.186440, 5.718413,45.188215]
 
 
 class Default_works:
@@ -107,13 +107,13 @@ class Default_works:
         else:
             geo = Geojson(COPYRIGHT=self.COPYRIGHT)
             for feature in data['features']:
-                if feature['geometry']:
+                if self._can_be_output(feature):
                     geo.append(self.Model(**feature).__dict__)
             # self.bound_filter(geo, self.bound)
             geo.dump('db/' + (filename or self.output_filename) + '.json')
 
     def _can_be_output(self, feature, **kwargs) -> bool:
-        return feature.position.in_bound(kwargs.get('bound', self.bound))
+        return feature['geometry']
 
     @staticmethod
     def convert_to_geojson(data_dict: dict) -> dict:

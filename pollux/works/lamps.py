@@ -55,9 +55,15 @@ class Works(Default_works):
             self.irc = int(properties['Lampe - IRC'] or 75)
             self.power = 150  # TODO: donnée à trouver (W)
             self.colour = int(properties['Lampe - Température Couleur'] or 5000)
-            self.on_motion = properties["Lampe - Régime"] in (
-                "CREM NOCTURNE AVEC DETECTION  10%",
-                "CREM NOCTURNE AVEC DETECTION  20%",
-                "GRE NOCTURNE AVEC TELEGESTION")
+            self.on_motion = self.is_on_motion(properties)
             self.lowering_night = lowering_night_impact.get(properties['Lampe - Régime'], 0)
             self.orientation = -1
+
+        @staticmethod
+        def is_on_motion(properties) -> bool:
+            return properties["Lampe - Régime"] in\
+                   (
+                    "CREM NOCTURNE AVEC DETECTION  10%",
+                    "CREM NOCTURNE AVEC DETECTION  20%",
+                    "GRE NOCTURNE AVEC TELEGESTION"
+                   )

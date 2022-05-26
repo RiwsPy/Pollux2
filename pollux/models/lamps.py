@@ -26,7 +26,7 @@ class Lamps(Default_model):
 
     @property
     def way_type(self) -> str:
-        if self.height < 5.0 or self.on_motion:
+        if (self.height < 5.0 or self.on_motion or self.irc < 30) and self.power <= 150:
             return 'footway'
         return 'road'
 
@@ -37,6 +37,16 @@ class Lamps(Default_model):
     @property
     def lumens_per_watt(self) -> int:
         return 100
+
+    @property
+    def lux_average_on_ground(self) -> float:
+        value = 0
+        if self.height >= 1:
+            value = (self.lumens_per_watt * self.power) / (math.pi * self.height_max_range**2)
+            if self.orientation != -1:
+                value *= 2
+
+        return value
 
     def distance_with_lux(self, nb_lux: int = 5, time: str = 'day') -> float:
         # distance où le nombre de lux au sol == nb_lux
@@ -109,3 +119,18 @@ class Lamps(Default_model):
     @property
     def is_oriented(self) -> bool:
         return self.orientation != -1.0
+
+    @property
+    def expense(self) -> float:
+        # V1
+        # TODO:
+        #  * Avoir le vrai self.power pour chaque luminaire
+        #  * Prendre en compte la puissance de la douille
+        #  * Connaître le tarif ville
+        #  * Calque Hiver/Eté/Intersaison et faire varier selon HP/HC
+        #  * Retravailler la db pour mieux connaître les créneaux des plages horaires
+        #  des réductions d'intensité nocturne
+        lowering_night = self.lowering_night
+        power_day = self.power
+        power_night = power_day * (100 - lowering_night) / 100
+        return (6 * power_day + 6 * power_night) * 0.1740 / 1000 * 365.25

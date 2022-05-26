@@ -138,11 +138,14 @@ class heatMap {
                     activeLayers.push(layer.layer)
                 }
             }
+
             this.map = L.map('city_map', {
                     layers: activeLayers,
                     minZoom: this.options.zoom.min,
                     maxZoom: this.options.zoom.max,
-                    wheelPxPerZoomLevel: this.options.wheelPxPerZoomLevel
+                    zoomDelta: this.options.zoom.button,  // granularité du zoom (bouton)
+                    zoomSnap: 0.1,  // modulo minimum
+                    wheelPxPerZoomLevel: 75/this.options.zoom.scroll  // granularité du zoom (scroll)
                 }).setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
             this.map.owner = this;
         } else {
@@ -369,6 +372,7 @@ class heatMap {
     createHeatLayer(data, layer) {
         let heatMapData = [];
         let cls = this;
+        console.log(data)
         data.features.forEach(function(d) {
             if (d.geometry.type == 'Point') {
                 let itm_intensity = 0;

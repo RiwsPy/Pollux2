@@ -1,6 +1,7 @@
 from itertools import zip_longest
 from typing import List
 from math import radians, cos, sin, degrees, acos, asin
+from django.contrib.gis.geos import Point
 
 EARTH_RADIUS = 6371000  # meters
 
@@ -49,21 +50,28 @@ class Position(List[float]):
 
     def distance(self, other: List[float]) -> float:
         my_pos = self.force_position()
+
         dlat_rad = radians(other[1]-my_pos[1])
-        dlon_rad = radians(other[0]-my_pos[0])
+        dlng_rad = radians(other[0]-my_pos[0])
         lat1_rad = radians(my_pos[1])
         lat2_rad = radians(other[1])
 
         a = sin(dlat_rad/2)**2 + \
-            cos(lat1_rad) * cos(lat2_rad) * sin(dlon_rad/2)**2
+            cos(lat1_rad) * cos(lat2_rad) * sin(dlng_rad/2)**2
 
         return EARTH_RADIUS * 2 * asin(a**0.5)
+
+    def distance_cartesian(self, other) -> float:
+        my_pos = self.force_position()
+        diff_lng = (other[0] - my_pos[0]) / LNG_1M
+        diff_lat = (other[1] - my_pos[1]) / LAT_1M
+        return (diff_lat**2 + diff_lng**2)**0.5
 
     def nearest_point_from_way(self, other1: List[float], other2: List[float]) -> 'Position':
         my_pos = self.force_position()
         try:
-
-            a1 = ((other2[1] - other1[1]) * LAT_1M) / ((other2[0] - other1[0]) * LNG_1M)
+            a1 = (other2[1] - other1[1]) / (other2[0] - other1[0])
+            # a1 = ((other2[1] - other1[1]) * LAT_1M) / ((other2[0] - other1[0]) * LNG_1M)
         except ZeroDivisionError:
             x = 0
             y = other1[1]
@@ -93,6 +101,19 @@ class Position(List[float]):
         _nearest_point = self.nearest_point_from_way(other1, other2)
 
         return my_pos.distance(_nearest_point)
+
+    def distance_cartesian_from_way(self, other1: List[float], other2: List[float]) -> float:
+        my_pos = self.force_position()
+
+        self_is_in = \
+            max(other1[0], other2[0]) > my_pos[0] > min(other1[0], other2[0]) or\
+            max(other1[1], other2[1]) > my_pos[1] > min(other1[1], other2[1])
+        if not self_is_in:
+            return min(my_pos.distance_cartesian(other1), my_pos.distance_cartesian(other2))
+
+        _nearest_point = self.nearest_point_from_way(other1, other2)
+
+        return my_pos.distance_cartesian(_nearest_point)
 
     def in_bound(self, bound: List[float]) -> bool:
         if type(self[0]) is float:
@@ -142,8 +163,8 @@ class Position(List[float]):
         if self == other:
             raise ZeroDivisionError
 
-        x1 = (other[0] - self.lng)
-        y1 = (other[1] - self.lat) * LAT_TO_LNG
+        x1 = (other[0] - self.lng) * LNG_TO_LAT
+        y1 = (other[1] - self.lat)  # * LAT_TO_LNG
         x = x1 * 90 / (abs(y1) + abs(x1))
 
         if y1 < 0:
@@ -207,7 +228,10 @@ class Relation(list):
         return self
 
 
-LAT_TO_LNG = 1200 / 1564
-LNG_1M = 1 / Position([0, 0]).distance([1, 0])
-LAT_1M = 1 / Position([0, 0]).distance([0, 1]) * LAT_TO_LNG
+# LAT_TO_LNG = 1200 / 1564
+LAT_TO_LNG = 787983 / 1112285
+LNG_TO_LAT = 1112285 / 787983
+
+LNG_1M = 1 / Position([0, 0]).distance([1, 0]) * LNG_TO_LAT
+LAT_1M = 1 / Position([0, 0]).distance([0, 1])  # * LAT_TO_LNG
 MOY_1M = (LNG_1M+LAT_1M)/2

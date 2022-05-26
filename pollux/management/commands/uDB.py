@@ -35,9 +35,9 @@ class Command(BaseCommand):
                     import json
                     from pollux.works import BASE_DIR
 
-                    from algo.create_line_from_point_and_orientation import create_line
+                    from pollux.algo.create_line_from_point_and_orientation import create_line
                     geo = create_line(Lamps, 20)
-                    with open(os.path.join(BASE_DIR.parent, 'db', 'lamps_line.json'), 'w+') as file:
+                    with open(os.path.join(BASE_DIR, 'pollux', 'db', 'lamps_line.json'), 'w+') as file:
                         json.dump(geo, file)
                     """
                     print('A effectuer :')
