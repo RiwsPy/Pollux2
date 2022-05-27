@@ -48,7 +48,8 @@ class Config(Default_Config):
                 'heatmap',
                 'trees',
                 Value(field='night_impact'),
-                Radius(fix=10),
+                MaxValue(method='part%', fix=80),
+                Radius(fix=15),
             ),
             Layer(
                 'Arbres',

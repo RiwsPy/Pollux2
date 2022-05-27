@@ -21,6 +21,7 @@ class Config(Default_Config):
                 'Eclairage (densité)',
                 'heatmap',
                 'lamps',
+                Blur(fix=6, unit='meter'),
                 IsActive(True),
                 Radius(field='max_range_day', unit='meter'),
                 Orientation(field='orientation'),

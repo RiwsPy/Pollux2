@@ -19,7 +19,7 @@ class Config(Default_Config):
                 'heatmap',
                 'lamps',
                 Gradient('BLUEBELT'),
-                Radius(field='max_range_night', unit='pixel'),
+                Radius(field='max_range_night', unit='auto'),
                 IsActive(True),
                 Value(field='expense'),
             ),

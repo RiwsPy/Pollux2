@@ -170,7 +170,10 @@ class IsActive(MapAttr):
 
 class Blur(MapAttr):
     attr_name = 'blur'
-    DEFAULT = 15
+    DEFAULT = {
+        'fix': 15,
+        'unit': 'pixel',
+    }
 
 
 class Orientation(MapAttr):
@@ -184,11 +187,11 @@ class MaxValue(MapAttr):
     attr_name = 'maxValue'
     DEFAULT = {
         'method': 'zoom_depend',
-        'gradient': {14: 3, 15: 2, 16: 3, 17: 2, 18: 1.3, 19: 1.3, 20: 1.1},
+        'gradient': {14: 3, 15: 3, 16: 3, 17: 3, 18: 2, 19: 1.5, 20: 1.1},
     }
     DOUBLE = {
         'method': 'zoom_depend',
-        'gradient': {14: 6, 15: 4, 16: 6, 17: 4, 18: 2.6, 19: 2.6, 20: 2.2, 21: 1.6, 22: 1.4},
+        'gradient': {k: v*2 for k, v in DEFAULT['gradient'].items()}
     }
 
 

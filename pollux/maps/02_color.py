@@ -17,7 +17,7 @@ class Config(Default_Config):
                 Value(field='colour'),
                 IsActive(True),
                 Radius(unit='meter'),
-                Blur(0),
+                Blur(fix=0),
                 MaxValue(method='fix', fix=6000),
                 gradient={
                     0.3333: '#FF880E',

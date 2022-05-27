@@ -89,7 +89,7 @@
                      e = this._data.length;
                  e > s ; s++) {
                 a = this._data[s];
-                this.radius(a[4], this.initBlur, a[3] == -1 ? -1: a[3]/360*Math.PI*2);
+                this.radius(a[4], a[5], a[3] == -1 ? -1: a[3]/360*Math.PI*2);
                 i.globalAlpha = Math.max(a[2] / this._max, t || .05);
                 i.drawImage(this._circle, a[0] - this._r, a[1] - this._r);
             };
@@ -120,18 +120,8 @@
 
 
 L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
-
-    // options: {
-    //     minOpacity: 0.05,
-    //     maxZoom: 18,
-    //     radius: 25,
-    //     blur: 15,
-    //     max: 1.0
-    // },
-
     initialize: function (latlngs, options) {
         this._latlngs = latlngs;
-        this._initRadius = options.radius.value || 25
         L.setOptions(this, options);
     },
 
@@ -169,7 +159,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
 
         if (this.options.pane) {
             this.getPane().appendChild(this._canvas);
-        }else {
+        } else {
             map._panes.overlayPane.appendChild(this._canvas);
         }
 
@@ -185,7 +175,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     onRemove: function (map) {
         if (this.options.pane) {
             this.getPane().removeChild(this._canvas);
-        }else{
+        } else {
             map.getPanes().overlayPane.removeChild(this._canvas);
         }
 
@@ -202,9 +192,9 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     getRadius: function (radiusValue) {
-        //radiusValue = this.options.radius.value || radiusValue;
+        //radiusValue = this.options.radius.fix || radiusValue;
         if (this.options.radius.unit === 'auto') {
-            radiusValue = Math.min(radiusValue / metresPerPixel(this._map), this._initRadius);
+            radiusValue = Math.min(radiusValue / metresPerPixel(this._map), radiusValue*2);
         // réalisme ++ mais parfois non exploitable en zoomant
         } else if (this.options.radius.unit === 'meter') {
             radiusValue /= metresPerPixel(this._map);
@@ -217,6 +207,24 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
             radiusValue = Math.max(this.options.radius.min, radiusValue)
         }
         return radiusValue
+    },
+
+    getBlur: function (blurValue, radius) {
+        if (this.options.blur.unit === 'auto') {
+            blurValue = Math.min(blurValue / metresPerPixel(this._map), blurValue);
+            blurValue = Math.max(radius/2, Math.min(blurValue, radius-10));
+        } else if (this.options.blur.unit === 'meter') {
+            blurValue /= metresPerPixel(this._map);
+        }
+        if (this.options.blur.min != undefined) {
+            blurValue = Math.max(blurValue, this.options.blur.min);
+        }
+        if (this.options.blur.max != undefined) {
+            blurValue = Math.min(blurValue, this.options.blur.max);
+        }
+        //blurValue = Math.min(blurValue, radius);
+
+        return blurValue;
     },
 
     _initCanvas: function () {
@@ -237,7 +245,10 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     _updateOptions: function () {
-        this._heat.radius(this.getRadius(this.options.radius.value), this.options.blur, -1);
+        let radius = this.getRadius(this.options.radius.fix);
+        this._heat.radius(radius,
+                          this.getBlur(this.options.blur.fix, radius),
+                          -1);
 
         if (this.options.gradient) {
             this._heat.gradient(this.options.gradient);
@@ -338,6 +349,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
                             Math.min(cell[2], this._max),
                             cell[3],
                             cell[4],
+                            this.getBlur(this.options.blur.fix, cell[4]),
                         ]);
                     }
                 }
@@ -346,9 +358,9 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         // console.timeEnd('process');
 
         // console.time('draw ' + data.length);
-        //this._heat.defaultRadius = this.getRadius(this.options.radius.value);
+        //this._heat.defaultRadius = this.getRadius(this.options.radius.fix);
 
-        this._heat.initBlur = this.options.blur;
+        //this._heat.initBlur = this.options.blur.fix;
         this._heat.data(data).draw(this.options.minOpacity);
         // console.timeEnd('draw ' + data.length);
 

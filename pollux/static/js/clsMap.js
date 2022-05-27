@@ -372,7 +372,6 @@ class heatMap {
     createHeatLayer(data, layer) {
         let heatMapData = [];
         let cls = this;
-        console.log(data)
         data.features.forEach(function(d) {
             if (d.geometry.type == 'Point') {
                 let itm_intensity = 0;
