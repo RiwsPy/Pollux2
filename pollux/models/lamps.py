@@ -16,7 +16,8 @@ class Lamps(Default_model):
     colour = models.IntegerField('Température de couleur', default=5000)
     on_motion = models.BooleanField('Détection de mouvement?', default=False)
     lowering_night = models.IntegerField('Réduction de puissance nocturne', default=0)
-    orientation = models.FloatField('Orientation', default=-1.0)
+    orientation = models.FloatField('Orientation', default=0.0)
+    horizontal_angle = models.FloatField('Angle horizontal', default=360.0)
     nearest_way_dist = models.FloatField('Distance voie la plus proche', default=-1.0)
     day_impact = models.FloatField('Impact (jour)', default=0.0)
     night_impact = models.FloatField('Impact (nuit)', default=0.0)
@@ -26,6 +27,7 @@ class Lamps(Default_model):
 
     @property
     def way_type(self) -> str:
+        # TODO: Abaisser 150W (=valeur par défaut) lorsque la puissance des luminaires sera connue
         if (self.height < 5.0 or self.on_motion or self.irc < 30) and self.power <= 150:
             return 'footway'
         return 'road'
@@ -43,7 +45,7 @@ class Lamps(Default_model):
         value = 0
         if self.height >= 1:
             value = (self.lumens_per_watt * self.power) / (math.pi * self.height_max_range**2)
-            if self.orientation != -1:
+            if self.is_oriented:
                 value *= 2
 
         return value
@@ -96,7 +98,7 @@ class Lamps(Default_model):
     def power_impact(self, time: str = 'day') -> float:
         power_value = self.power
         if time != 'day':
-            power_value = power_value * (1 - self.lowering_night / 100)
+            power_value = power_value * (1 - max(0, self.lowering_night) / 100)
 
         return power_value
 
@@ -118,7 +120,7 @@ class Lamps(Default_model):
 
     @property
     def is_oriented(self) -> bool:
-        return self.orientation != -1.0
+        return self.horizontal_angle % 360 != 0
 
     @property
     def expense(self) -> float:

@@ -161,6 +161,22 @@ class Legend(MapAttr):
     }
 
 
+class TileLayer(MapAttr):
+    attr_name = 'tile_layer'
+    DEFAULT = {
+        'url': 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        'maxZoom': 22,
+        'attribution': '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>' +
+                       'contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    }
+
+    NIGHT = {
+        'url': 'http://{s}.sm.mapstack.stamen.com/(toner-lite,$fff[difference],$fff[@23],$fff[hsl-saturation@20])/{z}/{x}/{y}.png',
+        'maxZoom': 20,
+        'attribution': ''
+    }
+
+
 class IsActive(MapAttr):
     attr_name = 'isActive'
     NOACTIVE = False
@@ -183,12 +199,20 @@ class Orientation(MapAttr):
     }
 
 
+class HorizontalAngle(MapAttr):
+    attr_name = 'horizontal_angle'
+    DEFAULT = {
+        'fix': 360
+    }
+
+
 class MaxValue(MapAttr):
     attr_name = 'maxValue'
     DEFAULT = {
         'method': 'zoom_depend',
         'gradient': {14: 3, 15: 3, 16: 3, 17: 3, 18: 2, 19: 1.5, 20: 1.1},
     }
+
     DOUBLE = {
         'method': 'zoom_depend',
         'gradient': {k: v*2 for k, v in DEFAULT['gradient'].items()}
@@ -239,6 +263,7 @@ class Default_Config:
     }
 
     OPTIONS_DEFAULT = Options(
+        TileLayer(),
         Zoom(),
         Legend(),
         bbox=MAX_BOUND_LNG_LAT,
@@ -255,6 +280,7 @@ class Default_Config:
                           IsActive(),
                           Blur(),
                           Orientation(),
+                          HorizontalAngle(),
                           MaxValue(),
                           )
     # Options par défaut pour le layer actuel

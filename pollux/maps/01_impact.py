@@ -4,8 +4,8 @@ from . import *
 class Config(Default_Config):
     ID = 1
     LAYER_BASE = Layer('', '', '',
-                       Gradient('BLUEBELT'),
-                       MaxValue('DOUBLE'),
+                       Gradient('LIGHT_COLORED'),
+                       MaxValue(method='fix', fix=10),
                        )
     DATA = {
         'options': Options(
@@ -19,7 +19,8 @@ class Config(Default_Config):
                 'lamps',
                 Radius(field='max_range_day'),
                 Value(field='day_impact'),
-                Orientation(field='orientation')
+                Orientation(field='orientation'),
+                HorizontalAngle(field='horizontal_angle'),
             ),
             Layer(
                 'Luminaires (Impact - Nuit)',
@@ -28,6 +29,7 @@ class Config(Default_Config):
                 Radius(field='max_range_night'),
                 Value(field='night_impact'),
                 Orientation(field='orientation'),
+                HorizontalAngle(field='horizontal_angle'),
                 IsActive(True)
             ),
             Layer(
@@ -41,7 +43,8 @@ class Config(Default_Config):
                 'heatmap',
                 'trees',
                 Value(field='day_impact'),
-                Radius(fix=10),
+                MaxValue(method='part%', fix=80),
+                Radius(fix=15),
             ),
             Layer(
                 'Arbres (Impact - Nuit)',

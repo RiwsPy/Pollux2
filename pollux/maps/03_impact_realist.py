@@ -6,6 +6,8 @@ class Config(Default_Config):
 
     LAYER_BASE = Layer('', '', '',
                        Radius(unit='meter'),
+                       Blur(fix=2, unit='meter'),
+                       MaxValue(method='fix', fix=10),
                        )
 
     DATA = {
@@ -13,7 +15,7 @@ class Config(Default_Config):
 
         'options': Options(
             Legend(name='Impact réaliste'),
-            Zoom(max=19, min=12),
+            Zoom(max=19),
             bbox=[5.717633, 45.182596, 5.734348, 45.185410],
         ),
         'layers': [
@@ -21,26 +23,19 @@ class Config(Default_Config):
                 'Eclairage (densité)',
                 'heatmap',
                 'lamps',
-                Blur(fix=6, unit='meter'),
-                IsActive(True),
                 Radius(field='max_range_day', unit='meter'),
                 Orientation(field='orientation'),
-                MaxValue(method='fix', fix=3),
-            ),
-            Layer(
-                'Arbres (JSON)',
-                'heatmap',
-                'lamps_output.json',
-                MaxValue(method='part%', fix=80),
-                Value(field='irc'),
+                HorizontalAngle(field='horizontal_angle'),
             ),
             Layer(
                 'Luminaire (Impact- Jour)',
                 'heatmap',
                 'lamps',
+                IsActive(True),
                 Radius(field='max_range_day', unit='meter'),
                 Value(field='day_impact'),
                 Orientation(field='orientation'),
+                HorizontalAngle(field='horizontal_angle'),
             ),
             Layer(
                 'Luminaire (Impact - Nuit)',
@@ -49,6 +44,7 @@ class Config(Default_Config):
                 Radius(field='max_range_night', unit='meter'),
                 Value(field='night_impact'),
                 Orientation(field='orientation'),
+                HorizontalAngle(field='horizontal_angle'),
             ),
             Layer(
                 'Luminaires',
@@ -78,7 +74,7 @@ class Config(Default_Config):
             ),
         ],
         'description': {
-            'title': "Carte test",
-            'icon': 'buttons/recommandation.png',
+            'title': "Carte Impact réaliste",
+            'icon': 'buttons/impact.png',
         }
     }
