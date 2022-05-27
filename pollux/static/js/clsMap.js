@@ -25,17 +25,18 @@ function getCookie(name) {
 const csrftoken = getCookie('csrftoken');
 
 
-function addAttribution(map) {
-    // choix à ajouter
+function addAttribution(map, options) {
     let tileLayer = L.tileLayer(
-        'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        options.url,
+        {
+            maxZoom: options.maxZoom,
+            attribution: options.attribution
+        }).addTo(map);
+        //'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
         //'https://tile.thunderforest.com/transport/{z}/{x}/{y}.png?apikey=XX', {
         //'https://tiles.stadiamaps.com/tiles/osm_bright/{z}/{x}/{y}{r}.png', {
         //'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 22,
-            //attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        }).addTo(map);
+        //attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
 }
 
 
@@ -85,9 +86,10 @@ class heatMap {
             this.options.zoom.max = this.options.zoom.min;
             this.options.zoom.min = old_max;
         }
+        this.options.zoom.max = Math.min(this.options.zoom.max, this.options.tile_layer.maxZoom);
         this.options.zoom.init = Math.min(this.options.zoom.max,
                                     Math.max(this.options.zoom.min, this.options.zoom.init)
-                                    )
+                                    );
 
         this.init()
     }
@@ -161,7 +163,7 @@ class heatMap {
         L.control.layers(null, controlLayers).addTo(this.map);
 
         if (!dontCreateMap) {
-            addAttribution(this.map)
+            addAttribution(this.map, this.options.tile_layer)
 
             if (this.options.buttons.fullScreen) {
                 this.addFullScreenButton()
@@ -392,18 +394,14 @@ class heatMap {
 
                 // Gestion minmax à faire côté python ?
                 if (itm_intensity != 0) {
-                    // Radius
-                    let itm_radius = d.properties[layer.radius.field] || layer.radius.fix;
-                    // Orientation
-                    let itm_orientation = cls.getOrientation(d, layer)
-
-                    // y, x, intensité, orientation, rayon
-                    heatMapData.push([
-                        +d.geometry.coordinates[1],
-                        +d.geometry.coordinates[0],
-                        +(itm_intensity),
-                        +(itm_orientation),
-                        +(itm_radius)]);
+                    heatMapData.push({
+                        lng: d.geometry.coordinates[0],
+                        lat: d.geometry.coordinates[1],
+                        intensity: itm_intensity,
+                        orientation: cls.getOrientation(d, layer),
+                        radius: d.properties[layer.radius.field] || layer.radius.fix,
+                        horizontal_angle: cls.getHorizontalAngle(d, layer),
+                    })
                 }
             }
         });
@@ -419,6 +417,17 @@ class heatMap {
             feat_orientation = Math.min(layer.orientation.max, feat_orientation)
         }
         return feat_orientation
+    }
+
+    getHorizontalAngle(feature, layer) {
+        let feat_hangle = feature.properties[layer.horizontal_angle.field] || layer.horizontal_angle.fix;
+        if (layer.horizontal_angle.min) {
+            feat_hangle = Math.max(layer.horizontal_angle.min, feat_hangle)
+        }
+        if (layer.horizontal_angle.max) {
+            feat_hangle = Math.min(layer.horizontal_angle.max, feat_hangle)
+        }
+        return feat_hangle
     }
 
     drawOptions() {

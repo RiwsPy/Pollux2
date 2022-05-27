@@ -41,28 +41,25 @@
             return this._data = [],
             this
         },
-        radius: function(t, i, orientation) { // (radius, blur)
-            i = i === undefined ? 15 : i; // blur
+        radius: function(radius, blur, orientation, horizontal_angle) {
+            blur = blur === undefined ? 15 : blur;
+            orientation = Math.max(0, orientation || 0);
+            horizontal_angle = horizontal_angle == undefined ? Math.PI*2 : horizontal_angle;
             var a = this._circle = document.createElement("canvas"),
                 s = a.getContext("2d"),
-                e = this._r = Math.max(1, t + i);
-            // TODO: gestion selon la forme
-            let multiplicator = 1;
-            if (orientation == -1) {
-                orientation = 0;
-                multiplicator = 2;
-            }
-            orientation = orientation || 0;
+                e = this._r = Math.max(1, radius + blur);
+
+            // bug car le point d'origine est fixe
             return a.width = 2*e,
                     a.height = 2*e,
                     s.shadowOffsetX = s.shadowOffsetY = 800,
-                    s.shadowBlur = i,
+                    s.shadowBlur = blur,
                     s.shadowColor = "black",
                     s.beginPath(),
                     // (x, y, rayon, angle de départ, angle de fin, sensHoraire)
-                    s.arc(e-800, e-800, t, orientation, (orientation + multiplicator*Math.PI), !0),
-                    s.closePath(),
-                    s.fill(),
+                    s.arc(e-800, e-800, radius, orientation, orientation + horizontal_angle, !0),
+                    s.closePath(), // ferme la forme
+                    s.fill(), // rempli, sinon stroke
                     this
         },
         gradient: function(t) {
@@ -79,19 +76,18 @@
                     this._grad = a.getImageData(0, 0, 1, 256).data,
                     this
         },
-        draw: function(t) { // (opacity)
+        draw: function(opacity) {
             this._grad || this.gradient(this.defaultGradient);
             var i = this._ctx;
             i.clearRect(0, 0, this._width, this._height);
-            //this._circle || this.radius(this.defaultRadius, this.initBlur, -1);
             for (var a,
                      s = 0,
                      e = this._data.length;
                  e > s ; s++) {
                 a = this._data[s];
-                this.radius(a[4], a[5], a[3] == -1 ? -1: a[3]/360*Math.PI*2);
-                i.globalAlpha = Math.max(a[2] / this._max, t || .05);
-                i.drawImage(this._circle, a[0] - this._r, a[1] - this._r);
+                this.radius(a.radius, a.blur, a.orientation/360*Math.PI*2, a.horizontal_angle/360*Math.PI*2);
+                i.globalAlpha = Math.max(a.intensity / this._max, opacity || .05);
+                i.drawImage(this._circle, a.x - this._r, a.y - this._r);
             };
 
             var n = i.getImageData(0, 0, this._width, this._height);
@@ -245,10 +241,10 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     _updateOptions: function () {
-        let radius = this.getRadius(this.options.radius.fix);
-        this._heat.radius(radius,
-                          this.getBlur(this.options.blur.fix, radius),
-                          -1);
+        //let radius = this.getRadius(this.options.radius.fix);
+        //this._heat.radius(radius,
+        //                  this.getBlur(this.options.blur.fix, radius),
+        //                  -1);
 
         if (this.options.gradient) {
             this._heat.gradient(this.options.gradient);
@@ -293,46 +289,45 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
 
         // console.time('process');
         for (i = 0, len = this._latlngs.length; i < len; i++) {
-            p = this._map.latLngToContainerPoint([this._latlngs[i][0], this._latlngs[i][1], this._latlngs[i][2]]);
+            p = this._map.latLngToContainerPoint([this._latlngs[i].lat,
+                                                  this._latlngs[i].lng,
+                                                  this._latlngs[i].intensity]);
             //p = this._map.latLngToContainerPoint(this._latlngs[i]); // pixel correspondant aux coordonnées
             x = Math.floor((p.x - offsetX) / cellSize) + 2;
             y = Math.floor((p.y - offsetY) / cellSize) + 2;
 
             var alt =
                 this._latlngs[i].alt !== undefined ? this._latlngs[i].alt :
-                this._latlngs[i][2] !== undefined ? this._latlngs[i][2] : 0;
+                this._latlngs[i].intensity !== undefined ? this._latlngs[i].intensity : 0;
 
             grid[y] = grid[y] || [];
             cell = grid[y][x];
 
             // position moyenne pondérée par le niveau d'intensité
             if (!cell) {
-                cell = grid[y][x] = [p.x,
-                                     p.y,
-                                     alt,
-                                     this._latlngs[i][3],
-                                     this.getRadius(this._latlngs[i][4])];
+                cell = grid[y][x] = {x: p.x,
+                                     y: p.y,
+                                     intensity: alt,
+                                     orientation: this._latlngs[i].orientation,
+                                     horizontal_angle: this._latlngs[i].horizontal_angle,
+                                     radius: this.getRadius(this._latlngs[i].radius)};
                 cell.p = p;
             } else {
-                cell[0] = (cell[0] * cell[2] + p.x * alt) / (cell[2] + alt); // x
-                cell[1] = (cell[1] * cell[2] + p.y * alt) / (cell[2] + alt); // y
-                cell[2] += alt; // cumulated intensity value
-                if (cell[3] != -1) {
-                    if (this._latlngs[i][3] == -1) {
-                        cell[3] = -1;
-                    } else if (Math.abs(cell[3] - this._latlngs[i][3]) > 170 && Math.abs(cell[3] - this._latlngs[i][3]) < 190) {
-                        cell[3] = -1;
-                    } else {
-                        cell[3] = (cell[3] + this._latlngs[i][3])/2;
-                    }
+                cell.x = (cell.x * cell.intensity + p.x * alt) / (cell.intensity + alt); // x
+                cell.y = (cell.y * cell.intensity + p.y * alt) / (cell.intensity + alt); // y
+                cell.intensity += alt; // cumulated intensity value
+                cell.horizontal_angle = Math.max(cell.horizontal_angle, this._latlngs[i].horizontal_angle);
+                if (Math.abs(cell.orientation - this._latlngs[i].orientation) > 170 &&
+                            Math.abs(cell.orientation - this._latlngs[i].orientation) < 190) {
+                    cell.horizontal_angle = 360;
+                } else {
+                    cell.orientation = (cell.orientation + this._latlngs[i].orientation)/2;
                 }
-                cell[4] = Math.max(cell[4], this.getRadius(this._latlngs[i][4]))
+                cell.radius = Math.max(cell.radius, this.getRadius(this._latlngs[i].radius))
             }
 
             // Set the max for the current zoom level
-            if (cell[2] > this._max) {
-                this._max = cell[2];
-            }
+            this._max = Math.max(this._max, cell.intensity)
         }
 
         this.updateMax(grid)
@@ -342,15 +337,16 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
             if (grid[i]) {
                 for (j = 0, len2 = grid[i].length; j < len2; j++) {
                     cell = grid[i][j];
-                    if (cell && cell[2] > 0 && bounds.contains(cell.p)) {
-                        data.push([
-                            Math.round(cell[0]),
-                            Math.round(cell[1]),
-                            Math.min(cell[2], this._max),
-                            cell[3],
-                            cell[4],
-                            this.getBlur(this.options.blur.fix, cell[4]),
-                        ]);
+                    if (cell && cell.intensity > 0 && bounds.contains(cell.p)) {
+                        data.push({
+                            x: Math.round(cell.x),
+                            y: Math.round(cell.y),
+                            intensity: Math.min(cell.intensity, this._max),
+                            radius: cell.radius,
+                            orientation: cell.orientation,
+                            horizontal_angle: cell.horizontal_angle,
+                            blur: this.getBlur(this.options.blur.fix, cell.radius)
+                        })
                     }
                 }
             }
@@ -389,8 +385,8 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
             values = []
             for (x in grid) {
                 for (y in grid[x]) {
-                    if (grid[x][y][2]) {
-                        values.push(Math.abs(grid[x][y][2]))
+                    if (grid[x][y].intensity) {
+                        values.push(Math.abs(grid[x][y].intensity))
                     }
                 }
             }

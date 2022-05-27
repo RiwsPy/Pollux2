@@ -15,7 +15,9 @@ class Cross(Default_cross):
         print('reset')
         lamps_queryset = Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
         for lamp in lamps_queryset:
-            lamp.orientation = -1.0
+            # Valeurs par défaut
+            lamp.orientation = 0.0
+            lamp.horizontal_angle = 360.0
             lamp.nearest_way_dist = -1.0
             lamp.save()
 
@@ -56,6 +58,7 @@ class Cross(Default_cross):
                 lamp.nearest_highway = highway
                 nearest_position = lamp_pos.nearest_point_from_way(*segment)
                 lamp.orientation = round(lamp_pos.orientation(nearest_position), 2)
+                lamp.horizontal_angle = 180.0
                 lamp.nearest_way_dist = round(dist, 2)
                 lamp.save()
 
