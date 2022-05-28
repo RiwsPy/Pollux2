@@ -9,3 +9,4 @@ old/
 /pollux/static/sass/
 package.json
 /pollux/staticfiles/
+/pollux/migrations/

@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models.trees import Trees
 from .models.lamps import Lamps
 from .models.highways import Highways
+from .models.crossings import Crossings
 
 
 @admin.register(Trees)
@@ -21,3 +22,8 @@ class LampsAdmin(admin.ModelAdmin):
 class HighwaysAdmin(admin.ModelAdmin):
     search_fields = ['name', 'type']
     readonly_fields = ['name']
+
+
+@admin.register(Crossings)
+class HighwaysAdmin(admin.ModelAdmin):
+    pass
