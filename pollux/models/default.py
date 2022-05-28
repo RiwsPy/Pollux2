@@ -2,6 +2,7 @@ from django.contrib.gis.db import models
 import json
 from django.core import serializers
 from django.contrib.gis.geos import Point
+from pollux.formats.position import Position
 
 
 class Default_model(models.Model):
@@ -33,8 +34,18 @@ class Default_model(models.Model):
         :param color: Colour Tempepature (Kelvins)
         :return: float
         """
-        return 0.0
+        return 1.0
+
+    def irc_impact(self, irc: int) -> int:
+        """
+        :param irc: Lamps irc (%)
+        :return: float
+        """
+        return irc
 
     @property
     def height(self) -> float:
         return 0.0
+
+    def distance_from(self, obj) -> float:
+        return Position(self.position).distance(obj.position)

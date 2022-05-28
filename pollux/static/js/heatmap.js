@@ -47,9 +47,13 @@
             horizontal_angle = horizontal_angle == undefined ? Math.PI*2 : horizontal_angle;
             var a = this._circle = document.createElement("canvas"),
                 s = a.getContext("2d"),
-                e = this._r = Math.max(1, radius + blur);
+                e = this._r = Math.max(1, radius);
 
-            // bug car le point d'origine est fixe
+            if (blur > radius) {
+                console.log(blur + ' ' + radius)
+            }
+
+            // bug horizontal_angle car le point d'origine est fixe
             return a.width = 2*e,
                     a.height = 2*e,
                     s.shadowOffsetX = s.shadowOffsetY = 800,
@@ -57,7 +61,7 @@
                     s.shadowColor = "black",
                     s.beginPath(),
                     // (x, y, rayon, angle de départ, angle de fin, sensHoraire)
-                    s.arc(e-800, e-800, radius, orientation, orientation + horizontal_angle, !0),
+                    s.arc(e-800, e-800, Math.max(0, radius - blur), orientation, orientation + horizontal_angle, !0),
                     s.closePath(), // ferme la forme
                     s.fill(), // rempli, sinon stroke
                     this
@@ -196,6 +200,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
             radiusValue /= metresPerPixel(this._map);
         }
 
+        radiusValue = Math.max(0, radiusValue + this.options.radius.add)
         if (this.options.radius.max != undefined) {
             radiusValue = Math.min(this.options.radius.max, radiusValue)
         }
@@ -206,10 +211,11 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     getBlur: function (blurValue, radius) {
-        if (this.options.blur.unit === 'auto') {
-            blurValue = Math.min(blurValue / metresPerPixel(this._map), blurValue);
-            blurValue = Math.max(radius/2, Math.min(blurValue, radius-10));
-        } else if (this.options.blur.unit === 'meter') {
+        if (this.options.blur.unit == '%' && this.options.blur.fix) {
+            blurValue = radius * this.options.blur.fix / 100;
+        } else if (this.options.radius.unit === 'auto') {
+            blurValue = Math.min(blurValue / metresPerPixel(this._map), radius/2, blurValue);
+        } else if (this.options.radius.unit === 'meter') {
             blurValue /= metresPerPixel(this._map);
         }
         if (this.options.blur.min != undefined) {
@@ -241,11 +247,6 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
     },
 
     _updateOptions: function () {
-        //let radius = this.getRadius(this.options.radius.fix);
-        //this._heat.radius(radius,
-        //                  this.getBlur(this.options.blur.fix, radius),
-        //                  -1);
-
         if (this.options.gradient) {
             this._heat.gradient(this.options.gradient);
         }
@@ -354,9 +355,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
         // console.timeEnd('process');
 
         // console.time('draw ' + data.length);
-        //this._heat.defaultRadius = this.getRadius(this.options.radius.fix);
 
-        //this._heat.initBlur = this.options.blur.fix;
         this._heat.data(data).draw(this.options.minOpacity);
         // console.timeEnd('draw ' + data.length);
 

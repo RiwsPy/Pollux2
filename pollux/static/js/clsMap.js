@@ -355,14 +355,19 @@ class heatMap {
     createNodeLayer(data, layer) {
         let cls = this;
         L.geoJSON(data, {
+            onEachFeature: function(feature, layer) {
+                addPopUp(feature, layer);
+            },
             pointToLayer: function(feature, latlng) {
                 let marker = L.marker(latlng, {icon: getIcon(layer),
                                                rotationAngle: cls.getOrientation(feature, layer)});
-                addPopUp(feature, marker);
+                //addPopUp(feature, marker);
                 return marker;
             }
         }).addTo(layer.layer);
     }
+
+
 
     heatLayerAttr(layer) {
         return {

@@ -19,6 +19,7 @@ class Config(Default_Config):
                 'lamps_incontinuite_lum.json',
                 Gradient('LIGHT_COLORED'),
                 Radius(fix=10),
+                Blur(method='%', fix=10),
                 IsActive(True),
                 Value(field='intensity'),
             ),

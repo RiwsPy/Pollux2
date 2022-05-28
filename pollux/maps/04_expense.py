@@ -5,11 +5,11 @@ class Config(Default_Config):
     ID = 4
     LAYER_BASE = Layer('', '', '',
                        MaxValue(method='part%',
-                                fix=60)
+                                fix=95)
                        )
     DATA = {
         'options': Options(
-            Zoom(max=19, init=18),
+            Zoom(max=19, init=16),
             Legend(name='Dépense €/an'),
             bbox=[5.717633, 45.182596, 5.734348, 45.185410],
         ),
@@ -21,8 +21,8 @@ class Config(Default_Config):
                 Gradient('BLUEBELT'),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
-                Radius(fix=15, unit='auto'),
-                MaxValue(method='fix', fix=114.4),
+                Radius(fix=20, unit='auto'),
+                Blur(unit='%', fix=30),
                 IsActive(True),
                 Value(field='expense'),
             ),

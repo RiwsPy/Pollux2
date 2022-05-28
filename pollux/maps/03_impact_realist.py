@@ -6,7 +6,7 @@ class Config(Default_Config):
 
     LAYER_BASE = Layer('', '', '',
                        Radius(unit='meter'),
-                       Blur(fix=2, unit='meter'),
+                       Blur(fix=45, unit='%'),
                        MaxValue(method='fix', fix=10),
                        )
 
@@ -24,6 +24,7 @@ class Config(Default_Config):
                 'heatmap',
                 'lamps',
                 Radius(field='max_range_day', unit='meter'),
+                Value(fix=10),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
             ),
@@ -57,14 +58,14 @@ class Config(Default_Config):
                 'heatmap',
                 'trees',
                 Value(field='day_impact'),
-                Radius(fix=10),
+                Radius(fix=15, unit='meter'),
             ),
             Layer(
                 'Arbre (Impact - Nuit)',
                 'heatmap',
                 'trees',
                 Value(field='night_impact'),
-                Radius(fix=10),
+                Radius(fix=15, unit='meter'),
             ),
             Layer(
                 'Arbres',

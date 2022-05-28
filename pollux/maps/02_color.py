@@ -4,8 +4,7 @@ from . import *
 class Config(Default_Config):
     ID = 2
     LAYER_BASE = Layer('', '', '',
-                       Radius(unit='meter'),
-                       Blur(fix=0),
+                       Blur(unit='%', fix=10),
                        MaxValue(method='fix', fix=6000),
                        Value(field='colour'),
                        gradient={
@@ -21,9 +20,9 @@ class Config(Default_Config):
         'href': '/map/2',
         'options': Options(
             TileLayer('NIGHT'),
-            Zoom(min=14, max=15, init=15),
+            Zoom(min=14, max=17, init=14),
             Legend(name='Température de couleur'),
-            bbox=[5.703192, 45.179133, 5.735250, 45.189599],
+            bbox=[5.702419, 45.168907, 5.742846, 45.196917],
         ),
         'layers': [
             Layer(
@@ -33,7 +32,7 @@ class Config(Default_Config):
                 IsActive(True),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
-                Radius(field='max_range_day')
+                Radius(field='max_range_day', unit='meter')
             ),
         ],
         'description': {
@@ -71,7 +70,8 @@ class Config(Default_Config):
                     'R': """
                         Cette méthodologie possède également ses limites.
                         Elle ne prend pas en compte les obstacles à la lumière comme les bâtiments par exemple.
-                        La puissance des luminaires n'intervient pas (encore) dans les résultats, c'est également un problème."""
+                        La puissance des luminaires n'intervient pas (encore) dans les résultats, c'est également un problème.
+                        Les satellites montrent l'éclairage vu du ciel, celle-ci montre l'éclairage perçu au sol."""
                 },
                 {
                     'Q': 'Quels sont les avantages de cette méthode ?',

@@ -5,7 +5,7 @@ class Config(Default_Config):
     ID = 1
     LAYER_BASE = Layer('', '', '',
                        Gradient('LIGHT_COLORED'),
-                       MaxValue(method='fix', fix=10),
+                       MaxValue(method='fix', fix=20),
                        )
     DATA = {
         'options': Options(
@@ -17,6 +17,7 @@ class Config(Default_Config):
                 'Luminaires (Impact - Jour)',
                 'heatmap',
                 'lamps',
+                Blur(unit='%', fix=30),
                 Radius(field='max_range_day'),
                 Value(field='day_impact'),
                 Orientation(field='orientation'),
@@ -26,6 +27,7 @@ class Config(Default_Config):
                 'Luminaires (Impact - Nuit)',
                 'heatmap',
                 'lamps',
+                Blur(unit='%', fix=30),
                 Radius(field='max_range_night'),
                 Value(field='night_impact'),
                 Orientation(field='orientation'),
@@ -45,6 +47,7 @@ class Config(Default_Config):
                 Value(field='day_impact'),
                 MaxValue(method='part%', fix=80),
                 Radius(fix=15),
+                Blur(unit='%', fix=45),
             ),
             Layer(
                 'Arbres (Impact - Nuit)',
@@ -53,6 +56,7 @@ class Config(Default_Config):
                 Value(field='night_impact'),
                 MaxValue(method='part%', fix=80),
                 Radius(fix=15),
+                Blur(unit='%', fix=45),
             ),
             Layer(
                 'Arbres',

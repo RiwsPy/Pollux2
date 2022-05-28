@@ -126,7 +126,7 @@ class Icon(MapAttr):
 class Zoom(MapAttr):
     attr_name = 'zoom'
     DEFAULT = {
-        'min': 16,
+        'min': 15,
         'max': 22,
         'init': 16,
         'scroll': 1,
@@ -139,6 +139,7 @@ class Radius(MapAttr):
     DEFAULT = {
         'unit': 'auto',
         'fix': 25,
+        'add': 0,
     }
 
 
@@ -188,7 +189,6 @@ class Blur(MapAttr):
     attr_name = 'blur'
     DEFAULT = {
         'fix': 15,
-        'unit': 'pixel',
     }
 
 
