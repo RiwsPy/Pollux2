@@ -37,12 +37,14 @@ class Cross(Default_cross):
         for lamp, highway in adjacent_match(self.ret_lamps.array, self.ret_highways.array, max_case_range=1):
             lamp_pos = Position(lamp.position)
             for index, segment in enumerate(zip(highway.position[:-1], highway.position[1:])):
-                dist = lamp_pos.distance_cartesian_from_way(*segment)
+                dist = lamp_pos.distance_from_way(*segment)
                 current_is_footway = highway.is_footway
                 if lamp.max_range(5, 'day') <= dist or dist <= 1 and current_is_footway:
                     # if dist <= 0.2:
                     #    print(f'distance <= 0.2: code {lamp.code}, distance: {dist}', highway.__dict__)
                     continue
+                # if lamp.code == '2200016':
+                #    print(dist, highway.__dict__, list(lamp.position), segment)
                 if hasattr(lamp, 'nearest_highway'):
                     nearest_is_footway = lamp.nearest_highway.is_footway
                     if current_is_footway is nearest_is_footway and dist < lamp.nearest_way_dist:
@@ -54,9 +56,10 @@ class Cross(Default_cross):
                         pass
                     else:
                         continue
-
                 lamp.nearest_highway = highway
                 nearest_position = lamp_pos.nearest_point_from_way(*segment)
+                # if lamp.code == '2200016':
+                #    print('validé', round(lamp_pos.orientation(nearest_position), 2))
                 lamp.orientation = round(lamp_pos.orientation(nearest_position), 2)
                 lamp.horizontal_angle = 180.0
                 lamp.nearest_way_dist = round(dist, 2)

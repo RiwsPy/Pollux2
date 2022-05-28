@@ -28,7 +28,7 @@ class Lamps(Default_model):
     @property
     def way_type(self) -> str:
         # TODO: Abaisser 150W (=valeur par défaut) lorsque la puissance des luminaires sera connue
-        if (self.height < 5.0 or self.on_motion or self.irc < 30) and self.power <= 150:
+        if (self.height < 5.0 or self.on_motion or self.irc < 25) and self.power <= 150:
             return 'footway'
         return 'road'
 
@@ -52,6 +52,8 @@ class Lamps(Default_model):
 
     def distance_with_lux(self, nb_lux: int = 5, time: str = 'day') -> float:
         # distance où le nombre de lux au sol == nb_lux
+        if nb_lux == 0:
+            nb_lux = 1
         hypotenuse = (self.lumens_per_watt * self.power_impact(time) *
                       math.cos(math.radians(self.angle_incidence)) / nb_lux) ** 0.5
         return hypotenuse * math.cos(math.radians(90 - self.angle_incidence))
@@ -78,22 +80,25 @@ class Lamps(Default_model):
         diff_lum_tree_height = max(self.height - illuminated_object.height, 0)
         square_distance = diff_lum_tree_height ** 2 + distance ** 2
 
-        return self.on_motion or square_distance >= self.max_range(nb_lux=nb_lux, time=time) ** 2
+        return self.on_motion or \
+                square_distance >= self.height_max_range**2 or \
+                square_distance >= self.max_range(nb_lux=nb_lux, time=time) ** 2
 
     def impact(self, illuminated_object, nb_lux: int, time: str) -> float:
         distance = illuminated_object.distance_from(self)
-        if self.is_without_impact(illuminated_object, distance, nb_lux=nb_lux, time=time) or \
-                self.illuminated_height_at(distance) <= 0:
+        if self.is_without_impact(illuminated_object, distance, nb_lux=nb_lux, time=time):
             return 0.0
 
         diff_lum_tree_height = max(self.height - illuminated_object.height, 0)
         square_distance = diff_lum_tree_height ** 2 + distance ** 2
 
-        intensity_value = (self.aligned_power_impact(illuminated_object, time=time) /
-                           max(1, square_distance)
-                           )
+        impact_lux = (self.aligned_power_impact(illuminated_object, time=time) *
+                      self.lumens_per_watt *
+                      math.cos(math.radians(self.angle_incidence)) /
+                      max(1, square_distance)
+                      )
 
-        return intensity_value * illuminated_object.color_impact(self.colour)
+        return impact_lux * illuminated_object.color_impact(self.colour)
 
     def power_impact(self, time: str = 'day') -> float:
         power_value = self.power
@@ -105,9 +110,9 @@ class Lamps(Default_model):
     def aligned_power_impact(self, other_object, time: str = 'day') -> int:
         power_impact = 0
         if not self.is_oriented:
-            power_impact = self.power_impact(time=time)
+            power_impact = self.power_impact(time=time) / 2
         elif self.is_aligned_with(other_object):
-            power_impact = self.power_impact(time=time) * 2
+            power_impact = self.power_impact(time=time)
 
         return power_impact
 

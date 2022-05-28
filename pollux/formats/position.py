@@ -69,6 +69,7 @@ class Position(List[float]):
 
     def nearest_point_from_way(self, other1: List[float], other2: List[float]) -> 'Position':
         my_pos = self.force_position()
+
         try:
             a1 = (other2[1] - other1[1]) / (other2[0] - other1[0])
             # a1 = ((other2[1] - other1[1]) * LAT_1M) / ((other2[0] - other1[0]) * LNG_1M)
@@ -87,33 +88,55 @@ class Position(List[float]):
             except ZeroDivisionError:
                 x = 0
             y = a1 * x + b1
+
         return self.__class__([x, y])
 
     def distance_from_way(self, other1: List[float], other2: List[float]) -> float:
+        # TODO: vrai dans un repère cartésien, à améliorer
+        my_pos = self.force_position()
+
+        xM, yM = my_pos
+        xB, yB = other1
+        xE, yE = other2
+        # coordonnées a,b du vecteur EB
+        a = xE - xB
+        b = yE - yB
+        # équation de la perpendiculaire D1 en B à (EB): ax+by+w1
+        w1 = -a * xB - b * yB
+        # puissance de M par rapport à D1
+        PMD1 = a * xM + b * yM + w1
+        # puissance de E par rapport à D1
+        PED1 = a * xE + b * yE + w1
+        # A ce stade encore ni racine ni quotient
+        if PMD1 * PED1 < 0:  # M et E de part et d'autre de D1
+            return ((xM - xB) * (xM - xB) + (yM - yB) * (yM - yB)) ** 0.5 / MOY_1M
+
+        # équation de la perpendiculaire D2 en E à (EB): ax+by+w2
+        w2 = -a * xE - b * yE
+        # puissance de M par rapport à D2
+        PMD2 = a * xM + b * yM + w2
+        # puissance de B par rapport à D2
+        PBD2 = a * xB + b * yB + w2
+        if PMD2 * PBD2 < 0:  # M et B de part et d'autre de D2
+            return ((xM - xE) * (xM - xE) + (yM - yE) * (yM - yE)) ** 0.5 / MOY_1M
+
+        # équation de la droite (EB) : bx-ay+w3
+        w3 = a * yB - b * xB
+        return abs(b * xM - a * yM + w3) / (a * a + b * b)**0.5 / MOY_1M
+
+    def distance_from_way_old(self, other1: List[float], other2: List[float]) -> float:
         my_pos = self.force_position()
 
         self_is_in = \
-            max(other1[0], other2[0]) > my_pos[0] > min(other1[0], other2[0]) or\
+            max(other1[0], other2[0]) > my_pos[0] > min(other1[0], other2[0]) and\
             max(other1[1], other2[1]) > my_pos[1] > min(other1[1], other2[1])
         if not self_is_in:
             return min(my_pos.distance(other1), my_pos.distance(other2))
+        # cas où il est "à moitié" dedans
 
         _nearest_point = self.nearest_point_from_way(other1, other2)
 
         return my_pos.distance(_nearest_point)
-
-    def distance_cartesian_from_way(self, other1: List[float], other2: List[float]) -> float:
-        my_pos = self.force_position()
-
-        self_is_in = \
-            max(other1[0], other2[0]) > my_pos[0] > min(other1[0], other2[0]) or\
-            max(other1[1], other2[1]) > my_pos[1] > min(other1[1], other2[1])
-        if not self_is_in:
-            return min(my_pos.distance_cartesian(other1), my_pos.distance_cartesian(other2))
-
-        _nearest_point = self.nearest_point_from_way(other1, other2)
-
-        return my_pos.distance_cartesian(_nearest_point)
 
     def in_bound(self, bound: List[float]) -> bool:
         if type(self[0]) is float:
@@ -217,6 +240,7 @@ class Relation(list):
             for nb, position in enumerate(self):
                 cumul_lng += position[0]
                 cumul_lat += position[1]
+            nb += 1
         try:
             return Position([cumul_lng/nb, cumul_lat/nb])
         except ZeroDivisionError:

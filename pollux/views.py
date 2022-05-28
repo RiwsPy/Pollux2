@@ -4,7 +4,7 @@ import os
 from json.decoder import JSONDecodeError
 from .maps import Configs
 from .works import BASE_DIR
-from .models import lamps, trees, highways
+from .models import lamps, trees, highways, crossings
 from .map_desc import ORIGIN_DATA
 from .formats.geojson import Geojson
 from .utils import in_bound
@@ -53,6 +53,7 @@ class JsonDetails(View):
         'trees': trees.Trees,
         'lamps': lamps.Lamps,
         'highways': highways.Highways,
+        'crossings': crossings.Crossings,
     }
     db_dir = {'db', 'db/cross'}
     no_way_files = ()
