@@ -31,8 +31,8 @@ class Cross(Default_cross):
     def apply_algo(self) -> None:
         super().apply_algo()
         for lamp, tree in adjacent_match(self.lamps_array, self.trees_array, max_case_range=1):
-            day_impact = lamp.impact(tree, nb_lux=5, time='day')
-            night_impact = lamp.impact(tree, nb_lux=5, time='night')
+            day_impact = lamp.impact(tree, nb_lux=3, time='day')
+            night_impact = lamp.impact(tree, nb_lux=3, time='night')
             if day_impact or night_impact:
                 lamp.day_impact = round(lamp.day_impact + day_impact, 2)
                 lamp.night_impact = round(lamp.night_impact + night_impact, 2)

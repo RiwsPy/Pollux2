@@ -116,8 +116,8 @@ class JsonDetails(View):
         response = cls.serialize(queryset)
 
         for lamp, geo_lamp in zip(queryset, response['features']):
-            geo_lamp['properties']['max_range_day'] = lamp.max_range(nb_lux=5, time='day')
-            geo_lamp['properties']['max_range_night'] = lamp.max_range(nb_lux=5, time='night')
+            geo_lamp['properties']['max_range_day'] = lamp.max_range(nb_lux=1, time='day')
+            geo_lamp['properties']['max_range_night'] = lamp.max_range(nb_lux=1, time='night')
             geo_lamp['properties']['expense'] = lamp.expense
 
         return JsonResponse(response)

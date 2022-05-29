@@ -5,7 +5,8 @@ class Config(Default_Config):
     ID = 1
     LAYER_BASE = Layer('', '', '',
                        Gradient('LIGHT_COLORED'),
-                       MaxValue(method='fix', fix=20),
+                       Blur(unit='%', fix=35),
+                       MaxValue(method='fix', fix=50),
                        )
     DATA = {
         'options': Options(
@@ -17,22 +18,20 @@ class Config(Default_Config):
                 'Luminaires (Impact - Jour)',
                 'heatmap',
                 'lamps',
-                Blur(unit='%', fix=30),
-                Radius(field='max_range_day'),
+                Radius(field='max_range_day', unit='meter'),
                 Value(field='day_impact'),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
+                IsActive(True)
             ),
             Layer(
                 'Luminaires (Impact - Nuit)',
                 'heatmap',
                 'lamps',
-                Blur(unit='%', fix=30),
-                Radius(field='max_range_night'),
+                Radius(field='max_range_night', unit='meter'),
                 Value(field='night_impact'),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
-                IsActive(True)
             ),
             Layer(
                 'Luminaires',
@@ -45,18 +44,16 @@ class Config(Default_Config):
                 'heatmap',
                 'trees',
                 Value(field='day_impact'),
-                MaxValue(method='part%', fix=80),
-                Radius(fix=15),
-                Blur(unit='%', fix=45),
+                MaxValue(method='part%', fix=90),
+                Radius(fix=15, unit='meter'),
             ),
             Layer(
                 'Arbres (Impact - Nuit)',
                 'heatmap',
                 'trees',
                 Value(field='night_impact'),
-                MaxValue(method='part%', fix=80),
-                Radius(fix=15),
-                Blur(unit='%', fix=45),
+                MaxValue(method='part%', fix=90),
+                Radius(fix=15, unit='meter'),
             ),
             Layer(
                 'Arbres',

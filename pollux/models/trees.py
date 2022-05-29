@@ -21,11 +21,13 @@ class Trees(Default_model):
 
     def distance_from(self, obj) -> float:
         dist = Position(self.position).distance(obj.position)
+        """
         if isinstance(obj, Lamps):
             illuminated_height = obj.illuminated_height_at(dist)
             illuminated_ratio = self.illuminated_ratio(illuminated_height)
             if illuminated_ratio >= 0.3:  # 30%, feuilles
                 dist -= 1
+        """
         return max(0.0, dist)
 
     def color_impact(self, color: int) -> float:

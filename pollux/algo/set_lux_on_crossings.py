@@ -29,8 +29,9 @@ class Cross(Default_cross):
         for lamp, crossing in adjacent_match(self.lamps_array, self.crossings_array, max_case_range=1):
             if lamp.height <= 1:
                 continue
-            day_impact = lamp.impact(crossing, nb_lux=5, time='day')
-            night_impact = lamp.impact(crossing, nb_lux=5, time='night')
+            day_impact = lamp.impact(crossing, nb_lux=3, time='day')
+            night_impact = lamp.impact(crossing, nb_lux=3, time='night')
+
             if day_impact or night_impact:
                 day_impact_irc = day_impact * min(100, lamp.irc) / 100
                 night_impact_irc = night_impact * min(100, lamp.irc) / 100

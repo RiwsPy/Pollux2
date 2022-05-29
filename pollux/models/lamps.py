@@ -37,11 +37,53 @@ class Lamps(Default_model):
         return 70.0
 
     @property
+    def incidence_rad(self) -> float:
+        return math.radians(self.angle_incidence)
+
+    @property
     def lumens_per_watt(self) -> int:
         return 100
 
     @property
+    def lumens(self) -> float:
+        return self.lumens_per_watt * self.power
+
+    @property
+    def lumens_night(self) -> float:
+        return self.lumens * (1 - max(0, self.lowering_night) / 100)
+
+    def lux_with_distance(self, distance: float, time: str = 'day', height: float = None) -> float:
+        if height is None:
+            height = self.height
+        try:
+            angle = height / distance
+        except ZeroDivisionError:
+            return 0.0
+
+        lumens_value = self.lumens_time(time=time)
+        surface = 2*2 * math.pi * distance**2 * (1 - math.cos(self.incidence_rad))
+        return lumens_value * math.cos(math.radians(angle)) / surface
+
+    def distance_with_lux(self, nb_lux: int = 5, time: str = 'day') -> float:
+        # TODO: A REFAIRE
+        # distance où le nombre de lux au sol == nb_lux
+        unknown_value = 1  # math.cos(self.height / distance)
+        square_distance = (self.lumens_time(time=time) * unknown_value) / \
+                          (4 * math.pi * nb_lux * (1 - math.cos(self.incidence_rad)))
+        return square_distance**0.5
+
+    """
+    if nb_lux <= 0:
+        nb_lux = 1
+    hypotenuse = (self.lumens_time(time) *
+                  math.cos(self.incidence_rad) / nb_lux) ** 0.5
+    return hypotenuse * math.cos(math.radians(90 - self.angle_incidence))
+    """
+
+    @property
     def lux_average_on_ground(self) -> float:
+        # TODO: intégrer les courbes de distribution de la lumière ?
+        #  A REFAIRE
         value = 0
         if self.height >= 1:
             value = (self.lumens_per_watt * self.power) / (math.pi * self.height_max_range**2)
@@ -50,19 +92,11 @@ class Lamps(Default_model):
 
         return value
 
-    def distance_with_lux(self, nb_lux: int = 5, time: str = 'day') -> float:
-        # distance où le nombre de lux au sol == nb_lux
-        if nb_lux == 0:
-            nb_lux = 1
-        hypotenuse = (self.lumens_per_watt * self.power_impact(time) *
-                      math.cos(math.radians(self.angle_incidence)) / nb_lux) ** 0.5
-        return hypotenuse * math.cos(math.radians(90 - self.angle_incidence))
-
     @property
     def height_max_range(self) -> float:
         if self.height <= 1:
             return 20.0
-        return self.height * math.tan(math.radians(self.angle_incidence))
+        return self.height * math.tan(self.incidence_rad)
 
     def max_range(self, nb_lux: int = 5, time: str = 'day') -> float:
         # considéré comme impact faible si < 5lux
@@ -73,48 +107,39 @@ class Lamps(Default_model):
     def illuminated_height_at(self, distance: float) -> float:
         # hauteur du flux lumineux à X mètres
         if self.height <= 1.0:
-            return math.tan(math.radians(self.angle_incidence)) * distance
+            return math.tan(self.incidence_rad) * distance
         return max(0.0, self.height * (1 - distance/self.height_max_range))
 
-    def is_without_impact(self, illuminated_object, distance, nb_lux: int = 5, time: str = 'day') -> bool:
+    def is_in_range(self, illuminated_object, distance, nb_lux: int = 5, time: str = 'day') -> bool:
         diff_lum_tree_height = max(self.height - illuminated_object.height, 0)
         square_distance = diff_lum_tree_height ** 2 + distance ** 2
 
         return self.on_motion or \
-                square_distance >= self.height_max_range**2 or \
-                square_distance >= self.max_range(nb_lux=nb_lux, time=time) ** 2
+            square_distance >= self.height_max_range**2 or \
+            square_distance >= self.max_range(nb_lux=nb_lux, time=time) ** 2
 
     def impact(self, illuminated_object, nb_lux: int, time: str) -> float:
-        distance = illuminated_object.distance_from(self)
-        if self.is_without_impact(illuminated_object, distance, nb_lux=nb_lux, time=time):
+        distance = Position(self.position).distance(illuminated_object.position)
+        #distance = illuminated_object.distance_from(self)
+        if self.is_in_range(illuminated_object, distance, nb_lux=nb_lux, time=time) or \
+                not self.is_aligned_with(illuminated_object):
             return 0.0
 
+        hyp = (distance**2 + self.height**2) ** 0.5
+        bottom_impact = self.lux_with_distance(hyp, time=time)
+
         diff_lum_tree_height = max(self.height - illuminated_object.height, 0)
-        square_distance = diff_lum_tree_height ** 2 + distance ** 2
+        hyp = (diff_lum_tree_height ** 2 + distance ** 2)**0.5
+        top_impact = self.lux_with_distance(hyp, time=time, height=diff_lum_tree_height)
 
-        impact_lux = (self.aligned_power_impact(illuminated_object, time=time) *
-                      self.lumens_per_watt *
-                      math.cos(math.radians(self.angle_incidence)) /
-                      max(1, square_distance)
-                      )
+        return max(bottom_impact, top_impact) * illuminated_object.color_impact(self.colour)
 
-        return impact_lux * illuminated_object.color_impact(self.colour)
+    def lumens_time(self, time: str = 'day') -> float:
+        lumens_value = self.lumens
+        if time == 'night':
+            lumens_value = self.lumens_night
 
-    def power_impact(self, time: str = 'day') -> float:
-        power_value = self.power
-        if time != 'day':
-            power_value = power_value * (1 - max(0, self.lowering_night) / 100)
-
-        return power_value
-
-    def aligned_power_impact(self, other_object, time: str = 'day') -> int:
-        power_impact = 0
-        if not self.is_oriented:
-            power_impact = self.power_impact(time=time) / 2
-        elif self.is_aligned_with(other_object):
-            power_impact = self.power_impact(time=time)
-
-        return power_impact
+        return lumens_value
 
     def is_aligned_with(self, other_object) -> bool:
         if not self.is_oriented or self.position == other_object.position:
@@ -137,7 +162,6 @@ class Lamps(Default_model):
         #  * Calque Hiver/Eté/Intersaison et faire varier selon HP/HC
         #  * Retravailler la db pour mieux connaître les créneaux des plages horaires
         #  des réductions d'intensité nocturne
-        lowering_night = self.lowering_night
-        power_day = self.power
-        power_night = power_day * (100 - lowering_night) / 100
-        return (6 * power_day + 6 * power_night) * 0.1740 / 1000 * 365.25
+        return (6 * self.lumens / self.lumens_per_watt +
+                6 * self.lumens_night / self.lumens_per_watt
+                ) * 0.1740 / 1000 * 365.25
