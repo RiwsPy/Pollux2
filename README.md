@@ -4,9 +4,10 @@ Continuité du Projet Pollux dans le cadre du CivicLab de Grenoble, proposé par
 Pour le défi *Lux, Led, Lumens* porté par GreenAlp.\
 https://grenoble.civiclab.eu
 
-Pollux est un outil de visualisation cartographique, pensé pour représenter l'éclairage public, son impact, ses manques en intégrant autant que possible son environnement réel.
+Pollux est un outil de visualisation cartographique, pensé pour représenter l'éclairage public, son impact, ses manques en intégrant autant que possible son environnement réel.\
+C'est un outil accessible, de vulgarisation et bien qu'une attention particulière a été portée au réalisme et à la rigueur scientifique, Pollux n'a pas la prétention d'être une référence en la matière.
 
-La version actuelle n'est pas encore disponible.\
+La version actuelle est actuellement disponible : http://164.92.163.211/\
 La version du prototype du projet est visible sur : https://green-pollux.herokuapp.com \
 Son repo : https://github.com/RiwsPy/Pollux
 
@@ -37,16 +38,18 @@ Après avoir rempli le fichier **.env** à la racine projet et configuré votre 
 
 ### Création et mise à jour des bases de données :
 ```
-./manage.py uDB works/trees.py
-./manage.py uDB works/lamps.py
-./manage.py uDB works/highways.py
+./manage.py uDB pollux/works/trees.py
+./manage.py uDB pollux/works/lamps.py
+./manage.py uDB pollux/works/highways.py
+./manage.py uDB pollux/works/crossings.py
 ```
 
 ### Complétion des données :
 ```
-./manage.py uCDB algo/complete_lamp_with_greenalpdata.py
-./manage.py uCDB algo/set_orientation_to_lamps.py
-./manage.py uCDB algo/lamp_impact_tree.py
+./manage.py uCDB pollux/algo/complete_lamp_with_greenalpdata.py
+./manage.py uCDB pollux/algo/set_orientation_to_lamps.py
+./manage.py uCDB pollux/algo/lamp_impact_tree.py
+./manage.py uCDB pollux/algo/set_lux_on_crossings.py
 ```
 
 ### Démarrage de l'application :
@@ -81,28 +84,29 @@ Les méthodes de conversion sont présentes dans *formats/*.
 Il est possible de mettre à jour la base de données, grâce à la commande -uDB.
 Pour une base, par exemple :
 ```
-./engine.py -uDB works/trees.py
+./engine.py -uDB pollux/works/trees.py
 ```
 Ou plusieurs bases :
 ```
-./engine.py -uDB works/parks.py works/shops.py
+./engine.py -uDB pollux/works/parks.py pollux/works/shops.py
 ```
 
 
 ### Architecture:
+- manage.py
 - .env
 - Pipfile
 - Pipfile.lock
-- algo/
-- db/
-- maps/
 - pollux/
+  - algo/
   - api_ext/
     - grenoble_alpes_metropole.py
     - osm.py
     - smmag.py
+  - db/
   - formats/
   - management/
+  - maps/
   - models/
   - static/
       - css/
@@ -113,6 +117,7 @@ Ou plusieurs bases :
       - index.html
       - map.html
       - ...
+  - tests/
   - views.py
   - works/
     - cross/
