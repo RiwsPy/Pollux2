@@ -4,7 +4,6 @@ from . import *
 class Config(Default_Config):
     ID = 6
     LAYER_BASE = Layer('', '', '',
-                       Radius(fix=15, unit='auto'),
                        Gradient('BLUEBELT'),
                        Blur(unit='%', fix=40),
                        MaxValue(method='fix',
@@ -13,9 +12,9 @@ class Config(Default_Config):
                        )
     DATA = {
         'options': Options(
-            Zoom(max=20, init=16),
-            Legend(name="Qualité d'éclairage"),
-            bbox=[5.717633, 45.182596, 5.734348, 45.185410],
+            Zoom(max=20, init=18),
+            Legend(name="Manque d'éclairage"),
+            bbox=[5.714337, 45.182177, 5.722755, 45.184826],
         ),
         'layers': [
             Layer(
@@ -33,7 +32,7 @@ class Config(Default_Config):
             ),
             Layer(
                 'Passages piétons',
-                'cluster',
+                'node',
                 'crossings',
                 Icon('PEDESTRIAN'),
             ),
@@ -62,7 +61,7 @@ class Config(Default_Config):
         ],
         'description': {
             'title': "Carte des passages piétons",
-            'accroche': "Une carte interactive indiquant la qualité d'éclairage des passages piétons.",
+            'accroche': "Une carte interactive indiquant les passages piétons peu éclairés.",
             'intro': """""",
             'icon': 'buttons/contradiction.png',
             'href': '/map_desc/6',

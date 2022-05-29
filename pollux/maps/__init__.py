@@ -78,6 +78,7 @@ class Gradient(MapAttr):
         0.5: 'lime',
         0.3: 'blue',
         0.15: 'violet',
+        0.1: 'black',
     }
 
     LIGHT_COLORED = {
@@ -87,6 +88,7 @@ class Gradient(MapAttr):
         0.63: 'lime',
         0.45: 'blue',
         0.31: 'violet',
+        0.1: 'black',
     }
 
     V1 = {
@@ -106,7 +108,7 @@ class Gradient(MapAttr):
         0.45: 'blue',
         0.31: 'violet',
         0.3: 'blue',
-        0.15: 'violet'
+        0.1: 'black',
     }
 
 

@@ -115,7 +115,6 @@ class Lamps(Default_model):
         square_distance = diff_lum_tree_height ** 2 + distance ** 2
 
         return self.on_motion or \
-            square_distance >= self.height_max_range**2 or \
             square_distance >= self.max_range(nb_lux=nb_lux, time=time) ** 2
 
     def impact(self, illuminated_object, nb_lux: int, time: str) -> float:
