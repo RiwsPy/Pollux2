@@ -3,6 +3,16 @@ function defaultZonePos() {
     return [[45.15008475740563, 5.664997100830078], [45.221347171208436, 5.766019821166993]]
 }
 
+function zonePos(bbox) {
+    return L.latLngBounds([
+                           [bbox[1],
+                            bbox[0]],
+                           [bbox[3],
+                            bbox[2]]
+                        ])
+}
+
+
 function defaultZoneBound() {
     return L.latLngBounds(defaultZonePos());
 }
@@ -77,9 +87,18 @@ function addNewLineInContent(category, content, default_value) {
 
 
 class heatMap {
-    constructor(layers, options) {
+    constructor(layers, options, ID) {
+        this.ID = ID;
         this.options = options;
         this.layers = layers;
+        this.options.filters = this.options.filters || {};
+        //this.options.filters.position__within = this.options_filters();
+
+        /*
+        for (let layer of this.layers) {
+            layer['filters'] = JSON.stringify(layer['filters']);
+        }
+        */
 
         if (this.options.zoom.min > this.options.zoom.max) {
             let old_max = this.options.zoom.max;
@@ -123,15 +142,18 @@ class heatMap {
     }
 
     createMap(controlLayers, dontCreateMap) {
-        let bbox_lat_lng = defaultZoneBound()
-        if (this.options.bbox) {
-            bbox_lat_lng = L.latLngBounds([
-                                [this.options.bbox[1],
-                                this.options.bbox[0]],
-                                [this.options.bbox[3],
-                                this.options.bbox[2]]
-                                ]);
+        let bbox_lat_lng = undefined;
+        //let bbox_lat_lng = defaultZoneBound()
+        //if (this.options.bbox) {
+        //    bbox_lat_lng = this.options.bbox;
+        //}
+        for (let layer of this.layers) {
+            if (layer.isActive) {
+                bbox_lat_lng = layer.filters['position__within'];
+                break;
+            }
         }
+        bbox_lat_lng = bbox_lat_lng || this.layers[0].filters.position__within;
 
         if (!dontCreateMap) {
             let activeLayers = [];
@@ -148,10 +170,10 @@ class heatMap {
                     zoomDelta: this.options.zoom.button,  // granularité du zoom (bouton)
                     zoomSnap: 0.1,  // modulo minimum
                     wheelPxPerZoomLevel: 75/this.options.zoom.scroll  // granularité du zoom (scroll)
-                }).setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
+                }).setView(zonePos(bbox_lat_lng).getCenter(), this.options.zoom.init);
             this.map.owner = this;
         } else {
-            this.map.setView(bbox_lat_lng.getCenter(), this.options.zoom.init);
+            this.map.setView(zonePos(bbox_lat_lng).getCenter(), this.options.zoom.init);
 
             for (let layer of this.layers) {
                 if (layer.isActive) {
@@ -242,16 +264,23 @@ class heatMap {
             }
             nb += 1;
         }
+        this.options.filters = JSON.parse(this.options_filters()) || {};
+        this.options.filters.position__within = bound;
 
-        window.location.href =
-            '?zoom=' + this.map.getZoom() +
+        let url = '?zoom=' + this.map.getZoom() +
             '&layers=' +
-            (activeNbLayers.join('/') || -1) +
+            (activeNbLayers.join('/') || -1);
+            /*
             '&bound=' +
             bound[0].toFixed(6) + '/' +
             bound[1].toFixed(6) + '/' +
             bound[2].toFixed(6) + '/' +
             bound[3].toFixed(6);
+            */
+        url += '&filters=' + JSON.stringify(this.options.filters)
+
+        window.location.href = url
+
     }
 
     addLegend(layer, maxValueInLayer) {
@@ -312,18 +341,38 @@ class heatMap {
         }
     }
 
-    loadJson(fileData) {
-        var files_to_load = {};
-        for (let layerdata of this.layers) {
-            if (!(layerdata.db in files_to_load)) {
-                files_to_load[layerdata.db] = true;
-                this.request(layerdata, fileData);
+    async loadJson() {
+        let layer_id = 0;
+        let layer_in_progress = {};
+        for await (let layerdata of this.layers) {
+            if (!layer_in_progress[layerdata.db] ||
+                    !layer_in_progress[layerdata.db][layerdata.filters]) {
+                layer_in_progress[layerdata.db] = layer_in_progress[layerdata.db] || {};
+                layer_in_progress[layerdata.db][layerdata.filters] = true;
+                this.request(layerdata, layer_id);
             }
+            layer_id += 1;
         };
     }
 
-    request(layerdata) {
-        let request = new Request('/api/' + layerdata.db + '?bound=' + this.options.bbox, {
+    options_filters() {
+        let str_url = new URL(window.location.href);
+        return str_url.searchParams.get("filters")
+    }
+
+    request(layerdata, layer_id) {
+       this._DB[layerdata.db] = this._DB[layerdata.db] || {};
+
+        // récupérer tous les attributs de l'URL ??
+        let url = '/api/' + layerdata.db //+ '?bound=' + this.options.bbox
+        url += '?map_id=' + this.ID || -1
+        url += '&layer_id=' + layer_id || -1
+        let filters = this.options_filters()
+        if (filters) {
+            url += '&filters=' + filters
+        }
+
+        let request = new Request(url, {
             //method: 'POST',
             method: 'GET',
             //body: JSON.stringify({bbox: this.options.bbox}),
@@ -335,9 +384,10 @@ class heatMap {
         fetch(request)
         .then((resp) => resp.json())
         .then((data) => {
-            this._DB[layerdata.db] = data;
-            for (let layer of this.layers) {
-                if (layer.db == layerdata.db) {
+           this._DB[layerdata.db][JSON.stringify(layerdata.filters)] = data;
+           for (let layer of this.layers) {
+                if (layer.db == layerdata.db &&
+                        JSON.stringify(layer.filters) == JSON.stringify(layerdata.filters)) {
                     this.createLayer(layer);
                 }
             }
@@ -345,10 +395,11 @@ class heatMap {
     }
 
     createLayer(layer) {
+        let data = this._DB[layer.db][JSON.stringify(layer.filters)];
         if (layer.style == 'heatmap') {
-            this.createHeatLayer(this._DB[layer.db], layer)
+            this.createHeatLayer(data, layer)
         } else if (layer.style == 'node' || layer.style == 'cluster') {
-            this.createNodeLayer(this._DB[layer.db], layer)
+            this.createNodeLayer(data, layer)
         };
     }
 

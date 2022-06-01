@@ -7,13 +7,8 @@ class Config(Default_Config):
                        Blur(unit='%', fix=10),
                        MaxValue(method='fix', fix=6000),
                        Value(field='colour'),
-                       gradient={
-                            0.3333: '#FF880E',
-                            0.4166: '#FF9F46',
-                            0.5: '#FFB16D',
-                            0.6666: '#FFCDA6',
-                            0.8333: '#FFE4CD',
-                            1.0: '#FFF6EC'}
+                       Gradient('TEMPERATURE_COLOR'),
+                       Filters(position__within=[5.702419, 45.168907, 5.742846, 45.196917])
                        )
 
     DATA = {
@@ -22,7 +17,6 @@ class Config(Default_Config):
             TileLayer('NIGHT'),
             Zoom(min=14, max=17, init=14),
             Legend(name='Température de couleur'),
-            bbox=[5.702419, 45.168907, 5.742846, 45.196917],
         ),
         'layers': [
             Layer(
@@ -70,6 +64,7 @@ class Config(Default_Config):
                     'R': """
                         Cette méthodologie possède également ses limites.
                         Elle ne prend pas en compte les obstacles à la lumière comme les bâtiments par exemple.
+                        Elle ne prend en compte que l'éclairage public et non l'impact de l'éclairage privé.
                         La puissance des luminaires n'intervient pas (encore) dans les résultats, c'est également un problème.
                         Les satellites montrent l'éclairage vu du ciel, celle-ci montre l'éclairage perçu au sol."""
                 },

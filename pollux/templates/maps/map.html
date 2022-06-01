@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <script src="{% static 'js/create_map.js' %}" onload="{{ mapJSMethod }}({{ layers }}, {{ options }})"></script>
+    <script src="{% static 'js/create_map.js' %}" onload="{{ mapJSMethod }}({{ layers }}, {{ options }}, {{ ID }})"></script>
 {% endblock %}
 
 {% block footer %}

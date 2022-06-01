@@ -11,13 +11,16 @@ from .utils import in_bound
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.gis.geos import Polygon
+from django.core.exceptions import FieldError
 from django.views import View
 from django.views.generic.base import ContextMixin
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
+from copy import deepcopy
 
-CONFIGS = Configs()
-CONFIGS.load()
+_CONFIGS = Configs()
+_CONFIGS.load()
+CONFIGS = deepcopy(_CONFIGS)
 
 
 class ShowMap(View):
@@ -27,7 +30,8 @@ class ShowMap(View):
         if not CONFIGS.get(map_id):
             return HttpResponseRedirect(reverse('home'))
 
-        context = CONFIGS[map_id]
+        context = deepcopy(_CONFIGS[map_id])
+        context['ID'] = map_id
         kwargs = request.GET
 
         zoom = kwargs.get('zoom')
@@ -43,19 +47,27 @@ class ShowMap(View):
         if bound and len(bound) == 4:
             context['options']['bbox'] = bound
 
+        # update des filters des calques en fonction des filters présents dans l'url
+        filters = kwargs.get('filters', '').split(',')
+        for fltr in filters:
+            k, _, v = fltr.partition(':')
+            if k and v:
+                for layer in context['layers']:
+                    layer['filters'][k] = v
+
         return render(request,
                       self.template_name,
                       context=context)
 
 
-class JsonDetails(View):
+class DataDetails(View):
     db_name_to_cls = {
         'trees': trees.Trees,
         'lamps': lamps.Lamps,
         'highways': highways.Highways,
         'crossings': crossings.Crossings,
     }
-    db_dir = {'db', 'db/cross'}
+    db_dirs = {'db', 'db/cross'}
     no_way_files = ()
 
     def get(self, request, filename):
@@ -69,8 +81,8 @@ class JsonDetails(View):
 
     def print_file_to_json(self, filename, **kwargs):
         # TODO: ajouter un équivalent au filter(position__within) ??
-        error_msg = 'db_dir: empty'
-        for directory in self.db_dir:
+        error_msg = 'db_dirs: empty'
+        for directory in self.db_dirs:
             try:
                 with open(os.path.join(BASE_DIR, 'pollux', directory, filename), 'r') as file:
                     if kwargs.get('bound'):
@@ -95,17 +107,34 @@ class JsonDetails(View):
 
         return JsonResponse({'Error': error_msg})
 
-    @staticmethod
-    def print_db_to_json(cls, **kwargs):
-        if 'bound' in kwargs:
-            bound = kwargs['bound'][0].split(',')
+    def print_db_to_json(self, cls, **kwargs):
+        queryset = cls.objects.all()
+
+        filters_updated = dict()
+        if kwargs['layer_id'][0] != '-1' and kwargs['map_id'][0] != '-1':
+            map_id = kwargs['map_id'][0]
+            layer_id = int(kwargs['layer_id'][0])
+            filters_updated.update(CONFIGS[map_id]['layers'][layer_id].get('filters', {}))
+        if 'filters' in kwargs:
+            filters_updated.update(json.loads(kwargs['filters'][0]))
+
+        for k, v in filters_updated.items():
+            if '.' in k:
+                # filters=trees.heigth__lge:5
+                db, _, k = k.partition('.')
+                if self.db_name_to_cls.get(db) is not cls:
+                    continue
             try:
-                queryset = cls.objects.filter(position__within=Polygon.from_bbox(bound))
+                if k == 'position__within':
+                    v = Polygon.from_bbox(v)
+                queryset = queryset.filter(**{k: v})
+                print(f'Filtre {k}: {v} appliqué.')
+            except FieldError:
+                print(f'Warning: Filtre {k}: {v} non appliqué.')
+                continue
             except ValueError:
-                # nombre d'argument erroné (!= 4)
-                queryset = cls.objects.all()
-        else:
-            queryset = cls.objects.all()
+                print(f'ValueError {k}: {v} ; position incorrecte ?')
+                continue
 
         if cls is not lamps.Lamps:
             return JsonResponse(cls.serialize(queryset))
@@ -132,7 +161,7 @@ class MixinSecondaryPages(MixinContext, View):
     template_name = ""
     extra_content = {
         'page_title': 'Pollux',
-        'maps_data': CONFIGS}
+        'maps_data': _CONFIGS}
 
     def get(self, request, *args, **kwargs):
         return render(request,

@@ -7,28 +7,29 @@ class Config(Default_Config):
                        Gradient('LIGHT_COLORED'),
                        Blur(unit='%', fix=35),
                        MaxValue(method='fix', fix=50),
+                       Filters(position__within=[5.704337, 45.182177, 5.722755, 45.184826])
                        )
     DATA = {
         'options': Options(
             Legend(name='Impact'),
-            bbox=[5.717633, 45.182596, 5.734348, 45.185410],
+            #bbox=[5.717633, 45.182596, 5.734348, 45.185410],
         ),
         'layers': [
             Layer(
                 'Luminaires (Impact - Jour)',
                 'heatmap',
                 'lamps',
-                Radius(field='max_range_day', unit='meter'),
+                Radius(field='max_range_day', unit='auto'),
                 Value(field='day_impact'),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
-                IsActive(True)
+                IsActive(True),
             ),
             Layer(
                 'Luminaires (Impact - Nuit)',
                 'heatmap',
                 'lamps',
-                Radius(field='max_range_night', unit='meter'),
+                Radius(field='max_range_night', unit='auto'),
                 Value(field='night_impact'),
                 Orientation(field='orientation'),
                 HorizontalAngle(field='horizontal_angle'),
@@ -45,7 +46,7 @@ class Config(Default_Config):
                 'trees',
                 Value(field='day_impact'),
                 MaxValue(method='part%', fix=90),
-                Radius(fix=15, unit='meter'),
+                Radius(fix=15, unit='auto'),
             ),
             Layer(
                 'Arbres (Impact - Nuit)',
@@ -53,7 +54,7 @@ class Config(Default_Config):
                 'trees',
                 Value(field='night_impact'),
                 MaxValue(method='part%', fix=90),
-                Radius(fix=15, unit='meter'),
+                Radius(fix=15, unit='auto'),
             ),
             Layer(
                 'Arbres',

@@ -5,13 +5,13 @@ class Config(Default_Config):
     ID = 4
     LAYER_BASE = Layer('', '', '',
                        MaxValue(method='part%',
-                                fix=95)
+                                fix=95),
+                       Filters(position__within=[5.717633, 45.182596, 5.734348, 45.185410])
                        )
     DATA = {
         'options': Options(
             Zoom(max=19, init=16),
             Legend(name='Dépense €/an'),
-            bbox=[5.717633, 45.182596, 5.734348, 45.185410],
         ),
         'layers': [
             Layer(

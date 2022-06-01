@@ -8,13 +8,13 @@ class Config(Default_Config):
                        Blur(unit='%', fix=40),
                        MaxValue(method='fix',
                                 fix=20),
-                       Value(max=20)
+                       Value(max=20),
+                       Filters(position__within=[5.714337, 45.182177, 5.722755, 45.184826])
                        )
     DATA = {
         'options': Options(
             Zoom(max=20, init=18),
             Legend(name="Manque d'éclairage"),
-            bbox=[5.714337, 45.182177, 5.722755, 45.184826],
         ),
         'layers': [
             Layer(
@@ -42,6 +42,24 @@ class Config(Default_Config):
                 'lamps',
                 Icon('LAMP'),
             ),
+
+            Layer(
+                'Contradiction',
+                'heatmap',
+                'contradiction_crossing_tree.json',
+                Radius(fix=20, unit='meter'),
+                MaxValue(method='zoom_depend'),
+                Blur(unit='%', fix=0),
+                Value(field='intensity'),
+                gradient={
+                    0.3333: '#FF880E',
+                    0.4166: '#FF9F46',
+                    0.5: '#FFB16D',
+                    0.6666: '#FFCDA6',
+                    0.8333: '#FFE4CD',
+                    1.0: '#FFF6EC'}
+    ),
+
             Layer(
                 'Zones éclairées',
                 'heatmap',

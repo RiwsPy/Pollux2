@@ -111,6 +111,22 @@ class Gradient(MapAttr):
         0.1: 'black',
     }
 
+    TEMPERATURE_COLOR = {
+        0.3333: '#FF880E',
+        0.4166: '#FF9F46',
+        0.5: '#FFB16D',
+        0.6666: '#FFCDA6',
+        0.8333: '#FFE4CD',
+        1.0: '#FFF6EC',
+    }
+
+
+class Filters(MapAttr):
+    attr_name = 'filters'
+    DEFAULT = {
+        'position__within': [5.718705, 45.187602, 5.727996, 45.189931],
+    }
+
 
 class Icon(MapAttr):
     attr_name = 'icon'
@@ -284,6 +300,7 @@ class Default_Config:
                           Orientation(),
                           HorizontalAngle(),
                           MaxValue(),
+                          Filters(),
                           )
     # Options par défaut pour le layer actuel
     LAYER_BASE = Layer('', '', '')

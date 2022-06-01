@@ -4,13 +4,13 @@ from . import *
 class Config(Default_Config):
     ID = 5
     LAYER_BASE = Layer('', '', '',
-                       MaxValue(method='fix', fix=1, min=0.4)
+                       MaxValue(method='fix', fix=1, min=0.4),
+                       Filters(position__within=[5.707430, 45.185546, 5.715208, 45.189024])
                        )
     DATA = {
         'options': Options(
             Zoom(init=17),
             Legend(name='Discontinuité %'),
-            bbox=[5.707430, 45.185546, 5.715208, 45.189024],
         ),
         'layers': [
             Layer(
