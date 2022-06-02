@@ -15,8 +15,8 @@ def update_deep(source: dict, other: dict, *no_dict_key) -> None:
             source[k] = source_copy
 
 
-def in_bound(feature: dict, bound: List[float], **kwargs) -> bool:
-    return Position(feature['geometry']['coordinates']).in_bound(bound)
+def in_bound(feature: dict, position__within: List[float], **kwargs) -> bool:
+    return Position(feature['geometry']['coordinates']).in_bound(position__within)
 
 
 if __name__ == '__main__':

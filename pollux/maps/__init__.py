@@ -27,6 +27,9 @@ class Configs(dict):
 class Layer(dict):
     def __init__(self, name: str, style: str, db: str, *args, **kwargs):
         for arg in args:
+            if 'preset' in arg:
+                self.update(**arg['preset'])
+                del arg['preset']
             self.update(**arg)
         self.update(**kwargs)
         self.update(**{'name': name, 'style': style, 'db': db})
@@ -284,7 +287,6 @@ class Default_Config:
         TileLayer(),
         Zoom(),
         Legend(),
-        bbox=MAX_BOUND_LNG_LAT,
         draw={'bboxButton': 1},
         minOpacity=0.05,
         buttons=_DEFAULT_BUTTONS,
@@ -349,3 +351,11 @@ class Default_Config:
         if not can_scan:
             buttons['scan'] = 0
         return self.copy_and_deep_update(self._DEFAULT_BUTTONS, buttons)
+
+
+class Preset(MapAttr):
+    OLD_SCHOOL = Layer('', '', '',
+                       Gradient('V1'),
+                       MaxValue(),
+                       Radius(method='fix', fix=25, unit='pixel'),
+                       )

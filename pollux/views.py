@@ -80,20 +80,22 @@ class DataDetails(View):
         return HttpResponseForbidden()
 
     def print_file_to_json(self, filename, **kwargs):
-        # TODO: ajouter un équivalent au filter(position__within) ??
         error_msg = 'db_dirs: empty'
         for directory in self.db_dirs:
             try:
                 with open(os.path.join(BASE_DIR, 'pollux', directory, filename), 'r') as file:
-                    if kwargs.get('bound'):
-                        kwargs['bound'] = kwargs['bound'][0].split(',')
-                        kwargs['bound'] = [float(pos) for pos in kwargs['bound']]
-                        kwargs['bound'] = [kwargs['bound'][1],
-                                           kwargs['bound'][0],
-                                           kwargs['bound'][3],
-                                           kwargs['bound'][2]]
                     geo = Geojson()
-                    geo.load(json.load(file), in_bound, **kwargs)
+                    if 'filters' in kwargs:
+                        filters = json.loads(kwargs['filters'][0])
+                        filters = [float(pos) for pos in filters['position__within']]
+                        filters = [filters[1],
+                                   filters[0],
+                                   filters[3],
+                                   filters[2]]
+                        kwargs['filters'] = filters
+                        geo.load(json.load(file), in_bound, **kwargs)
+                    else:
+                        geo.load(json.load(file))
                     return JsonResponse(geo)
             except FileNotFoundError:
                 error_msg = f'FileNotFoundError: {filename} not found'
