@@ -27,6 +27,10 @@ class ShowMap(View):
     template_name = 'maps/map.html'
 
     def get(self, request, map_id):
+        if map_id == 'mapbox':
+            return render(request, 'maps/map_box.html',
+                          {'mapbox_access_token': os.getenv('MAPBOX_ACCESS_TOKEN'),
+                           'data': crossings.Crossings.serialize(crossings.Crossings.objects.all())})
         if not CONFIGS.get(map_id):
             return HttpResponseRedirect(reverse('home'))
 

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head_dependencies %}
+    <!-- MapBox -->
+    <script src='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v3.3.1/mapbox.css' rel='stylesheet' />
+
+    <!-- Map Scripts -->
+    <script src="{% static 'js/heatmap.js' %}"></script>
+    <script src="{% static 'js/clsMap.js' %}"></script>
+{% endblock %}
+
+{% block navbar %}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <div id="map_box">
+                <div id="city_map">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/mapbox_map.js' %}" onload="create_map('{{ mapbox_access_token }}', {{ data }})"></script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}
