@@ -16,6 +16,8 @@ class Works(Osm_works):
             way["highway"="primary_link"]{Osm_works().BBOX};
             way["highway"="secondary_link"]{Osm_works().BBOX};
             way["highway"="tertiary_link"]{Osm_works().BBOX};
+            way["highway"="motorway_link"]{Osm_works().BBOX};
+            way["highway"="trunk_link"]{Osm_works().BBOX};
             way["highway"="residential"]{Osm_works().BBOX};
             way["highway"="service"]{Osm_works().BBOX};
             way["highway"="living_street"]{Osm_works().BBOX};
@@ -32,7 +34,8 @@ class Works(Osm_works):
     highway_accepted = (
                 'primary', 'trunk', 'motorway', 'secondary', 'tertiary', 'residential', 'service',
                 'living_street', 'unclassified', 'footway', 'pedestrian', 'path',
-                'primary_link', 'secondary_link', 'tertiary_link', 'cycleway')
+                'primary_link', 'secondary_link', 'tertiary_link', 'cycleway',
+		'motorway_link', 'trunk_link')
 
     def _can_be_output(self, feature, **kwargs) -> bool:
         return super()._can_be_output(feature, **kwargs) and \
