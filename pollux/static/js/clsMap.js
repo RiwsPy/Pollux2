@@ -92,7 +92,6 @@ class heatMap {
         this.options = options;
         this.layers = layers;
         this.options.filters = this.options.filters || {};
-        //this.options.filters.position__within = this.options_filters();
 
         /*
         for (let layer of this.layers) {
@@ -143,17 +142,22 @@ class heatMap {
 
     createMap(controlLayers, dontCreateMap) {
         let bbox_lat_lng = undefined;
-        //let bbox_lat_lng = defaultZoneBound()
-        //if (this.options.bbox) {
-        //    bbox_lat_lng = this.options.bbox;
-        //}
-        for (let layer of this.layers) {
-            if (layer.isActive) {
-                bbox_lat_lng = layer.filters['position__within'];
-                break;
+        if (this.url_get_paramaters('filters')) {
+            // Position dans l'URL
+            bbox_lat_lng = JSON.parse(this.url_get_paramaters('filters'))['position__within'];
+        }
+        if (!bbox_lat_lng) {
+            // Position du filtre n°1
+            bbox_lat_lng = this.layers[0].filters.position__within;
+
+            // Position du premier filtre actif
+            for (let layer of this.layers) {
+                if (layer.isActive) {
+                    bbox_lat_lng = layer.filters['position__within'];
+                    break;
+                }
             }
         }
-        bbox_lat_lng = bbox_lat_lng || this.layers[0].filters.position__within;
 
         if (!dontCreateMap) {
             let activeLayers = [];
@@ -264,7 +268,7 @@ class heatMap {
             }
             nb += 1;
         }
-        this.options.filters = JSON.parse(this.options_filters()) || {};
+        this.options.filters = JSON.parse(this.url_get_paramaters('filters')) || {};
         this.options.filters.position__within = bound;
 
         let url = '?zoom=' + this.map.getZoom() +
@@ -355,9 +359,9 @@ class heatMap {
         };
     }
 
-    options_filters() {
+    url_get_paramaters(param) {
         let str_url = new URL(window.location.href);
-        return str_url.searchParams.get("filters")
+        return str_url.searchParams.get(param)
     }
 
     request(layerdata, layer_id) {
@@ -367,7 +371,7 @@ class heatMap {
         let url = '/api/' + layerdata.db //+ '?bound=' + this.options.bbox
         url += '?map_id=' + this.ID || -1
         url += '&layer_id=' + layer_id || -1
-        let filters = this.options_filters()
+        let filters = this.url_get_paramaters('filters')
         if (filters) {
             url += '&filters=' + filters
         }
