@@ -7,7 +7,7 @@ https://grenoble.civiclab.eu
 Pollux est un outil de visualisation cartographique, pensé pour représenter l'éclairage public, son impact, ses manques en intégrant autant que possible son environnement réel.\
 C'est un outil accessible, de vulgarisation et bien qu'une attention particulière a été portée au réalisme et à la rigueur scientifique, Pollux n'a pas la prétention d'être une référence en la matière.
 
-La version actuelle est actuellement disponible : http://164.92.163.211/ \
+La version actuelle est actuellement disponible : http://164.92.163.211/  \
 La version du prototype du projet est visible sur : https://green-pollux.herokuapp.com \
 Son repo : https://github.com/RiwsPy/Pollux
 
