@@ -25,14 +25,14 @@ class Configs(dict):
 
 
 class Layer(dict):
-    def __init__(self, name: str, style: str, db: str, *args, **kwargs):
+    def __init__(self, name: str, typ: str, db: str, *args, **kwargs):
         for arg in args:
             if 'preset' in arg:
                 self.update(**arg['preset'])
                 del arg['preset']
             self.update(**arg)
         self.update(**kwargs)
-        self.update(**{'name': name, 'style': style, 'db': db})
+        self.update(**{'name': name, 'type': typ, 'db': db})
 
 
 class Options(dict):
@@ -162,6 +162,11 @@ class Radius(MapAttr):
         'fix': 25,
         'add': 0,
     }
+
+
+class Style(MapAttr):
+    attr_name = 'style'
+    DEFAULT = {}
 
 
 class Value(MapAttr):
@@ -303,6 +308,7 @@ class Default_Config:
                           HorizontalAngle(),
                           MaxValue(),
                           Filters(),
+                          Style(),
                           )
     # Options par défaut pour le layer actuel
     LAYER_BASE = Layer('', '', '')
@@ -344,7 +350,7 @@ class Default_Config:
     def buttons(self) -> dict:
         can_scan = False
         for layer in self.DATA.get('layers', {}):
-            if layer.get('style') == 'heatmap':
+            if layer.get('type') == 'heatmap':
                 can_scan = True
                 break
         buttons = self.DATA.get('options', {}).get('buttons', {})

@@ -400,9 +400,9 @@ class heatMap {
 
     createLayer(layer) {
         let data = this._DB[layer.db][JSON.stringify(layer.filters)];
-        if (layer.style == 'heatmap') {
+        if (layer.type == 'heatmap') {
             this.createHeatLayer(data, layer)
-        } else if (layer.style == 'node' || layer.style == 'cluster') {
+        } else if (layer.type == 'node' || layer.type == 'cluster') {
             this.createNodeLayer(data, layer)
         };
     }
@@ -410,6 +410,7 @@ class heatMap {
     createNodeLayer(data, layer) {
         let cls = this;
         L.geoJSON(data, {
+            style: layer.style,
             onEachFeature: function(feature, layer) {
                 addPopUp(feature, layer);
             },
