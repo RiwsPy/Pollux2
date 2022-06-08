@@ -150,14 +150,12 @@ class Position(List[float]):
         return self
 
     def type_of_pos(self) -> str:
-        if type(self[0]) is list:
-            if type(self[0][0]) is list:
-                if type(self[0][0][0]) is list:
+        if isinstance(self[0], list):
+            if isinstance(self[0][0], list):
+                if isinstance(self[0][0][0], list):
                     return 'MultiPolygon'
 
-                try:
-                    self[0][1]
-                except IndexError:
+                if self[0][0] == self[0][-1]:
                     return 'Polygon'
                 return 'MultiLineString'
             return 'LineString'
@@ -197,6 +195,20 @@ class Position(List[float]):
                 diff = 90
             x -= (x - diff) * 2
         return x % 360
+
+    def iter_pos(self) -> tuple:
+        type_of_pos = self.type_of_pos()
+        if type_of_pos == 'Point':
+            yield tuple(self)
+        elif type_of_pos == 'LineString':
+            for pos1, pos2 in zip(self[:-1], self[1:]):
+                yield pos1, pos2
+        # TODO: multipolygon ??
+        else:
+            for line in self:
+                for pos1, pos2 in zip(line[:-1], line[1:]):
+                    yield pos1, pos2
+
 
 # [[Position], [Position], ...]
 # TODO
