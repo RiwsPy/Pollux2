@@ -14,6 +14,8 @@ class Highways(Default_model):
     name = models.CharField('Nom de la voie', max_length=100, default="")
     width = models.FloatField('Largeur', default=0.0)
     lanes = models.IntegerField('Nombre de voies', default=0)
+    parking_r = models.CharField('Parking à droite', max_length=15, default='unknown')
+    parking_l = models.CharField('Parking à gauche', max_length=15, default='unknown')
 
     def __str__(self) -> str:
         return f'Voie: {self.type}, {self.name}'

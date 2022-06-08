@@ -35,12 +35,42 @@ class Works(Osm_works):
                 'primary', 'trunk', 'motorway', 'secondary', 'tertiary', 'residential', 'service',
                 'living_street', 'unclassified', 'footway', 'pedestrian', 'path',
                 'primary_link', 'secondary_link', 'tertiary_link', 'cycleway',
-		'motorway_link', 'trunk_link')
+                'motorway_link', 'trunk_link')
 
     def _can_be_output(self, feature, **kwargs) -> bool:
         return super()._can_be_output(feature, **kwargs) and \
                feature['properties'].get('highway') in self.highway_accepted and \
                not feature['properties'].get('footway', False)  # sidewalk, crossing
+
+    def _output_feature_with_model(self, feature: dict) -> dict:
+        feature_model = self.Model(**feature).__dict__.copy()
+        feature_model['position'] = LineString(feature_model['position'])
+        for k, v in feature['properties'].items():
+            k_split = k.split(':')
+            if len(k_split) < 3:
+                continue
+            is_parking, is_lane, side = k_split[:3]
+            if is_parking != 'parking' or is_lane != 'lane':
+                continue
+            if v in ('street_side', 'painted_area_only', 'marked',
+                     'fire_lane', 'separate', 'on_street', 'half_on_kerb', 'on_kerb') or \
+                    v.isdigit(): # parking:lane:both:capacity = 11
+                continue
+            if v in ('no_parking', 'no_stopping'):
+                v = 'no'
+
+            if side in ('right', 'both'):
+                feature_model['parking_r'] = v
+            if side in ('left', 'both'):
+                feature_model['parking_l'] = v
+
+            if feature_model['parking_l'] != 'unknown' and feature_model['parking_r'] == 'unknown':
+                ret = 'no' if feature_model['parking_l'] != 'no' else 'yes'
+                feature_model['parking_r'] = ret
+            elif feature_model['parking_r'] != 'unknown' and feature_model['parking_l'] == 'unknown':
+                ret = 'no' if feature_model['parking_r'] != 'no' else 'yes'
+                feature_model['parking_l'] = ret
+        return feature_model
 
     def output(self, data: dict, filename: str = '') -> None:
         data = self.convert_to_geojson(data)
@@ -52,10 +82,8 @@ class Works(Osm_works):
             if feature['geometry']['type'] == 'MultiLineString':
                 # MultiLineString to LineString
                 feature['geometry']['coordinates'] = feature['geometry']['coordinates'][0]
-            feature = self.Model(**feature).__dict__
-            feature['position'] = LineString(feature['position'])
+            feature = self._output_feature_with_model(feature)
             self.model.objects.create(**feature)
-
 
     class Model(Osm_works.Model):
         def __init__(self, **kwargs):
@@ -64,3 +92,5 @@ class Works(Osm_works):
             self.name = kwargs['properties'].get('name', '')
             self.width = kwargs['properties'].get('width', 0)
             self.lanes = kwargs['properties'].get('lanes', 0)
+            self.parking_r = 'unknown'
+            self.parking_l = 'unknown'

@@ -4,7 +4,7 @@ import os
 from json.decoder import JSONDecodeError
 from .maps import Configs
 from .works import BASE_DIR
-from .models import lamps, trees, highways, crossings
+from .models import lamps, trees, highways, crossings, parking_public
 from .map_desc import ORIGIN_DATA
 from .formats.geojson import Geojson
 from .utils import in_bound
@@ -16,6 +16,8 @@ from django.views import View
 from django.views.generic.base import ContextMixin
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
+from django.db.models import Q
+from django.contrib.gis.measure import D
 from copy import deepcopy
 
 _CONFIGS = Configs()
@@ -70,6 +72,7 @@ class DataDetails(View):
         'lamps': lamps.Lamps,
         'highways': highways.Highways,
         'crossings': crossings.Crossings,
+        'parking_public': parking_public.Parking_public,
     }
     db_dirs = {'db', 'db/cross'}
     no_way_files = ()
@@ -131,10 +134,23 @@ class DataDetails(View):
                 if self.db_name_to_cls.get(db) is not cls:
                     continue
             try:
+                do_filter = True
                 if k == 'position__within':
                     v = Polygon.from_bbox(v)
-                queryset = queryset.filter(**{k: v})
-                print(f'Filtre {k}: {v} appliqué.')
+                # provisoire
+                elif k == 'position__dwithin' and filters_updated.get('position__within'):
+                    cls_from_elt = self.db_name_to_cls.get(v)
+                    bbox = Polygon.from_bbox(filters_updated['position__within'])
+                    elts = cls_from_elt.objects.filter(position__within=bbox)
+                    fat_Q = Q(pk=-1)
+                    for elt in elts:
+                        fat_Q |= Q(position__distance_lte=(elt.position, D(m=20)))
+                    queryset = queryset.filter(fat_Q)
+                    do_filter = False
+
+                if do_filter:
+                    queryset = queryset.filter(**{k: v})
+                    print(f'Filtre {k}: {v} appliqué.')
             except FieldError:
                 print(f'Warning: Filtre {k}: {v} non appliqué.')
                 continue
@@ -153,6 +169,10 @@ class DataDetails(View):
         for lamp, geo_lamp in zip(queryset, response['features']):
             geo_lamp['properties']['max_range_day'] = lamp.max_range(nb_lux=3, time='day')
             geo_lamp['properties']['max_range_night'] = lamp.max_range(nb_lux=3, time='night')
+            colour_impact = (60 + 20 * max(0, min(4000, lamp.colour - 2000)) / 4000) / 80
+            geo_lamp['properties']['impact_tree_on_ground'] = (lamp.lux_with_distance(lamp.height, 'day') +
+                                                               lamp.lux_with_distance(lamp.height, 'night')) / 2 * \
+                                                              colour_impact
             geo_lamp['properties']['expense'] = lamp.expense
 
         return JsonResponse(response)

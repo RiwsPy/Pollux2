@@ -7,10 +7,11 @@ from pollux.formats.geojson import Geojson
 from pollux.formats.position import Position
 from typing import List
 from pollux.formats import osm
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, LineString, Polygon, MultiPolygon, MultiLineString
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+POLLUX_DIR = Path(__file__).resolve().parent.parent
 WORKS_DIR = Path(__file__).resolve().parent
 
 '''
@@ -74,11 +75,11 @@ class Default_works:
 
         return self.request_method(url=self.url, **kwargs)
 
-    def load(self, filename: str = '', file_ext: str = '', directory='db') -> dict:
+    def load(self, filename: str = '', file_ext: str = '', directory='pollux/db') -> dict:
         filename = filename or self.filename
         file_ext = file_ext or self.file_ext
         with open(os.path.join(BASE_DIR, directory, f'{filename}.{file_ext}'), 'r') as file:
-            if file_ext == 'json':
+            if file_ext in ('json', 'geojson'):
                 file = json.load(file)
             else:
                 file = self.convert_to_geojson(file)
@@ -94,13 +95,20 @@ class Default_works:
 
         return geo
 
+    TYPE_TO_FORM = {
+        'Point': Point,
+        'LineString': LineString,
+        'MultiLineString': MultiLineString,
+        'Polygon': Polygon,
+        'MultiPolygon': MultiPolygon,
+    }
+
     def output(self, data: dict, filename: str = '') -> None:
         if self.model:
             if data and data['features']:
                 self.model.objects.all().delete()
                 for feature in data['features']:
-                    feature = self.Model(**feature).__dict__
-                    feature["position"] = Point(feature['position'])
+                    feature = self._output_feature_with_model(feature)
                     self.model.objects.create(**feature)
             else:
                 print('Aucune donnée trouvé.')
@@ -111,6 +119,22 @@ class Default_works:
                     geo.append(self.Model(**feature).__dict__)
             # self.bound_filter(geo, self.bound)
             geo.dump('db/' + (filename or self.output_filename) + '.json')
+
+    def _output_feature_with_model(self, feature: dict) -> dict:
+        geo_type = feature['geometry']['type']
+        feature = self.Model(**feature).__dict__
+        method = self.TYPE_TO_FORM.get(geo_type, Point)
+
+        try:
+            feature["position"] = method(feature['position'])
+        except (TypeError, ValueError):
+            if method == MultiPolygon:
+                feature['position'] = MultiPolygon(Polygon(feature['position'][0][0]))
+            elif method == Polygon:
+                feature['position'] = Polygon(feature['position'][0])
+            elif method == MultiLineString:
+                feature['position'] = MultiLineString(LineString(feature['position'][0]))
+        return feature
 
     def _can_be_output(self, feature, **kwargs) -> bool:
         return feature['geometry']

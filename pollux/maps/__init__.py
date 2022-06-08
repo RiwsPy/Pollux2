@@ -203,6 +203,12 @@ class TileLayer(MapAttr):
         'attribution': ''
     }
 
+    OSM = {
+        'url': 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        'maxZoom': 19,
+        'attribution': '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+    }
+
 
 class IsActive(MapAttr):
     attr_name = 'isActive'
