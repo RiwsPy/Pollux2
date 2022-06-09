@@ -116,7 +116,7 @@ class heatMap {
         var controlLayers = {};
         for (let lyr of this.layers) {
             let feature = null;
-            if (lyr.style == 'cluster') {
+            if (lyr.type == 'cluster') {
                 let radius = function(zoom) {
                     return zoom >= 19? 1: 80;
                 };
