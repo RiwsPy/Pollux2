@@ -13,6 +13,10 @@ class Works(Default_works):
     COPYRIGHT_ORIGIN = Gam.BASE_URL
     COPYRIGHT_LICENSE = 'ODbL'
 
+    def _can_be_output(self, feature, **kwargs) -> bool:
+        return super()._can_be_output(feature, **kwargs) and \
+                feature['properties'].get('access') != 'private'
+
     def _output_feature_with_model(self, feature: dict) -> dict:
         geo_type = feature['geometry']['type']
         feature = self.Model(**feature).__dict__

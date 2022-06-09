@@ -61,6 +61,13 @@ class ShowMap(View):
                 for layer in context['layers']:
                     layer['filters'][k] = v
 
+        # Q n'est pas transmit car incompatible avec le type str
+        for layer in context['layers']:
+            try:
+                del layer['Q']
+            except KeyError:
+                pass
+
         return render(request,
                       self.template_name,
                       context=context)
@@ -123,7 +130,10 @@ class DataDetails(View):
         if kwargs['layer_id'][0] != '-1' and kwargs['map_id'][0] != '-1':
             map_id = kwargs['map_id'][0]
             layer_id = int(kwargs['layer_id'][0])
+            print(layer_id, CONFIGS[map_id]['layers'][layer_id].get('Q', 'nope'))
             filters_updated.update(CONFIGS[map_id]['layers'][layer_id].get('filters', {}))
+            if 'Q' in CONFIGS[map_id]['layers'][layer_id]:
+                queryset = queryset.filter(CONFIGS[map_id]['layers'][layer_id]['Q'])
         if 'filters' in kwargs:
             filters_updated.update(json.loads(kwargs['filters'][0]))
 

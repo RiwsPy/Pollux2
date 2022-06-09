@@ -349,12 +349,12 @@ class heatMap {
         let layer_id = 0;
         let layer_in_progress = {};
         for await (let layerdata of this.layers) {
-            if (!layer_in_progress[layerdata.db] ||
-                    !layer_in_progress[layerdata.db][layerdata.filters]) {
+            //if (!layer_in_progress[layerdata.db] ||
+            //        !layer_in_progress[layerdata.db][layerdata.filters]) {
                 layer_in_progress[layerdata.db] = layer_in_progress[layerdata.db] || {};
                 layer_in_progress[layerdata.db][layerdata.filters] = true;
                 this.request(layerdata, layer_id);
-            }
+            //}
             layer_id += 1;
         };
     }
