@@ -1,8 +1,9 @@
 from django.contrib.gis.db import models
 import json
 from django.core import serializers
-from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import Point, MultiLineString, LineString
 from pollux.formats.position import Position
+from django.contrib.gis.gdal.error import GDALException
 
 
 class Default_model(models.Model):
@@ -17,6 +18,16 @@ class Default_model(models.Model):
         ret = json.loads(serializers.serialize(file_format, queryset))
         del ret['crs']
         return ret
+
+    @property
+    def length(self) -> float:
+        if isinstance(self.position, (LineString, MultiLineString)):
+            self.position.srid = 4326
+            try:
+                self.position.transform(3857)
+            except GDALException:
+                pass
+        return self.position.length
 
     def illuminated_height_at(self, distance: float) -> float:
         return 0.0
