@@ -1,6 +1,6 @@
 from . import Default_cross
 from ..models.parking_public import Parking_public
-from ..formats.geojson import Geojson
+from ..formats.geojson import Geojson, Geo_Feature
 from ..utils import linestring_to_polygon
 
 
@@ -15,17 +15,18 @@ class Cross(Default_cross):
     def apply_algo(self):
         geo = Geojson()
         for parking_model, parking_dict in zip(self.ret_parkings,
-                                               Parking_public.serialize(self.ret_parkings)['features']
+                                               self.model.serialize(self.ret_parkings)['features']
                                                ):
-
-            ret = []
+            parking_dict['properties'] = {}
             for line in parking_dict['geometry']['coordinates']:
                 for positions in zip(line[:-1], line[1:]):
                     coordinates_polygon = self.polygon_coordinates(positions, parking_model)
                     if coordinates_polygon:
-                        ret.append(coordinates_polygon)
-            parking_dict['geometry']['coordinates'] = ret
-            geo.append(parking_dict)
+                        new_geof = Geo_Feature()
+                        new_geof.position = coordinates_polygon
+                        new_geof['geometry']['type'] = 'Polygon'
+                        geo.append(new_geof)
+
         geo.dump(self.dump_filename)
 
     @staticmethod

@@ -71,7 +71,7 @@ class Highways(Default_model):
             return 0.0
 
         value = nb_car_lane * car_lane_width
-        if self.highway not in ("service", "unclassified"):
+        if self.highway not in ("service",):
             # ajout des largeurs des bandes
             value += (nb_car_lane + 1) * line_width
         elif self.width > 0.0:
