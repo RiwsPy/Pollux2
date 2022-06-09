@@ -2,8 +2,10 @@ from itertools import zip_longest
 from typing import List
 from math import radians, cos, sin, degrees, acos, asin
 from django.contrib.gis.geos import Point
+from pyproj import Geod
 
 EARTH_RADIUS = 6371000  # meters
+geoid = Geod(ellps='WGS84')
 
 
 class Position(List[float]):
@@ -36,19 +38,10 @@ class Position(List[float]):
             return Relation(self).to_position()
         return self
 
-    def distance3(self, other: List[float]) -> float:
-        # method 2
-        my_pos = self.force_position()
-        lat_a = radians(my_pos.lat)
-        lat_b = radians(other[1])
-        long_diff = radians(my_pos.lng - other[0])
-        distance = (sin(lat_a) * sin(lat_b) +
-                    cos(lat_a) * cos(lat_b) * cos(long_diff))
-        resToMile = degrees(acos(distance)) * 69.09
-        resToMt = resToMile / 0.00062137119223733
-        return resToMt
-
     def distance(self, other: List[float]) -> float:
+        return geoid.inv(*self, *other)[2]
+
+    def distance_x(self, other: List[float]) -> float:
         my_pos = self.force_position()
 
         dlat_rad = radians(other[1]-my_pos[1])
@@ -60,12 +53,6 @@ class Position(List[float]):
             cos(lat1_rad) * cos(lat2_rad) * sin(dlng_rad/2)**2
 
         return EARTH_RADIUS * 2 * asin(a**0.5)
-
-    def distance_cartesian(self, other) -> float:
-        my_pos = self.force_position()
-        diff_lng = (other[0] - my_pos[0]) / LNG_1M
-        diff_lat = (other[1] - my_pos[1]) / LAT_1M
-        return (diff_lat**2 + diff_lng**2)**0.5
 
     def nearest_point_from_way(self, other1: List[float], other2: List[float]) -> 'Position':
         my_pos = self.force_position()
@@ -162,39 +149,12 @@ class Position(List[float]):
         return 'Point'
 
     def projection(self, distance: float, orientation: float) -> 'Position':
-        """
-        :param distance: float (meters)
-        :param orientation: float (degrees)
-        :return: Position
-        """
-        orientation %= 360
-        orientation_x = 1 - abs(orientation % 180 - 90) / 90
-        orientation_y = 1 - orientation_x
-        if 270 > orientation > 90:
-            orientation_y = -orientation_y
-        if orientation > 180:
-            orientation_x = -orientation_x
-
-        new_x = self.lng + orientation_x * distance * LNG_1M
-        new_y = self.lat + orientation_y * distance * LAT_1M
-        return self.__class__([new_x, new_y])
+        lng_new, lat_new, _ = geoid.fwd(*self, orientation, distance)
+        return self.__class__([lng_new, lat_new])
 
     def orientation(self, other: List[float]) -> float:
-        # orientation en degrés
-        if self == other:
-            raise ZeroDivisionError
-
-        x1 = (other[0] - self.lng) * LNG_TO_LAT
-        y1 = (other[1] - self.lat)  # * LAT_TO_LNG
-        x = x1 * 90 / (abs(y1) + abs(x1))
-
-        if y1 < 0:
-            if x > 270:
-                diff = 270
-            else:
-                diff = 90
-            x -= (x - diff) * 2
-        return x % 360
+        for_az, _, _ = geoid.inv(*self, *other)
+        return for_az % 360
 
     def iter_pos(self) -> tuple:
         type_of_pos = self.type_of_pos()

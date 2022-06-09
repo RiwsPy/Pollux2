@@ -21,6 +21,7 @@ django-leaflet = "*"
 psycopg2-binary = "*"
 factory-boy = "*"
 pytest-django = "*"
+pyproj = "*"
 
 [requires]
 python_version = "3.8"
