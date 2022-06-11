@@ -4,8 +4,14 @@ Continuité du Projet Pollux dans le cadre du CivicLab de Grenoble, proposé par
 Pour le défi *Lux, Led, Lumens* porté par GreenAlp.\
 https://grenoble.civiclab.eu
 
-Pollux est un outil de visualisation cartographique, pensé pour représenter l'éclairage public, son impact, ses manques en intégrant autant que possible son environnement réel.\
-C'est un outil accessible, de vulgarisation et bien qu'une attention particulière a été portée au réalisme et à la rigueur scientifique, Pollux n'a pas la prétention d'être une référence en la matière.
+Pollux est un outil de caractérisation et de visualisation cartographique de l'espace public. \
+Initialement pensé pour représenter l'éclairage public, il s'avère que pour répondre correctement à cette problématique, une perception accrue de l'espace public soit nécessaire. \
+Et une fois, cette perception acquise, elle est utile pour tous les éléments constituant cet espace public : l'éclairage, la biodiversité, le stationnenement, le logement....
+
+Deux piliers constituent la base de Pollux :
+* le fond : récupérer, mettre à jour, stocker des données, les croiser, les décupler, les fiabiliser, avec une approche rigoureusement scientifique
+* la forme : représenter ces informations sur des cartes interactives, en mettant en avant leur accessibilité, à des fins de sensibilisation et de compréhension
+
 
 La version actuelle est actuellement disponible : http://164.92.163.211/  \
 La version du prototype du projet est visible sur : https://green-pollux.herokuapp.com \
@@ -60,25 +66,6 @@ Après avoir rempli le fichier **.env** à la racine projet et configuré votre 
 En local, par défaut, l'application sera visible sur l'url :\
 http://127.0.0.1:8000/
 
-
-### Pollux API :
-Pollux utilise de nombreux jeux de données.\
-Chaque jeu de données est représenté par un fichier présent dans *works/*.\
-Les données récoltées sont présentes dans *db/*.\
-Les différentes requêtes sont générées dans *api_ext/*.
-
-Les requêtes passent l'endpoint **api/**.
-
-```
-https://green-pollux.herokuapp.com/api/nom_du_fichier
-```
-Par exemple :
-https://green-pollux.herokuapp.com/api/trees_output.json
-
-
-### Conversion en Geojson
-L'extension des fichiers récupérés est variable. Pollux les convertis par défaut en Geojson.\
-Les méthodes de conversion sont présentes dans *formats/*.
 
 ### Les mises à jour automatique des données :
 Il est possible de mettre à jour la base de données, grâce à la commande -uDB.
