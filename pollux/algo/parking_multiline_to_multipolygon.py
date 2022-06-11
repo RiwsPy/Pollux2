@@ -5,6 +5,10 @@ from ..utils import linestring_to_polygon
 
 
 class Cross(Default_cross):
+    """
+        Transforme les segments de parkings de voirie en polygone, les sauvegardent dans un fichier de format geojson.
+        Le fichier en question peut être importé sur d'autres outils pour finition.
+    """
     dump_filename = 'db/parking_public_2D.json'
     model = Parking_public
 
