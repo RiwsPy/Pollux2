@@ -92,6 +92,7 @@ class heatMap {
         this.options = options;
         this.layers = layers;
         this.options.filters = this.options.filters || {};
+        this._DB = {};
 
         /*
         for (let layer of this.layers) {
@@ -108,8 +109,6 @@ class heatMap {
         this.options.zoom.init = Math.min(this.options.zoom.max,
                                     Math.max(this.options.zoom.min, this.options.zoom.init)
                                     );
-
-        this.init()
     }
 
     init() {
@@ -130,9 +129,7 @@ class heatMap {
             lyr.data = {};
         }
 
-        this._DB = {};
-
-        this.createMap(controlLayers, false);
+        this.createMap(controlLayers, false, this.centerMapPos());
         this.loadJson();
 
         // basic leaflet traduction
@@ -140,7 +137,7 @@ class heatMap {
         document.getElementsByClassName('leaflet-control-zoom-out')[0].title = 'Zoom arrière';
     }
 
-    createMap(controlLayers, dontCreateMap) {
+    centerMapPos() {
         let bbox_lat_lng = undefined;
         if (this.url_get_paramaters('filters')) {
             // Position dans l'URL
@@ -158,7 +155,10 @@ class heatMap {
                 }
             }
         }
+        return bbox_lat_lng;
+    }
 
+    createMap(controlLayers, dontCreateMap, bbox_lat_lng) {
         if (!dontCreateMap) {
             let activeLayers = [];
             for (let layer of this.layers) {

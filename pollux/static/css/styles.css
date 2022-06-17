@@ -314,4 +314,16 @@ h1, div, a {
   width: 100%;
 }
 
+div .items p {
+  display: none;
+}
+
+div .items p:target {
+  display: block;
+}
+
+div .items p #onload {
+  display: block;
+}
+
 /*# sourceMappingURL=styles.css.map */
