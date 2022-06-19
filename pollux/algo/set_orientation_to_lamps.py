@@ -1,33 +1,49 @@
+from django.contrib.gis.geos import Polygon
+from django.db.models import Q
+from django.contrib.gis.measure import D
+from collections import defaultdict
+
 from .georepartition_in_array import Repartition_point, adjacent_match
 from pollux.works import MAX_BOUND_LNG_LAT
-from pollux.works.ways import Works as Highways
 from pollux.formats.position import Position
 from pollux.models.lamps import Lamps
+from pollux.models.highways import Highways
 from . import Default_cross
-from django.contrib.gis.geos import Polygon
-from collections import defaultdict
 
 
 class Cross(Default_cross):
     max_range = 12
 
-    def pre_algo(self):
+    @staticmethod
+    def reset_lamp_data(queryset) -> None:
+        itm = queryset.first()
+        if itm:
+            queryset.update(orientation=itm.__class__.orientation.field.default,
+                            horizontal_angle=itm.__class__.horizontal_angle.field.default,
+                            nearest_way_dist=itm.__class__.nearest_way_dist.field.default)
+
+    def pre_algo(self, q1=None, q2=None):
         print('reset')
-        lamps_queryset = Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
-        for lamp in lamps_queryset:
-            # Valeurs par défaut
-            lamp.orientation = 0.0
-            lamp.horizontal_angle = 360.0
-            lamp.nearest_way_dist = -1.0
-            lamp.save()
+        lamps_queryset = q1 or Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
+        self.reset_lamp_data(lamps_queryset)
 
         print('Préparation des luminaires...')
-        self.ret_lamps = Repartition_point(Lamps.objects.all(),
+        self.ret_lamps = Repartition_point(lamps_queryset,
                                            bound=MAX_BOUND_LNG_LAT,
                                            max_range=self.max_range)
 
         print('Préparation des voies...')
-        self.ret_highways = Repartition_point(Highways.model.objects.all(),
+        ways_queryset = q2
+        if ways_queryset is None:
+            if lamps_queryset.count() > 1000:
+                ways_queryset = Highways.objects.all()
+            else:
+                fat_Q = Q(pk=-1)
+                for lamp in lamps_queryset:
+                    fat_Q = Q(position__distance_lt=(lamp.position, D(m=100))) | fat_Q
+                ways_queryset = Highways.objects.filter(fat_Q)
+
+        self.ret_highways = Repartition_point(ways_queryset,
                                               bound=MAX_BOUND_LNG_LAT,
                                               max_range=self.max_range)
 
@@ -36,7 +52,11 @@ class Cross(Default_cross):
         super().apply_algo()
         for lamp, highway in adjacent_match(self.ret_lamps.array, self.ret_highways.array, max_case_range=1):
             lamp_pos = Position(lamp.position)
-            for index, segment in enumerate(zip(highway.position[:-1], highway.position[1:])):
+            highway_positions = []
+            for linestring in highway.position:
+                highway_positions.extend(list(linestring))
+
+            for index, segment in enumerate(zip(highway_positions[:-1], highway_positions[1:])):
                 dist = lamp_pos.distance_from_way(*segment)
                 current_is_footway = highway.is_footway
                 if lamp.max_range(5, 'day') <= dist or dist <= 1 and current_is_footway:

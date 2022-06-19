@@ -30,9 +30,6 @@ class Command(BaseCommand):
 def db_update(cls_type):
     cls_instance = cls_type()
     try:
-        cls_instance.pre_pre_algo()
-        cls_instance.pre_algo()
-        cls_instance.apply_algo()
-        cls_instance.post_algo()
+        cls_instance.run()
     except FileNotFoundError:
         print('Error', cls_type, ': FileNotFound')

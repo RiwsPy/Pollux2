@@ -28,9 +28,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'django_extensions',
     'django.contrib.gis',
     'leaflet',
     'pollux',
+    'bank'
 ]
 
 MIDDLEWARE = [
@@ -127,3 +129,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LEAFLET_CONFIG = {
     'SPATIAL_EXTENT': (5.0, 44.0, 7.5, 46)
 }
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS = 2000

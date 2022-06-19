@@ -21,7 +21,11 @@ class Configs(dict):
 
             # print('Chargement de', cls, 'réussi.')
             a = import_module(__name__ + '.' + cls).Config()
+            if a.Meta.abstract is True:
+                continue
             self[str(a.ID)] = a.data
+            #print(a.ID, a.options)
+            #print(a.data)
 
 
 class Layer(dict):
@@ -252,7 +256,11 @@ class MaxValue(MapAttr):
 
 
 class Default_Config:
+    class Meta:
+        abstract = False
+
     ID = 0
+    abstract = False
     DATA = {}
     _DEFAULT_DATA = {
         'template_name_or_list': 'maps/map.html',
@@ -341,12 +349,12 @@ class Default_Config:
 
     @property
     def data(self) -> dict:
-        self.DATA['layers'] = self.layers
-        self.DATA['options'] = self.options.copy()
-        self.DATA['description'] = self.description
-        self.DATA['href'] = self.DATA.get('href', f'/map/{self.ID}')
-
-        return self.copy_and_deep_update(self._DEFAULT_DATA, self.DATA)
+        data = self.DATA.copy()
+        data['layers'] = self.layers
+        data['options'] = self.options.copy()
+        data['description'] = self.description
+        data['href'] = self.DATA.get('href', f'/map/{self.ID}')
+        return self.copy_and_deep_update(self._DEFAULT_DATA, data)
 
     @property
     def description(self) -> dict:

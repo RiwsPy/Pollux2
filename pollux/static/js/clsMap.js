@@ -87,8 +87,8 @@ function addNewLineInContent(category, content, default_value) {
 
 
 class heatMap {
-    constructor(layers, options, ID) {
-        this.ID = ID;
+    constructor(layers, options) {
+        this.ID = options.ID || 'default';
         this.options = options;
         this.layers = layers;
         this.options.filters = this.options.filters || {};
@@ -369,7 +369,7 @@ class heatMap {
 
         // récupérer tous les attributs de l'URL ??
         let url = '/api/' + layerdata.db //+ '?bound=' + this.options.bbox
-        url += '?map_id=' + this.ID || -1
+        url += '?map_id=' + this.ID
         url += '&layer_id=' + layer_id || -1
         let filters = this.url_get_paramaters('filters')
         if (filters) {
@@ -392,14 +392,13 @@ class heatMap {
            for (let layer of this.layers) {
                 if (layer.db == layerdata.db &&
                         JSON.stringify(layer.filters) == JSON.stringify(layerdata.filters)) {
-                    this.createLayer(layer);
+                    this.createLayer(layer, data);
                 }
             }
         });
     }
 
-    createLayer(layer) {
-        let data = this._DB[layer.db][JSON.stringify(layer.filters)];
+    createLayer(layer, data) {
         if (layer.type == 'heatmap') {
             this.createHeatLayer(data, layer)
         } else if (layer.type == 'node' || layer.type == 'cluster') {

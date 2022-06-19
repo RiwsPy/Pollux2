@@ -4,10 +4,32 @@ import math
 from pollux.formats.position import Position
 
 
-class Lamps(Default_model):
+class DefaultLamps(Default_model):
     class Meta:
-        app_label = "pollux"
         verbose_name = "Luminaire"
+        abstract = True
+
+    """TODO:
+        Variation de l'intensité lumineuse selon l'heure
+        > Correspond au % de puissance émis par le luminaire
+        > Dire qu'un luminaire réduit sa conso de 30% à 23h n'a pas de sens si on ne sait pas à quel %
+        il se trouve avant cette horaire
+        Méthode proposée : JSONField
+        k (str) = heure à laquelle le programme s'enclenche
+        v (int) = % de puissance pendant le programme
+        Les programmes se suivent obligatoirement, il n'est pas nécessaire de spécifier une horaire de fin
+        {
+            "20": 90,
+            "23": 60,
+        }
+        Signifie : 90% de puissance entre 20h (inclu) et 23h (exclu) puis 60% de 23h (inclu) à 20h (exclu)
+        En cas d'arrêt au cours de la nuit, il suffit de spécifier un % de 0 :
+        {
+            "20": 90,
+            "23": 0,
+            "05": 90,
+        }
+    """
 
     code = models.CharField(max_length=20, default="")
     height = models.FloatField('Hauteur', default=7.9)
@@ -15,7 +37,7 @@ class Lamps(Default_model):
     power = models.IntegerField('Puissance', default=149)
     colour = models.IntegerField('Température de couleur', default=4999)
     on_motion = models.BooleanField('Détection de mouvement?', default=False)
-    lowering_night = models.IntegerField('Réduction de puissance nocturne', default=0)
+    lowering_night = models.IntegerField('Réduction nocturne (%)', default=0)
     orientation = models.FloatField('Orientation', default=0.0)
     horizontal_angle = models.FloatField('Angle horizontal', default=360.0)
     nearest_way_dist = models.FloatField('Distance voie la plus proche', default=-1.0)
@@ -164,3 +186,10 @@ class Lamps(Default_model):
         return (6 * self.lumens / self.lumens_per_watt +
                 6 * self.lumens_night / self.lumens_per_watt
                 ) * 0.1740 / 1000 * 365.25
+
+
+class Lamps(DefaultLamps):
+    class Meta:
+        app_label = "pollux"
+        verbose_name = "Luminaire"
+        abstract = False

@@ -2,9 +2,12 @@ from django.shortcuts import render
 import json
 import os
 from json.decoder import JSONDecodeError
+
+import bank.models
 from .maps import Configs
 from .works import BASE_DIR
 from .models import lamps, trees, highways, crossings, parking_public
+from bank.models import LampsMairin00, LampsCoccia00
 from .map_desc import ORIGIN_DATA
 from .formats.geojson import Geojson
 from .utils import in_bound
@@ -13,6 +16,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from django.contrib.gis.geos import Polygon
 from django.core.exceptions import FieldError
 from django.views import View
+from django.views.generic import DetailView
 from django.views.generic.base import ContextMixin
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
@@ -29,15 +33,17 @@ class ShowMap(View):
     template_name = 'maps/map.html'
 
     def get(self, request, map_id):
-        if map_id == 'mapbox':
-            return render(request, 'maps/map_box.html',
-                          {'mapbox_access_token': os.getenv('MAPBOX_ACCESS_TOKEN'),
-                           'data': crossings.Crossings.serialize(crossings.Crossings.objects.all())})
         if not CONFIGS.get(map_id):
             return HttpResponseRedirect(reverse('home'))
 
         context = deepcopy(_CONFIGS[map_id])
+        template_name = self.template_name
+        if map_id == 'mapbox':
+            template_name = 'maps/map_box.html'
+            context['mapbox_access_token'] = os.getenv('MAPBOX_ACCESS_TOKEN')
+
         context['ID'] = map_id
+        context['options']['ID'] = map_id
         kwargs = request.GET
 
         zoom = kwargs.get('zoom')
@@ -69,17 +75,20 @@ class ShowMap(View):
                 pass
 
         return render(request,
-                      self.template_name,
+                      template_name,
                       context=context)
 
 
 class DataDetails(View):
+    # TODO: meilleur moyen d'automatiser (ou d'isoler) cette méthode ?
     db_name_to_cls = {
         'trees': trees.Trees,
         'lamps': lamps.Lamps,
         'highways': highways.Highways,
         'crossings': crossings.Crossings,
         'parking_public': parking_public.Parking_public,
+        'lamps_coccia00': LampsCoccia00,
+        'lamps_mairin00': LampsMairin00,
     }
     db_dirs = {'db', 'db/cross'}
     no_way_files = ()
@@ -130,7 +139,7 @@ class DataDetails(View):
         if kwargs['layer_id'][0] != '-1' and kwargs['map_id'][0] != '-1':
             map_id = kwargs['map_id'][0]
             layer_id = int(kwargs['layer_id'][0])
-            print(layer_id, CONFIGS[map_id]['layers'][layer_id].get('Q', 'nope'))
+
             filters_updated.update(CONFIGS[map_id]['layers'][layer_id].get('filters', {}))
             if 'Q' in CONFIGS[map_id]['layers'][layer_id]:
                 queryset = queryset.filter(CONFIGS[map_id]['layers'][layer_id]['Q'])
@@ -168,21 +177,20 @@ class DataDetails(View):
                 print(f'ValueError {k}: {v} ; position incorrecte ?')
                 continue
 
-        if cls is not lamps.Lamps:
-            return JsonResponse(cls.serialize(queryset))
+        response = cls.serialize(queryset)
+        if cls is not lamps.Lamps and cls.Meta.app_label != 'bank':
+            return JsonResponse(response)
 
         # Python 3.8+ only
         # TODO: Spécifité à indiquer dans request et non par défaut
         # TODO: possibilité d'enlever des attributs pour alléger les données sortantes ?
-        response = cls.serialize(queryset)
-
         for lamp, geo_lamp in zip(queryset, response['features']):
             geo_lamp['properties']['max_range_day'] = lamp.max_range(nb_lux=3, time='day')
             geo_lamp['properties']['max_range_night'] = lamp.max_range(nb_lux=3, time='night')
             colour_impact = (60 + 20 * max(0, min(4000, lamp.colour - 2000)) / 4000) / 80
             geo_lamp['properties']['impact_tree_on_ground'] = (lamp.lux_with_distance(lamp.height, 'day') +
                                                                lamp.lux_with_distance(lamp.height, 'night')) / 2 * \
-                                                              colour_impact
+                                                            colour_impact
             geo_lamp['properties']['expense'] = lamp.expense
 
         return JsonResponse(response)

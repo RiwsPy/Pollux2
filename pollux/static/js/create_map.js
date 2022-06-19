@@ -1,7 +1,7 @@
 // require clsMap.js
 
-function create_map(fileLayer, options, ID) {
-    let map = new heatMap(fileLayer, options, ID);
+function create_map(fileLayer, options) {
+    let map = new heatMap(fileLayer, options);
     map.init()
 }
 

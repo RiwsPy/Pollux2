@@ -2,7 +2,7 @@ from math import ceil, floor
 from typing import List, Tuple, Any
 from pollux.formats.position import LNG_1M, LAT_1M
 import numpy as np
-from django.contrib.gis.geos import Point, Polygon, LineString
+from django.contrib.gis.geos import Point, Polygon, LineString, MultiLineString
 from pollux.formats.position import Position
 from django.db.models.query import QuerySet
 
@@ -22,7 +22,7 @@ class Repartition_point:
         self.array = np.empty(dim_bound, dtype=np.dtype('O'))
 
         if isinstance(queryset, QuerySet):
-            queryset = queryset.filter(position__within=Polygon.from_bbox(self.bound))
+            # queryset = queryset.filter(position__within=Polygon.from_bbox(self.bound))
             elt_count = queryset.count()
         else:
             elt_count = len(queryset)
@@ -35,6 +35,10 @@ class Repartition_point:
             positions = [feature.position]
         elif isinstance(feature.position, LineString):
             positions = self.cut_linestring(feature.position)
+        elif isinstance(feature.position, MultiLineString):
+            positions = []
+            for position in feature.position:
+                positions.extend(self.cut_linestring(position))
         else:
             print(type(feature.position), 'non géré')
             return
