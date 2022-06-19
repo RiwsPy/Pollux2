@@ -22,6 +22,7 @@ psycopg2-binary = "*"
 factory-boy = "*"
 pytest-django = "*"
 pyproj = "*"
+django-extensions = "*"
 
 [requires]
 python_version = "3.8"
