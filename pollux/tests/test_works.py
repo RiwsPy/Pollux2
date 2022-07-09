@@ -1,6 +1,5 @@
 import os.path
-from pollux.formats.position import Position
-from pollux.formats.osm import convert_to_geojson
+from pollux.formats.osm import convert_osm_to_geojson
 from pollux.works import Default_works
 import pytest
 import json
@@ -14,38 +13,41 @@ DEFAULT_BOUND = [LAT_MIN, LNG_MIN, LAT_MAX, LNG_MAX]
 
 def test_base():
     w = Default_works()
-    assert w.COPYRIGHT == 'The data included in this document is from unknown.' +\
-                          ' The data is made available under unknown.'
+    assert (
+        w.COPYRIGHT
+        == "The data included in this document is from unknown."
+        + " The data is made available under unknown."
+    )
 
-    assert w.output_filename == 'empty_output'
+    assert w.output_filename == "empty_output"
 
 
 def test_load(base_dir, db_dir):
     w = Default_works()
-    data_test = w.load('mock_geojson', 'json', directory=db_dir)
-    with open(os.path.join(base_dir, db_dir, 'mock_geojson.json'), 'r') as file:
+    data_test = w.load("mock_geojson", "json", directory=db_dir)
+    with open(os.path.join(base_dir, db_dir, "mock_geojson.json"), "r") as file:
         expected_value = json.load(file)
-    assert data_test['features'] == expected_value['features']
+    assert data_test["features"] == expected_value["features"]
 
 
 def test_convert_osm_to_geojson(db_dir):
     w = Default_works()
-    data_test = w.load('mock_osm', 'json', directory=db_dir)
+    data_test = w.load("mock_osm", "json", directory=db_dir)
     w2 = Default_works()
-    expected_value = w2.load('mock_geojson', 'json', directory=db_dir)
-    assert convert_to_geojson(data_test) == expected_value
+    expected_value = w2.load("mock_geojson", "json", directory=db_dir)
+    assert convert_osm_to_geojson(data_test) == expected_value
 
-    del data_test['elements']
+    del data_test["elements"]
     with pytest.raises(KeyError):
-        convert_to_geojson(data_test)
+        convert_osm_to_geojson(data_test)
 
 
 def test_convert_osm_to_geojson_way(db_dir):
     w = Default_works()
-    data_test = w.load('mock_osm_way', 'json', directory=db_dir)
+    data_test = w.load("mock_osm_way", "json", directory=db_dir)
     w2 = Default_works()
-    expected_value = w2.load('mock_geojson_way', 'json', directory=db_dir)
-    assert convert_to_geojson(data_test) == expected_value
+    expected_value = w2.load("mock_geojson_way", "json", directory=db_dir)
+    assert convert_osm_to_geojson(data_test) == expected_value
 
 
 def test_fake_request(db_dir):

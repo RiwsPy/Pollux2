@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import json
 from mimetypes import guess_type
+from typing import TextIO
 
 from django.contrib.gis.geos import (
     Point,
@@ -96,15 +97,8 @@ class Default_works:
     ) -> dict:
         filename = filename or self.filename
         file_ext = file_ext or self.file_ext
-        with open(
-            os.path.join(BASE_DIR, directory, f"{filename}.{file_ext}"), "r"
-        ) as file:
-            if guess_type(directory + f"/{filename}.{file_ext}")[0] == "application/json":
-                file = json.load(file)
-            else:
-                file = self.convert_to_geojson(file)
 
-        return file
+        return self.convert_to_geojson(directory + f"/{filename}.{file_ext}")
 
     def bound_filter(self, geo: Geojson, bound: List[float] = None) -> dict:
         bound = bound or self.bound
@@ -123,7 +117,6 @@ class Default_works:
     }
 
     def output(self, data: dict, filename: str = "") -> None:
-        data = self.convert_to_geojson(data)
         if self.model:
             if data and data["features"]:
                 self.model.objects.all().delete()
@@ -162,8 +155,12 @@ class Default_works:
         return feature["geometry"]
 
     @staticmethod
-    def convert_to_geojson(data_dict: dict) -> dict:
-        return data_dict
+    def convert_to_geojson(directory_file: str) -> dict:
+        file_content = dict()
+        if guess_type(directory_file)[0] == "application/json":
+            with open(os.path.join(BASE_DIR, directory_file), "r") as file:
+                file_content = json.load(file)
+        return file_content
 
     class Model:
         def __init__(self, **kwargs):
@@ -187,5 +184,13 @@ class Osm_works(Default_works):
         return f"{tuple(self.bound)}"
 
     @staticmethod
-    def convert_to_geojson(data_dict: dict) -> dict:
-        return osm.convert_to_geojson(data_dict)
+    def convert_data_to_geojson(data) -> dict:
+        return osm.convert_osm_to_geojson(data)
+
+    def convert_to_geojson(self, directory_file: str) -> dict:
+        file_content = super().convert_to_geojson(directory_file=directory_file)
+        return self.convert_data_to_geojson(file_content)
+
+    def output(self, data: dict, filename: str = "") -> None:
+        data = self.convert_data_to_geojson(data)
+        super().output(data=data, filename=filename)

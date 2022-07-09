@@ -4,26 +4,25 @@ from pollux.formats.geojson import Geojson
 
 
 class Works(Osm_works):
-    filename = 'crossings'
+    filename = "crossings"
     model = Crossings
-    query = \
-        f"""(
+    query = f"""(
             node["highway"="crossing"]{Osm_works().BBOX};
             way["highway"="footway"]["footway"="crossing"]{Osm_works().BBOX};
         );
         (._;>;);
         """
 
-    def output(self, data: dict, filename: str = '') -> None:
-        data = self.convert_to_geojson(data)
+    def output(self, data: dict, filename: str = "") -> None:
+        data = self.convert_data_to_geojson(data)
         geo = Geojson()
         geo.load(data)
 
         # Set LineString to Point
-        for feature in geo['features']:
-            if feature.geometry['type'] == 'LineString':
+        for feature in geo["features"]:
+            if feature.geometry["type"] == "LineString":
                 feature.position = feature.position.force_position()
-                feature.geometry['type'] = 'Point'
+                feature.geometry["type"] = "Point"
 
-        #geo.dump('db/crossings_output.json')
+        # geo.dump('db/crossings_output.json')
         super().output(geo)
