@@ -99,7 +99,7 @@ class Default_works:
         with open(
             os.path.join(BASE_DIR, directory, f"{filename}.{file_ext}"), "r"
         ) as file:
-            if guess_type(directory + f"/{filename}.{file_ext}") == "application/json":
+            if guess_type(directory + f"/{filename}.{file_ext}")[0] == "application/json":
                 file = json.load(file)
             else:
                 file = self.convert_to_geojson(file)
