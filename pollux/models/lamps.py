@@ -33,9 +33,9 @@ class DefaultLamps(Default_model):
 
     code = models.CharField(max_length=20, default="")
     height = models.FloatField('Hauteur', default=7.9)
-    irc = models.IntegerField('Rendu de couleur', default=74)
+    irc = models.IntegerField('IRC', default=74)
     power = models.IntegerField('Puissance', default=149)
-    colour = models.IntegerField('Température de couleur', default=4999)
+    colour = models.IntegerField('T° de couleur', default=4999)
     on_motion = models.BooleanField('Détection de mouvement?', default=False)
     lowering_night = models.IntegerField('Réduction nocturne (%)', default=0)
     orientation = models.FloatField('Orientation', default=0.0)

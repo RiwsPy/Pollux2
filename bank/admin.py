@@ -18,33 +18,31 @@ class CsvImportForm(forms.Form):
 
 @admin.register(LampsMairin00)
 class LampsUserAdmin(LampsAdmin):
-    model_name = 'LampsMairin00'
+    model_name = "LampsMairin00"
     model = LampsMairin00
 
     @property
     def readonly_fields(self):
-        return super().readonly_fields + ['lat', 'lng']
+        return super().readonly_fields + ["lat", "lng"]
 
     def get_urls(self):
         urls = super().get_urls()
-        new_urls = [path('upload-file/', self.upload_file)]
+        new_urls = [path("upload-file/", self.upload_file)]
         return new_urls + urls
 
     def upload_file(self, request):
         if request.method == "POST":
             db_file = request.FILES["file_upload"]
-            csv_file_name = db_file.name.lower()
 
-            if csv_file_name.endswith('.json') or\
-                    csv_file_name.endswith('.geojson'):
+            if db_file.content_type == "application/json":
                 self.upload_json(db_file)
-            elif csv_file_name.endswith('.csv'):
+            elif db_file.content_type == "text/csv":
                 self.upload_csv(db_file)
             else:
-                messages.warning(request, 'Extension de fichier non reconnue.')
+                messages.warning(request, "Extension de fichier non reconnue.")
                 return HttpResponseRedirect(request.path_info)
 
-            url = reverse(f'admin:bank_{self.model_name.lower()}_changelist')
+            url = reverse(f"admin:bank_{self.model_name.lower()}_changelist")
             return HttpResponseRedirect(url)
 
         form = CsvImportForm()
@@ -56,7 +54,7 @@ class LampsUserAdmin(LampsAdmin):
         csv_data = file_data.split("\n")
 
         for lamp_data in csv_data:
-            fields = lamp_data.split(",")
+            fields = lamp_data.split(',')
             try:
                 self.model.objects.update_or_create(
                     code=fields[0] or self.model.code.field.default,
@@ -73,15 +71,13 @@ class LampsUserAdmin(LampsAdmin):
 
     def upload_json(self, json_file) -> None:
         json_data = json.load(json_file)
-        for feat in json_data['features']:
-
+        for feat in json_data["features"]:
             self.model.objects.update_or_create(
-                position=Point(feat['geometry']['coordinates']),
-                **feat['properties']
+                position=Point(feat["geometry"]["coordinates"]), **feat["properties"]
             )
 
 
 @admin.register(LampsCoccia00)
 class LampsUserAdmin02(LampsUserAdmin):
-    model_name = 'LampsCoccia00'
+    model_name = "LampsCoccia00"
     model = LampsCoccia00
