@@ -1,9 +1,9 @@
 .credits {
   margin: 10px;
-  font-size: 16px;
+  font-size: 1rem;
 }
 .credits a {
-  font-size: 16px;
+  font-size: 1rem;
   color: rgb(224, 34, 236);
   text-decoration: none;
 }
@@ -30,7 +30,7 @@
 footer {
   bottom: 0;
   width: 100%;
-  height: 50px;
+  height: 3.125rem;
   text-align: right;
   padding: 5px 50px 0 0;
   background-color: #eee;
@@ -43,7 +43,7 @@ footer ul li {
   margin-right: 20px;
 }
 footer ul li a {
-  font-size: 16px;
+  font-size: 1rem;
   text-decoration: none;
   color: black;
 }
@@ -54,58 +54,58 @@ footer ul li a {
 }
 
 .main_title {
-  margin-bottom: 50px;
+  margin-bottom: 3.125rem;
 }
 .main_title .logo {
-  padding-left: 40px;
+  padding-left: 2.5rem;
 }
 @media (max-width: 599px) {
   .main_title .logo {
-    padding-left: 10px;
+    padding-left: 0.625rem;
   }
 }
 .main_title .logo img {
-  width: 150px;
+  width: 9.375rem;
   max-width: 25%;
   height: auto;
 }
 .main_title .devise {
-  margin: -5% 5% 0 40px;
+  margin: -5% 5% 0 2.5rem;
   max-width: 1000px;
-  font-size: 18px;
+  font-size: 1.125rem;
   font-style: italic;
   text-align: right;
 }
 @media (min-width: 600px) {
   .main_title .devise {
-    font-size: 26px;
+    font-size: 1.625rem;
   }
 }
 
 .main_bar {
   background-color: rgb(192, 172, 246);
-  border-radius: 30px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  margin: 0 10px 0 10px;
-  min-width: 300px;
-  width: 40%;
+  border-radius: 2rem;
+  box-shadow: 0 0.313rem 0.625rem rgba(0, 0, 0, 0.1);
+  margin: 0 0.625rem 0 0.625rem;
+  min-width: 25rem;
 }
 @media only screen and (min-width: 600px) {
   .main_bar {
-    margin: 0 20% 0 10%;
+    margin: 0 8rem 0 4rem;
+    width: 40%;
   }
 }
 .main_bar ul {
-  padding: 20px 20px 0 20px;
+  padding: 1.25rem 1.25rem 0 1.25rem;
   list-style: none;
 }
 .main_bar ul li {
-  padding: 0 0 20px 0;
+  padding: 0 0 1.25rem 0;
 }
 .main_bar ul li a {
   font-weight: bold;
   color: #FFF;
-  font-size: 20px;
+  font-size: 1.25rem;
 }
 .main_bar ul li a:link {
   text-decoration: none;
@@ -114,19 +114,19 @@ footer ul li a {
   color: #e6e6e6;
 }
 .main_bar ul li a img {
-  width: 80px;
-  height: 80px;
-  padding-right: 5px;
+  width: 5rem;
+  height: 5rem;
+  padding-right: 0.313rem;
 }
 
 .map_desc {
-  margin: 10px 10px 20px 10px;
+  margin: 0.625rem 0.625rem 1.25rem 0.625rem;
   max-width: 75%;
   text-align: center;
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 .map_desc a {
-  font-size: 18px;
+  font-size: 1.125rem;
   color: rgb(224, 34, 236);
   text-decoration: none;
 }
@@ -134,23 +134,23 @@ footer ul li a {
   color: #bf11ca;
 }
 .map_desc #myTxt {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 .map_desc h2 {
-  margin-top: -10px;
-  padding-top: 10px;
-  font-size: 36px;
+  margin-top: -0.625rem;
+  padding-top: 0.625rem;
+  font-size: 2.3rem;
   border: solid rgb(217, 219, 64);
-  border-radius: 10px;
-  border-top: 0px;
+  border-radius: 0.625rem;
+  border-top: 0;
 }
 .map_desc h3 {
   background-color: rgb(192, 172, 246);
-  border-radius: 30px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  margin: 10px;
-  padding: 10px;
-  font-size: 30px;
+  border-radius: 2rem;
+  box-shadow: 0 0.313rem 0.625rem rgba(0, 0, 0, 0.1);
+  margin: 0.625rem;
+  padding: 0.625rem;
+  font-size: 1.875rem;
 }
 .map_desc hr {
   height: 0.2rem;
@@ -173,12 +173,12 @@ footer ul li a {
 }
 .logo_desc a div {
   background-color: rgb(192, 172, 246);
-  border-radius: 30px;
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-  padding: 5px;
-  padding-top: 8px;
-  margin-top: 20px;
-  border-radius: 10px;
+  border-radius: 2rem;
+  box-shadow: 0 0.313rem 0.625rem rgba(0, 0, 0, 0.1);
+  padding: 0.313rem;
+  padding-top: 0.5rem;
+  margin-top: 1.25rem;
+  border-radius: 0.625rem;
 }
 .logo_desc a div > h5 {
   font-weight: bold;
@@ -190,7 +190,7 @@ footer ul li a {
 }
 .logo_desc a img {
   width: 100%;
-  max-width: 200px;
+  max-width: 12.5rem;
   height: auto;
 }
 
@@ -207,11 +207,11 @@ html, body {
 }
 
 header {
-  padding-top: 100px;
+  padding-top: 6.25rem;
 }
 
 h1, div, a {
-  font: 14px Manjari;
+  font: 0.875rem Manjari;
 }
 
 #city_map {
@@ -233,7 +233,7 @@ h1, div, a {
   margin-top: 1%;
   position: absolute;
   overflow: auto;
-  font-size: 16px;
+  font-size: 1rem;
 }
 
 #mainNav {
@@ -241,14 +241,14 @@ h1, div, a {
   /*background: rgba(170,255,170,.8);*/
   /*background: rgba(250, 250, 250, .9);*/
   background-position: center;
-  height: 80px;
+  height: 5rem;
 }
 #mainNav .container {
   display: inline-block;
   text-align: right;
 }
 #mainNav .container a img {
-  width: 70px;
+  width: 4.375rem;
   height: auto;
 }
 #mainNav .container ul.horizontal-list {
@@ -258,49 +258,44 @@ h1, div, a {
 }
 #mainNav .container ul.horizontal-list li {
   display: inline-block;
-  margin: 5px 30px 0 0;
-}
-@media (max-width: 599px) {
-  #mainNav .container ul.horizontal-list li {
-    margin: 5px 5px 0 0;
-  }
+  margin: 0.313rem 0.313rem 0 0;
 }
 
 #content {
-  margin-bottom: 50px;
-  min-height: 470px;
+  margin-bottom: 3.125rem;
+  min-height: 29.375rem;
 }
 #content .encyclopedia {
   text-align: justify;
-  margin: 10px 30px 10px 30px;
+  margin: 0.625rem 1.875rem 0.625rem 1.875rem;
 }
 #content .encyclopedia a, #content .encyclopedia div {
-  font-size: 18px;
+  font-size: 1.125rem;
 }
 
 .legendBox {
-  padding: 6px 8px;
-  font: 14px Manjari;
+  padding: 0.375rem 0.5rem;
+  font: 0.875rem Manjari;
   background: rgba(255, 255, 255, 0.8);
-  line-height: 24px;
+  line-height: 1.5rem;
   color: #555;
 }
 .legendBox h4 {
-  font-size: 16px;
+  font-size: 1rem;
   text-align: center;
-  margin: 2px 12px 8px;
+  margin: 0.125 0.75rem 0.5rem;
   color: #777;
 }
 .legendBox i {
-  width: 18px;
-  height: 18px;
+  width: 1.125rem;
+  height: 1.125rem;
   float: left;
-  margin: 2px 8px 0 0;
+  margin: 0.125rem 0.5rem 0 0;
   opacity: 0.7;
-  border-radius: 10px;
+  border-radius: 0.625rem;
 }
 .legendBox i.icon {
-  background-size: 16px;
+  background-size: 1rem;
   background-color: rgb(255, 255, 255);
 }
 
@@ -312,18 +307,6 @@ h1, div, a {
 #about iframe {
   height: 100%;
   width: 100%;
-}
-
-div .items p {
-  display: none;
-}
-
-div .items p:target {
-  display: block;
-}
-
-div .items p #onload {
-  display: block;
 }
 
 /*# sourceMappingURL=styles.css.map */
