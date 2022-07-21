@@ -3,20 +3,14 @@ from pollux.models.lamps import Lamps
 from pollux.models.trees import Trees
 from .georepartition_in_array import Repartition_point, adjacent_match
 from django.contrib.gis.geos import Polygon
+from django.db.models import F
 
 
 class Cross(Default_cross):
-    @staticmethod
-    def reset_objects(queryset):
-        itm = queryset.first()
-        if itm:
-            queryset.update(day_impact=itm.__class__.day_impact.field.default,
-                            night_impact=itm.__class__.night_impact.field.default)
-
     def pre_algo(self, q1=None, q2=None):
         self.q1 = q1 or Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
         print('Prise en compte des luminaires')
-        self.reset_objects(self.q1)
+        Lamps.reset_queryset(self.q1, "day_impact", "night_impact")
         self.q1_array = Repartition_point(self.q1, self.bound, max_range=30).array
 
         print('Prise en compte des arbres')
@@ -29,6 +23,6 @@ class Cross(Default_cross):
             day_impact = lamp.impact(tree, nb_lux=3, time='day')
             night_impact = lamp.impact(tree, nb_lux=3, time='night')
             if day_impact or night_impact:
-                lamp.day_impact = round(lamp.day_impact + day_impact, 2)
-                lamp.night_impact = round(lamp.night_impact + night_impact, 2)
+                lamp.day_impact = F("day_impact") + day_impact
+                lamp.night_impact = F("night_impact") + night_impact
                 lamp.save()

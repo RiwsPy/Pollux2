@@ -66,10 +66,28 @@ class LampsAdmin(admin.ModelAdmin):
         "day_impact",
         "night_impact",
     )
+
     search_fields = ["code"]
     actions = ["update_orientation", "update_tree_impact", "export_json"]
     list_filter = (ColourListFilter,)
     list_per_page = 1000
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "code",
+                    "power",
+                    "height",
+                    ("colour", "irc"),
+                    "orientation",
+                    "lowering_night",
+                    ("day_impact", "night_impact"),
+                    "position",
+                )
+            },
+        ),
+    )
 
     @admin.display(description="Orientation (°)")
     def orientation_int(self, obj):
@@ -104,7 +122,7 @@ class HighwaysAdmin(admin.ModelAdmin):
 
 @admin.register(Crossings)
 class CrossingsAdmin(admin.ModelAdmin):
-    pass
+    list_display = ("illuminance_day", "illuminance_irc_day", "illuminance_night", "illuminance_irc_night")
 
 
 @admin.register(Parking_public)

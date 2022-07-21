@@ -10,33 +10,50 @@ class Cross(Default_cross):
         pass
 
     def pre_algo(self):
-        print('Prise en compte des luminaires')
+        print("Prise en compte des luminaires")
         # lamps_queryset = Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
-        self.lamps_array = Repartition_point(Lamps.objects.all(), self.bound, max_range=30).array
+        self.lamps_array = Repartition_point(
+            Lamps.objects.all(), self.bound, max_range=30
+        ).array
 
-        print('Prise en compte des passages piétons')
-        crossings_queryset = Crossings.objects.filter(position__within=Polygon.from_bbox(self.bound))
-        for crossing in crossings_queryset:
-            crossing.illuminance_day = 0.0
-            crossing.illuminance_irc_day = 0.0
-            crossing.illuminance_night = 0.0
-            crossing.illuminance_irc_night = 0.0
-            crossing.save()
-        self.crossings_array = Repartition_point(Crossings.objects.all(), self.bound, max_range=30).array
+        print("Prise en compte des passages piétons")
+        crossings_queryset = Crossings.objects.filter(
+            position__within=Polygon.from_bbox(self.bound)
+        )
+        Crossings.reset_queryset(
+            crossings_queryset,
+            "illuminance_day",
+            "illuminance_irc_day",
+            "illuminance_night",
+            "illuminance_irc_night",
+        )
+        self.crossings_array = Repartition_point(
+            Crossings.objects.all(), self.bound, max_range=30
+        ).array
 
     def apply_algo(self) -> None:
         super().apply_algo()
-        for lamp, crossing in adjacent_match(self.lamps_array, self.crossings_array, max_case_range=1):
+        for lamp, crossing in adjacent_match(
+            self.lamps_array, self.crossings_array, max_case_range=1
+        ):
             if lamp.height <= 1:
                 continue
-            day_impact = lamp.impact(crossing, nb_lux=3, time='day')
-            night_impact = lamp.impact(crossing, nb_lux=3, time='night')
+            day_impact = lamp.impact(crossing, nb_lux=3, time="day")
+            night_impact = lamp.impact(crossing, nb_lux=3, time="night")
 
             if day_impact or night_impact:
                 day_impact_irc = day_impact * min(100, lamp.irc) / 100
                 night_impact_irc = night_impact * min(100, lamp.irc) / 100
-                crossing.illuminance_day = round(crossing.illuminance_day + day_impact, 2)
-                crossing.illuminance_irc_day = round(crossing.illuminance_irc_day + day_impact_irc, 2)
-                crossing.illuminance_night = round(crossing.illuminance_night + night_impact, 2)
-                crossing.illuminance_irc_night = round(crossing.illuminance_irc_night + night_impact_irc, 2)
+                crossing.illuminance_day = round(
+                    crossing.illuminance_day + day_impact, 2
+                )
+                crossing.illuminance_irc_day = round(
+                    crossing.illuminance_irc_day + day_impact_irc, 2
+                )
+                crossing.illuminance_night = round(
+                    crossing.illuminance_night + night_impact, 2
+                )
+                crossing.illuminance_irc_night = round(
+                    crossing.illuminance_irc_night + night_impact_irc, 2
+                )
                 crossing.save()

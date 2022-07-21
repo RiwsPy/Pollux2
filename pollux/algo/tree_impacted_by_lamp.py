@@ -10,7 +10,7 @@ class Cross(Lamp_cross):
     def pre_algo(self, q1=None, q2=None):
         print('Prise en compte des arbres')
         self.q1 = q1 or Trees.objects.filter(position__within=Polygon.from_bbox(self.bound))
-        self.reset_objects(self.q1)
+        Trees.reset_queryset(self.q1, "day_impact", "night_impact")
         self.q1_array = Repartition_point(self.q1, self.bound, max_range=30).array
 
         self.q2 = q2 or Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))

@@ -13,10 +13,14 @@ class Default_model(models.Model):
 
     position = models.PointField(default=Point(0, 0))
 
+    @classmethod
+    def reset_queryset(cls, queryset, *attrs):
+        queryset.update(**{attr: getattr(cls, attr).field.default for attr in attrs})
+
     @staticmethod
     def serialize(queryset, file_format: str = "geojson") -> dict:
         ret = json.loads(serializers.serialize(file_format, queryset))
-        del ret['crs']
+        del ret["crs"]
         return ret
 
     @property

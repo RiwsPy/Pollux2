@@ -14,18 +14,10 @@ from . import Default_cross
 class Cross(Default_cross):
     max_range = 12
 
-    @staticmethod
-    def reset_lamp_data(queryset) -> None:
-        itm = queryset.first()
-        if itm:
-            queryset.update(orientation=itm.__class__.orientation.field.default,
-                            horizontal_angle=itm.__class__.horizontal_angle.field.default,
-                            nearest_way_dist=itm.__class__.nearest_way_dist.field.default)
-
     def pre_algo(self, q1=None, q2=None):
         print('reset')
         lamps_queryset = q1 or Lamps.objects.filter(position__within=Polygon.from_bbox(self.bound))
-        self.reset_lamp_data(lamps_queryset)
+        Lamps.reset_queryset(lamps_queryset, "orientation", "horizontal_angle", "nearest_way_dist")
 
         print('Préparation des luminaires...')
         self.ret_lamps = Repartition_point(lamps_queryset,
