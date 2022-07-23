@@ -10,7 +10,6 @@ class Config(Default_Config):
         'options': Options(
             Zoom(max=22, init=18),
             Legend(name="Où ne pas planter des arbres"),
-            TileLayer(TileLayer.OSM),
         ),
         'layers': [
             Layer(
@@ -37,12 +36,6 @@ class Config(Default_Config):
                 'Parkings publics',
                 'node',
                 'parking_public',
-                Style(color="#007800", opacity=0.75, weight=5)
-            ),
-            Layer(
-                "Parkings publics absents d'OSM",
-                'node',
-                'parking_lane_not_in_osm.json',
                 Style(color="#007800", opacity=0.75, weight=5)
             ),
         ]

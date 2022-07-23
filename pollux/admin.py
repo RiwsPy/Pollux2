@@ -122,7 +122,12 @@ class HighwaysAdmin(admin.ModelAdmin):
 
 @admin.register(Crossings)
 class CrossingsAdmin(admin.ModelAdmin):
-    list_display = ("illuminance_day", "illuminance_irc_day", "illuminance_night", "illuminance_irc_night")
+    list_display = (
+        "illuminance_day",
+        "illuminance_irc_day",
+        "illuminance_night",
+        "illuminance_irc_night",
+    )
 
 
 @admin.register(Parking_public)

@@ -184,7 +184,7 @@ class Osm_works(Default_works):
         return f"{tuple(self.bound)}"
 
     @staticmethod
-    def convert_data_to_geojson(data) -> dict:
+    def convert_data_to_geojson(data: dict) -> dict:
         return osm.convert_osm_to_geojson(data)
 
     def convert_to_geojson(self, directory_file: str) -> dict:

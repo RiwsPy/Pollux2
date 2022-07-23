@@ -20,7 +20,7 @@ from django.views.generic import DetailView
 from django.views.generic.base import ContextMixin
 from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.urls import reverse
-from django.db.models import Q
+from django.db.models import Q, F
 from django.contrib.gis.measure import D
 from copy import deepcopy
 
@@ -203,9 +203,7 @@ class MixinContext(ContextMixin):
 
 class MixinSecondaryPages(MixinContext, View):
     template_name = ""
-    extra_content = {
-        'page_title': 'Pollux',
-        'maps_data': _CONFIGS}
+    extra_content = {"page_title": "Pollux", "maps_data": _CONFIGS}
 
     def get(self, request, *args, **kwargs):
         return render(request,
@@ -244,8 +242,10 @@ class ShowMapDescription(MixinSecondaryPages):
         if not CONFIGS.get(map_id):
             return HttpResponseRedirect(reverse('home'))
         self.map_id = map_id
+
         return super().get(request, *args, **kwargs)
 
     @property
     def extra_content(self) -> dict:
         return {**super().extra_content, **{'map_data': CONFIGS[self.map_id]}}
+
