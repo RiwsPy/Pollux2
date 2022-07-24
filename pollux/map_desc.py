@@ -1,6 +1,6 @@
 # utilisée sur la page 'A propos'
 
-ORIGIN_DATA = {
+DATA_ORIGIN = {
     'columns': ['Nom', 'Origine', 'Licence', 'Détails'],
     'lines': [
         {'name': "Arbres de Grenoble",

@@ -11,8 +11,6 @@
         <br>
         <p><strong>Textes</strong> : Pollux</p>
         <br>
-        <p><strong>Hébergement</strong> : <a href="https://www.heroku.com/">Heroku</a></p>
-        <br>
         <p><strong>CMS</strong> : <a href="https://getbootstrap.com/">Bootstrap</a></p>
         <br>
         <p><strong>Thème</strong> : From scratch</p>
@@ -27,11 +25,11 @@
         <u><h2>Données</h2></u>
         <table>
             <tr>
-                {% for column_name in dict_data.columns %}
+                {% for column_name in data_origin.columns %}
                     <th>{{ column_name }}</th>
                 {% endfor %}
             </tr>
-            {% for lines in dict_data.lines %}
+            {% for lines in data_origin.lines %}
                 <tr>
                     <td>{{ lines.name }}</td>
                     <td><a href="{{ lines.href }}">{{ lines.href_txt }}</a></td>
